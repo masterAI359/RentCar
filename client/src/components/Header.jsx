@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 function Header() {
   return (
     <div
-      className={`w-full py-6 flex justify-between items-center ${styles.paddingX} ${styles.paddingY} `}
+      className={`w-full py-6 flex justify-between items-center ${styles.paddingX} pt-10  `}
     >
       <Link to="/">
-      <div className={`${styles.heading2} `}>Rent a ride</div>
+        <div className={` text-[16px] md:text-[28px] ${styles.heading2}`}>
+          Rent a Ride
+        </div>
       </Link>
-      
-      <div className="">
+
+      <div className="hidden lg:block">
         <ul className="flex list-none">
           {navLinks.map((navlink, index) => (
             <li
@@ -19,13 +21,25 @@ function Header() {
             >
               <Link
                 to={navlink.path}
-                className={`text-black  font-poppins font-semibold`}
+                className={`text-black  font-poppins cursor-pointer font-semibold`}
               >
                 {navlink.title}
               </Link>
             </li>
           ))}
         </ul>
+      </div>
+      <div className="flex gap-2">
+        <div>
+          <button id="signIn" className={`${styles.button} `}>
+            Sign In
+          </button>
+        </div>
+        <div>
+          <button id="signUp" className={`${styles.button} `}>
+            Sign Up
+          </button>
+        </div>
       </div>
     </div>
   );
