@@ -31,14 +31,18 @@ function Header() {
       </div>
       <div className="flex gap-2">
         <div>
+          <Link to={'/signIn'}>
           <button id="signIn" className={`${styles.button} `}>
             Sign In
           </button>
+          </Link>
         </div>
         <div>
+          <Link to={'/signUp'}>
           <button id="signUp" className={`${styles.button} `}>
             Sign Up
           </button>
+          </Link>
         </div>
       </div>
     </div>
