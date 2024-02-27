@@ -22,15 +22,16 @@ export const signIn = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const validUser = await User.findOne({ email });
-    if (!validUser) next(errorHandler(404, "user not found"));
+    if (!validUser) return next(errorHandler(404, "user not found"));
     const validPassword = bcryptjs.compareSync(password, validUser.password);
-    if (!validPassword) next(errorHandler(401, "wrong credentials"));
+    if (!validPassword) return next(errorHandler(401, "wrong credentials"));
     const token = Jwt.sign({ id: validUser._id }, process.env.SECRET_KEY);
-    const {password:hashedPassword , ...rest} = validUser._doc
-    const expiryDate = new Date(Date.now()  +  3600000) //1 hour
+    const { password: hashedPassword, ...rest } = validUser._doc;
+    // const expiryDate = new Date(Date.now()  +  3600000) //1 hour
     res
-      .cookie("access_token", token, { httpOnly: true },{ expiresIn: expiryDate })
-      .status(200).json(rest);
+      .cookie("access_token", token, { httpOnly: true, maxAge: 36000000 }) //10 hours
+      .status(200)
+      .json(rest);
   } catch (error) {
     next(error);
   }
