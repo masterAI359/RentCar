@@ -1,7 +1,40 @@
+import { useState } from "react";
 import styles from "../index";
 import { Link } from "react-router-dom";
 
 function SignUp() {
+  const [formData, setFormData] = useState({});
+  const [isError, setError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (data.succes === false) {
+        setError(true);
+        return 
+      }
+      setError(false)
+      
+    } catch (error) {
+      setLoading(false)
+      setError(true);
+
+    }
+  };
+
   return (
     <>
       <div
@@ -11,28 +44,46 @@ function SignUp() {
           <h1 className={`${styles.heading2}`}>Sign Up</h1>
         </div>
 
-        <form action="" className="flex flex-col gap-5 pt-10 px-5">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-5 pt-10 px-5"
+        >
           <input
             type="text"
             id="username"
             className="text-black bg-slate-100 p-3 rounded-md"
             placeholder="UserName"
+            onChange={handleChange}
           />
           <input
             type="text"
             id="email"
             className="text-black bg-slate-100 p-3 rounded-md"
             placeholder="Email"
+            onChange={handleChange}
           />
           <input
             type="text"
             id="password"
             className="text-black bg-slate-100 p-3 rounded-md"
             placeholder="Password"
+            onChange={handleChange}
           />
-          <button className={`${styles.button}`}>Register</button>
-
-          <p className="text-[10px]">Have a account?   <span className="text-blue-600"> <Link to={`/signin`}>Sign in</Link></span></p>
+          <button className={`${styles.button}  disabled:bg-slate-500 text-black disabled:text-white`} disabled={isLoading}>
+            {isLoading ? "Loading ..." : "Register"}
+          </button>
+          <div className="flex justify-between">
+         
+          <p className="text-[10px]">
+            Have a account?{" "}
+            <span className="text-blue-600">
+              {" "}
+              <Link to={`/signin`}>Sign in</Link>
+            </span>
+          </p>
+          <p className="text-[10px] text-red-600">{isError && "something went wrong"}</p>
+          </div>
+          
         </form>
         <div>
           <h3 className="text-center text-slate-700 pt-3 pb-3 text-[10px]">
