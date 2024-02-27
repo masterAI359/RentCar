@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.1"
   },
   "devDependencies": {
+    "@iconify-json/devicon": "^1.1.35",
+    "@iconify-json/logos": "^1.1.42",
+    "@iconify/tailwind": "^0.1.4",
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react-swc": "^3.5.0",
