@@ -24,24 +24,22 @@ function SignUp() {
       setLoading(false);
       if (data.succes === false) {
         setError(true);
-        return 
+        return;
       }
-      setError(false)
-      
+      setError(false);
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       setError(true);
-
     }
   };
 
   return (
     <>
       <div
-        className={`p-5  sm:p-0 max-w-lg mx-auto  rounded-lg overflow-hidden lg:min-h-[650px] shadow-xl`}
+        className={`pb-10 max-w-lg mx-auto mt-16  rounded-lg overflow-hidden  shadow-2xl`}
       >
-        <div className={` green px-4 py-2 rounded-t-lg`}>
-          <h1 className={`${styles.heading2}`}>Sign Up</h1>
+        <div className={` green px-6 py-2   rounded-t-lg`}>
+          <h1 className={`${styles.heading2} text-[28px]`}>Sign Up</h1>
         </div>
 
         <form
@@ -69,21 +67,24 @@ function SignUp() {
             placeholder="Password"
             onChange={handleChange}
           />
-          <button className={`${styles.button}  disabled:bg-slate-500 text-black disabled:text-white`} disabled={isLoading}>
+          <button
+            className={`${styles.button}  disabled:bg-slate-500 text-black disabled:text-white`}
+            disabled={isLoading}
+          >
             {isLoading ? "Loading ..." : "Register"}
           </button>
           <div className="flex justify-between">
-         
-          <p className="text-[10px]">
-            Have a account?{" "}
-            <span className="text-blue-600">
-              {" "}
-              <Link to={`/signin`}>Sign in</Link>
-            </span>
-          </p>
-          <p className="text-[10px] text-red-600">{isError && "something went wrong"}</p>
+            <p className="text-[10px]">
+              Have a account?{" "}
+              <span className="text-blue-600">
+                {" "}
+                <Link to={`/signin`}>Sign in</Link>
+              </span>
+            </p>
+            <p className="text-[10px] text-red-600">
+              {isError && "something went wrong"}
+            </p>
           </div>
-          
         </form>
         <div>
           <h3 className="text-center text-slate-700 pt-3 pb-3 text-[10px]">

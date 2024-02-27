@@ -142,3 +142,10 @@
 .green{
   background-color: #14B464;
 }
+
+.centerX{
+  transform: translateX(50% -50%);
+}
+.centerY{
+  transform: translateY(50% -50%);
+}

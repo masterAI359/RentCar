@@ -7,7 +7,9 @@ function Header() {
       className={`w-full py-6 flex justify-between items-center ${styles.paddingX} pt-10  `}
     >
       <Link to="/">
-        <div className={` text-[16px] md:text-[18px] lg:text-[20px] font-poppins font-bold`}>
+        <div
+          className={` text-[16px] md:text-[18px] lg:text-[20px] font-poppins font-bold`}
+        >
           Rent a Ride
         </div>
       </Link>
@@ -31,17 +33,20 @@ function Header() {
       </div>
       <div className="flex gap-2">
         <div>
-          <Link to={'/signIn'}>
-          <button id="signIn" className={`${styles.button}  `}>
-            Sign In
-          </button>
+          <Link to={"/signIn"}>
+            <button id="signIn" className={`${styles.button}  `}>
+              Sign In
+            </button>
           </Link>
         </div>
         <div>
-          <Link to={'/signUp'}>
-          <button id="signUp" className={`${styles.buttonsm} ${styles.button} `}>
-            Sign Up
-          </button>
+          <Link to={"/signUp"}>
+            <button
+              id="signUp"
+              className={`${styles.buttonsm} ${styles.button} `}
+            >
+              Sign Up
+            </button>
           </Link>
         </div>
       </div>
