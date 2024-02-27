@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --black-gradient: linear-gradient(
     144.39deg,
@@ -136,4 +137,15 @@
 .white__gradient {
   background: rgba(255, 255, 255, 0.6);
   filter: blur(750px);
+}
+
+.green{
+  background-color: #14B464;
+}
+
+.centerX{
+  transform: translateX(50% -50%);
+}
+.centerY{
+  transform: translateY(50% -50%);
 }
