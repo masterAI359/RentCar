@@ -3,6 +3,7 @@ import styles from "../index";
 import { Link ,useNavigate } from "react-router-dom";
 import { signInFailure,signInStart,signInSuccess } from "../redux/user/userSlice";
 import {useDispatch, useSelector} from 'react-redux'
+import OAuth from "../components/OAuth";
 
 
 function SignIn() {
@@ -69,7 +70,7 @@ function SignIn() {
             className={`${styles.button}  disabled:bg-slate-500 text-black disabled:text-white`}
             disabled={isLoading}
           >
-            {isLoading ? "Loading ..." : "Register"}
+            {isLoading ? "Loading ..." : "Login"}
           </button>
           <div className="flex justify-between">
             <div className="flex justify-between">
@@ -86,7 +87,7 @@ function SignIn() {
             </div>
             
             <p className="text-[10px] text-red-600">
-              {isError ? isError.message || "something went wrong" : "" }
+              {isError ? isError.message || "something went wrong" : " " }
             </p>
           </div>
         </form>
@@ -96,22 +97,13 @@ function SignIn() {
           </h3>
           <div className="flex justify-center items-center gap-3 pb-6">
             <span className="bg-green-300 w-20 h-[.1px]"></span>
-            <span className="text-[12px] text-slate-500">
+            <span className="text-[10px] sm:text-[12px] text-slate-500">
               Continue with social login
             </span>
             <span className="bg-green-300 w-20 h-[.1px]"> </span>
           </div>
 
-          <div className={`px-5`}>
-            <div className="flex gap-3 justify-center border  py-3 rounded-md  items-center  border-black mb-4">
-              <span className="icon-[devicon--google]"></span>
-              <button>Continue with Google</button>
-            </div>
-            <div className="flex gap-3 justify-center pl-4 border  py-3 rounded-md  items-center border-black">
-              <span className="icon-[logos--facebook]"></span>
-              <button>Continue with Facebook</button>
-            </div>
-          </div>
+          <OAuth/>
         </div>
       </div>
     </>
