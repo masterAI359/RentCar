@@ -1,11 +1,13 @@
 import { useState } from "react";
 import styles from "../index";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 function SignUp() {
   const [formData, setFormData] = useState({});
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -27,6 +29,7 @@ function SignUp() {
         return;
       }
       setError(false);
+      navigate('/signin')
     } catch (error) {
       setLoading(false);
       setError(true);
@@ -92,22 +95,13 @@ function SignUp() {
           </h3>
           <div className="flex justify-center items-center gap-3 pb-6">
             <span className="bg-green-300 w-20 h-[.1px]"></span>
-            <span className="text-[12px] text-slate-500">
+            <span className="text-[10px] sm:text-[12px] text-slate-500">
               Continue with social login
             </span>
             <span className="bg-green-300 w-20 h-[.1px]"> </span>
           </div>
 
-          <div className={`px-5`}>
-            <div className="flex gap-3 justify-center border border-[1px] py-3 rounded-md  items-center border-[1px] border-black mb-4">
-              <span className="icon-[devicon--google]"></span>
-              <button>Continue with Google</button>
-            </div>
-            <div className="flex gap-3 justify-center pl-4 border border-[1px] py-3 rounded-md  items-center border-[1px] border-black">
-              <span className="icon-[logos--facebook]"></span>
-              <button>Continue with Facebook</button>
-            </div>
-          </div>
+          <OAuth/>
         </div>
       </div>
     </>
