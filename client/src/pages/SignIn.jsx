@@ -1,12 +1,15 @@
 import { useState } from "react";
 import styles from "../index";
 import { Link ,useNavigate } from "react-router-dom";
+import { signInFailure,signInStart,signInSuccess } from "../redux/user/userSlice";
+import {useDispatch, useSelector} from 'react-redux'
+
 
 function SignIn() {
   const [formData, setFormData] = useState({});
-  const [isError, setError] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const {isLoading,isError} = useSelector((state) => state.user)
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
 
   const handleChange = (e) => {
@@ -15,24 +18,23 @@ function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
+      dispatch(signInStart())
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      setLoading(false);
+    
       if (data.succes === false) {
-        setError(true);
+        dispatch(signInFailure(data))
         return;
       }
-      setError(false);
+      dispatch(signInSuccess(data))
       navigate('/')
     } catch (error) {
-      setLoading(false);
-      setError(true);
+      dispatch(signInFailure(error))
     }
   };
 
@@ -42,7 +44,7 @@ function SignIn() {
         className={`pb-10 max-w-lg mx-auto mt-16  rounded-lg overflow-hidden  shadow-2xl`}
       >
         <div className={` green px-6 py-2   rounded-t-lg`}>
-          <h1 className={`${styles.heading2} text-[28px]`}>Sign In</h1>
+          <h1 className={`${styles.heading2}  text-normal `}>Sign In</h1>
         </div>
 
         <form
@@ -84,7 +86,7 @@ function SignIn() {
             </div>
             
             <p className="text-[10px] text-red-600">
-              {isError && "something went wrong"}
+              {isError ? isError.message || "something went wrong" : "" }
             </p>
           </div>
         </form>
@@ -101,11 +103,11 @@ function SignIn() {
           </div>
 
           <div className={`px-5`}>
-            <div className="flex gap-3 justify-center border border-[1px] py-3 rounded-md  items-center border-[1px] border-black mb-4">
+            <div className="flex gap-3 justify-center border  py-3 rounded-md  items-center  border-black mb-4">
               <span className="icon-[devicon--google]"></span>
               <button>Continue with Google</button>
             </div>
-            <div className="flex gap-3 justify-center pl-4 border border-[1px] py-3 rounded-md  items-center border-[1px] border-black">
+            <div className="flex gap-3 justify-center pl-4 border  py-3 rounded-md  items-center border-black">
               <span className="icon-[logos--facebook]"></span>
               <button>Continue with Facebook</button>
             </div>
