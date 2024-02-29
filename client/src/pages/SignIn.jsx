@@ -44,8 +44,9 @@ function SignIn() {
       <div
         className={`pb-10 max-w-lg mx-auto mt-16  rounded-lg overflow-hidden  shadow-2xl`}
       >
-        <div className={` green px-6 py-2   rounded-t-lg`}>
+        <div className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}>
           <h1 className={`${styles.heading2}  text-normal `}>Sign In</h1>
+          <Link to={'/'} ><div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">x</div></Link>
         </div>
 
         <form
