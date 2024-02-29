@@ -3,6 +3,8 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutStart,
+  signOut,
 } from "../redux/user/userSlice";
 
 function Profile() {
@@ -11,6 +13,7 @@ function Profile() {
   );
   const dispatch = useDispatch();
 
+  //delete
   const handleDelete = async () => {
     try {
       dispatch(deleteUserStart());
@@ -28,21 +31,17 @@ function Profile() {
     }
   };
 
+  //signout
   const handleSignOut = async () => {
-    if (currentUser) {
-      const res = await fetch("/api/auth/signout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "applicatoin/json",
-        },
-        body: JSON.stringify({
-          access_token: currentUser.access_token,
-        }),
-      });
-      const data = await res.json();
-      console.log(data);
+    dispatch(signOutStart());
+    try {
+      await fetch("/api/user/signout");
+      dispatch(signOut());
+    } catch (error) {
+      console.log(error);
     }
   };
+
   return (
     <div>
       <h1>Profile</h1>

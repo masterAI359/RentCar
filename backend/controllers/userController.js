@@ -47,14 +47,26 @@ export const deleteUser = async (req, res, next) => {
     return next(errorHandler(401, "you can only delete your account"));
   }
   try {
-     const deleted = await User.findByIdAndDelete(req.user.id);
-    if(deleted){
+    const userFound = await User.findByIdAndDelete(req.user.id);
+    if (userFound) {
       res.status(200).json({ message: "user deleted successfully" });
     }
-    next(errorHandler(404,"user not found and not deleted"))
-     
-    
+    next(errorHandler(404, "user not found and not deleted"));
   } catch (error) {
     next(error);
   }
 };
+
+
+//signOut 
+
+export const signOut = async(req,res,next)=> {
+  try{
+    res.clearCookie('access_token')
+    res.status(200).json({message:"signedOut successfully"})
+  }
+  catch(error){
+    next(error)
+  }
+
+}
