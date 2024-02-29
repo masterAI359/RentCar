@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser);
+
   return (
     <div
       className={`w-full py-6 flex justify-between items-center ${styles.paddingX} pt-10  `}
