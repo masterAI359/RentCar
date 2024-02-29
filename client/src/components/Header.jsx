@@ -56,9 +56,12 @@ function Header() {
                 className="h-10 w-10 rounded-[50%] object-cover"
               />
             ) : (
+              <Link to={'/signup'}>
               <button id="signup" className={`${styles.button} `}>
                 Sign Up
               </button>
+              </Link>
+              
             )}
           </Link>
         </div>

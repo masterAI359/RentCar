@@ -24,10 +24,8 @@ function OAuth() {
         }),
       });
       const data = await res.json();
-      console.log(data)
-      navigate('/')
       dispatch(signInSuccess(data));
-      
+      navigate('/')
       
     } catch (error) {
       console.log('could not login with google ', error);
