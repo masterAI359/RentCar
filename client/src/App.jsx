@@ -3,9 +3,11 @@ import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import About from "./pages/About";
+import Profile from './pages/Profile'
 
 import styles from ".";
 import With_nav from "./components/Layout/With_nav";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -23,8 +25,12 @@ function App() {
 
             {/* components without Navbar */}
             <Route>
-              <Route path="/signIn" element={<SignIn />} />
-              <Route path="/signUp" element={<SignUp />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+            </Route>
+
+            <Route element={<PrivateRoute/>}>
+               <Route path="/profile" element={<Profile/>}/>
             </Route>
 
           </Routes>

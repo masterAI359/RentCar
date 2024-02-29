@@ -49,12 +49,12 @@ export const google = async (req, res, next) => {
       res.cookie("access_token", token, {
         httpOnly: true,
         expires: expireDate,
-      });
+      }).status(200).json(rest)
     } else {
-      const password =
+      const generatedPassword =
         Math.random().toString(36).slice(-8) +
-        Math.random().toString(36).slice(-8);
-      const hashedPassword = bcryptjs.hashSync(password, 10);
+        Math.random().toString(36).slice(-8); //we are generating a random password since there is no password in result
+      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
       const newUser = new User({
         profilePicture: req.body.photo,
         password: hashedPassword,
@@ -62,21 +62,21 @@ export const google = async (req, res, next) => {
           req.body.name.split(" ").join("").toLowerCase() +
           Math.random().toString(36).slice(-8) +
           Math.random().toString(36).slice(-8),
-
         email: req.body.email,
+        //we cannot set username to req.body.name because other user may also have same name so we generate a random value and concat it to name 
+        //36 in toString(36) means random value from 0-9 and a-z
       });
       await newUser.save();
       const token = Jwt.sign({ id: newUser._id }, process.env.SECRET_KEY);
       const { password: hashedPassword2, ...rest } = newUser;
-      res
-        .cookie("access_token", token, {
+      res.cookie("access_token", token, {
           httpOnly: true,
           expires: expireDate,
-        })
-        .status(200)
-        .json(rest);
+        }).status(200).json(rest);
     }
   } catch (error) {
     next(error);
   }
 };
+
+

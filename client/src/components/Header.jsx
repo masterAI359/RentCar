@@ -1,7 +1,11 @@
 import styles from "../index";
 import { navLinks } from "../constants";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 function Header() {
+  const { currentUser } = useSelector((state) => state.user);
+
   return (
     <div
       className={`w-full py-6 flex justify-between items-center ${styles.paddingX} pt-10  `}
@@ -34,19 +38,31 @@ function Header() {
       <div className="flex gap-2">
         <div>
           <Link to={"/signIn"}>
-            <button id="signIn" className={`${styles.button}  `}>
-              Sign In
-            </button>
+            {currentUser ? (
+              ""
+            ) : (
+              <button id="signin" className={`${styles.button}  `}>
+                Sign In
+              </button>
+            )}
           </Link>
         </div>
-        <div>
-          <Link to={"/signUp"}>
-            <button
-              id="signUp"
-              className={`${styles.buttonsm} ${styles.button} `}
-            >
-              Sign Up
-            </button>
+        <div className="flex items-center justify-center">
+          <Link to={"/profile"}>
+            {currentUser ? (
+              <img
+                src={`${currentUser.profilePicture}`}
+                alt="profile"
+                className="h-10 w-10 rounded-[50%] object-cover"
+              />
+            ) : (
+              <Link to={'/signup'}>
+              <button id="signup" className={`${styles.button} `}>
+                Sign Up
+              </button>
+              </Link>
+              
+            )}
           </Link>
         </div>
       </div>
