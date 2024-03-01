@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js";
+import adminRoute from './routes/adminRoute.js'
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 
@@ -27,6 +28,9 @@ App.use(cors());
 
 App.use("/api/user", userRoute);
 App.use("/api/auth", authRoute);
+App.use("/api/admin",adminRoute);
+
+
 
 App.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

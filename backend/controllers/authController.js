@@ -28,12 +28,17 @@ export const signIn = async (req, res, next) => {
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(401, "wrong credentials"));
     const token = Jwt.sign({ id: validUser._id }, process.env.SECRET_KEY);
-    const { password: hashedPassword, ...rest } = validUser._doc;
+    const { password: hashedPassword, isAdmin, ...rest } = validUser._doc;
     // const expiryDate = new Date(Date.now()  +  3600000) //1 hour
+    const responsePayload = { isAdmin, ...rest };
+
+    req.user = { ...rest, isAdmin: validUser.isAdmin };
+    next();
+
     res
       .cookie("access_token", token, { httpOnly: true, maxAge: 36000000 }) //10 hours
       .status(200)
-      .json(rest);
+      .json(responsePayload);
   } catch (error) {
     next(error);
   }
@@ -41,15 +46,19 @@ export const signIn = async (req, res, next) => {
 
 export const google = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email }).lean();
+    console.log(user)
     if (user) {
-      const { password: hashedPassword, ...rest } = user._doc;
+      const { password: hashedPassword, ...rest } = user;
       const token = Jwt.sign({ id: user._id }, process.env.SECRET_KEY);
 
-      res.cookie("access_token", token, {
-        httpOnly: true,
-        expires: expireDate,
-      }).status(200).json(rest)
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          expires: expireDate,
+        })
+        .status(200)
+        .json(rest);
     } else {
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
@@ -63,20 +72,21 @@ export const google = async (req, res, next) => {
           Math.random().toString(36).slice(-8) +
           Math.random().toString(36).slice(-8),
         email: req.body.email,
-        //we cannot set username to req.body.name because other user may also have same name so we generate a random value and concat it to name 
+        //we cannot set username to req.body.name because other user may also have same name so we generate a random value and concat it to name
         //36 in toString(36) means random value from 0-9 and a-z
       });
       await newUser.save();
       const token = Jwt.sign({ id: newUser._id }, process.env.SECRET_KEY);
       const { password: hashedPassword2, ...rest } = newUser;
-      res.cookie("access_token", token, {
+      res
+        .cookie("access_token", token, {
           httpOnly: true,
           expires: expireDate,
-        }).status(200).json(rest);
+        })
+        .status(200)
+        .json(rest);
     }
   } catch (error) {
     next(error);
   }
 };
-
-
