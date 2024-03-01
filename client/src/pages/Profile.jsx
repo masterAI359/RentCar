@@ -3,7 +3,6 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
-  signOutStart,
   signOut,
 } from "../redux/user/userSlice";
 
@@ -12,6 +11,9 @@ function Profile() {
     (state) => state.user
   );
   const dispatch = useDispatch();
+ 
+ 
+ 
 
   //delete
   const handleDelete = async () => {
@@ -33,7 +35,6 @@ function Profile() {
 
   //signout
   const handleSignOut = async () => {
-    dispatch(signOutStart());
     try {
       await fetch("/api/user/signout");
       dispatch(signOut());

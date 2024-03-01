@@ -8,6 +8,8 @@ import Profile from './pages/Profile'
 import styles from ".";
 import With_nav from "./components/Layout/With_nav";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminPrivateRoutes from "./components/AdminPrivateRoutes";
 
 function App() {
   return (
@@ -31,6 +33,10 @@ function App() {
 
             <Route element={<PrivateRoute/>}>
                <Route path="/profile" element={<Profile/>}/>
+            </Route>
+
+            <Route  element={<AdminPrivateRoutes/>}>
+              <Route path="/adminDashboard" element={<AdminDashboard/>}/>
             </Route>
 
           </Routes>

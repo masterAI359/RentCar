@@ -35,9 +35,6 @@ const userSlice = createSlice({
             state.isError = action.payload
             
         },
-        signOutStart:(state)=> {
-            state.isLoading = true
-        },
         signOut:(state)=> {
             state.currentUser = null
             state.isLoading=false
@@ -55,7 +52,6 @@ export const {
     deleteUserStart,
     deleteUserSuccess,
     signOut,
-    signOutStart
 
 } = userSlice.actions
 

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
-
+  
   return (
     <div
       className={`w-full py-6 flex justify-between items-center ${styles.paddingX} pt-10  `}
@@ -38,7 +38,7 @@ function Header() {
       <div className="flex gap-2">
         <div>
           <Link to={"/signIn"}>
-            {currentUser ? (
+            {currentUser&& !currentUser.isAdmin ?  (
               ""
             ) : (
               <button id="signin" className={`${styles.button}  `}>
@@ -49,10 +49,12 @@ function Header() {
         </div>
         <div className="flex items-center justify-center">
           <Link to={"/profile"}>
-            {currentUser ? (
+           
+            {currentUser && !currentUser.isAdmin ? (
               <img
                 src={`${currentUser.profilePicture}`}
-                alt="profile"
+                alt="fsd"
+                referrerPolicy="no-referrer"
                 className="h-10 w-10 rounded-[50%] object-cover"
               />
             ) : (
