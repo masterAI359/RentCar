@@ -30,7 +30,7 @@ export const signIn = async (req, res, next) => {
     const token = Jwt.sign({ id: validUser._id }, process.env.SECRET_KEY);
     const { password: hashedPassword, isAdmin, ...rest } = validUser._doc;
     // const expiryDate = new Date(Date.now()  +  3600000) //1 hour
-    const responsePayload = { isAdmin, ...rest };
+    const responsePayload = { isAdmin,password:hashedPassword, ...rest };
 
     req.user = { ...rest, isAdmin: validUser.isAdmin };
     next();
@@ -47,7 +47,6 @@ export const signIn = async (req, res, next) => {
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).lean();
-    console.log(user)
     if (user) {
       const { password: hashedPassword, ...rest } = user;
       const token = Jwt.sign({ id: user._id }, process.env.SECRET_KEY);
