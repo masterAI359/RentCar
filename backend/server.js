@@ -4,8 +4,10 @@ import dotenv from "dotenv";
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js";
 import adminRoute from './routes/adminRoute.js'
+import vendorRoute from './routes/venderRoute.js'
 import cors from 'cors'
 import cookieParser from "cookie-parser";
+
 
 const App = express();
 
@@ -29,6 +31,7 @@ App.use(cors());
 App.use("/api/user", userRoute);
 App.use("/api/auth", authRoute);
 App.use("/api/admin",adminRoute);
+App.use("/api/vendor",vendorRoute)
 
 
 

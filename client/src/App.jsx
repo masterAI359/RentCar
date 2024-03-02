@@ -12,6 +12,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPrivateRoutes from "./components/AdminPrivateRoutes";
 import Enterprise from "./pages/Enterprise";
 import Contact from "./pages/Contact";
+import VendorSignin from "./pages/VendorSignin";
+import VendorSignup from "./pages/VendorSignup";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
             <Route>
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/vendorSignin" element= {<VendorSignin/>}/>
+              <Route path="/vendorSignup" element={<VendorSignup/>} />
             </Route>
 
             <Route element={<PrivateRoute/>}>
@@ -41,6 +45,8 @@ function App() {
             <Route  element={<AdminPrivateRoutes/>}>
               <Route path="/adminDashboard" element={<AdminDashboard/>}/>
             </Route>
+
+
 
           </Routes>
         </div>
