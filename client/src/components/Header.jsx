@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
-  
+
   return (
     <div
       className={`w-full py-6 flex justify-between items-center ${styles.paddingX} pt-10  `}
@@ -38,34 +38,35 @@ function Header() {
       <div className="flex gap-2">
         <div>
           <Link to={"/signIn"}>
-            {currentUser&& !currentUser.isAdmin ?  (
+            {currentUser && !currentUser.isAdmin ? (
               ""
             ) : (
-              <button id="signin" className={`border-[1px] border-green-500 py-1 text-[12px] md:text-[14px] sm:py-[7px] px-2 sm:px-4 font-normal sm:font-semibold rounded-md `}>
+              <button
+                id="signin"
+                className={`border-[1px] border-green-500 py-1 text-[12px] md:text-[14px] sm:py-[7px] px-2 sm:px-4 font-normal sm:font-semibold rounded-md `}
+              >
                 Sign In
               </button>
             )}
           </Link>
         </div>
         <div className="flex items-center justify-center">
-          <Link to={"/profile"}>
-           
-            {currentUser && !currentUser.isAdmin ? (
+          {currentUser && !currentUser.isAdmin ? (
+            <Link to={"/profile"}>
               <img
                 src={`${currentUser.profilePicture}`}
                 alt="fsd"
                 referrerPolicy="no-referrer"
                 className="h-10 w-10 rounded-[50%] object-cover"
               />
-            ) : (
-              <Link to={'/signup'}>
+            </Link>
+          ) : (
+            <Link to={"/signup"}>
               <button id="signup" className={`${styles.button} `}>
                 Sign Up
               </button>
-              </Link>
-              
-            )}
-          </Link>
+            </Link>
+          )}
         </div>
       </div>
     </div>

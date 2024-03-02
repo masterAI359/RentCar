@@ -30,7 +30,6 @@ export const vendorSignin = async(req,res,next)=> {
                 return res.status(401).json({message:"wrong credentials"})
             }
             const token = Jwt.sign({id:validVendor._id},process.env.SECRET_KEY)
-            console.log(validVendor)
             const {password:hadshedPassword,...rest} = validVendor
             const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000
 

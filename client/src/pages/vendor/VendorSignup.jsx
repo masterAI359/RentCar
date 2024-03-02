@@ -1,15 +1,14 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSlice";
-import styles from "..";
-import OAuth from "../components/OAuth";
+import OAuth from "../../components/OAuth";
+import styles from "../..";
+import { useState } from "react";
 
-function VendorSignin() {
+
+function VendorSignup() {
     const [formData, setFormData] = useState({});
-    const { isLoading, isError } = useSelector((state) => state.user);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const [isError, setError] = useState(false);
+    const [isLoading, setLoading] = useState(false);
+    const navigate = useNavigate()
   
     const handleChange = (e) => {
       setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -17,30 +16,24 @@ function VendorSignin() {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
+      setLoading(true);
       try {
-        dispatch(signInStart());
-        const res = await fetch("/api/auth/signin", {
+        const res = await fetch("/api/vendor/vendorsignup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
         const data = await res.json();
-  
+        setLoading(false);
         if (data.succes === false) {
-          dispatch(signInFailure(data));
+          setError(true);
           return;
         }
-        if(data.isAdmin){
-          dispatch(signInSuccess(data))
-          navigate('/adminDashboard')
-        }
-        else{
-          dispatch(signInSuccess(data));
-          navigate("/");
-        }
-       
+        setError(false);
+        navigate('/vendorSignin')
       } catch (error) {
-        dispatch(signInFailure(error));
+        setLoading(false);
+        setError(true);
       }
     };
   
@@ -49,21 +42,22 @@ function VendorSignin() {
         <div
           className={`pb-10 max-w-lg mx-auto mt-16  rounded-lg overflow-hidden  shadow-2xl`}
         >
-          <div
-            className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}
-          >
-            <h1 className={`${styles.heading2}  text-normal `}>Sign In <span className="text-white text-[8px]">as vendor</span></h1>
-            <Link to={"/"}>
-              <div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">
-                x
-              </div>
-            </Link>
+          <div className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}>
+            <h1 className={`${styles.heading2} text-[28px]`}>Sign Up <span className="text-[6px] text-white">as vendor</span></h1>
+            <Link to={'/'} ><div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">x</div></Link>
           </div>
   
           <form
             onSubmit={handleSubmit}
             className="flex flex-col gap-5 pt-10 px-5"
           >
+            <input
+              type="text"
+              id="username"
+              className="text-black bg-slate-100 p-3 rounded-md"
+              placeholder="UserName"
+              onChange={handleChange}
+            />
             <input
               type="text"
               id="email"
@@ -82,22 +76,18 @@ function VendorSignin() {
               className={`${styles.button}  disabled:bg-slate-500 text-black disabled:text-white`}
               disabled={isLoading}
             >
-              {isLoading ? "Loading ..." : "Login"}
+              {isLoading ? "Loading ..." : "Register"}
             </button>
             <div className="flex justify-between">
-              <div className="flex justify-between">
-                <p className="text-[10px] border-r border-black">
-                  No account?{" "}
-                  <span className="text-blue-600 pr-2">
-                    {" "}
-                    <Link to={`/vendorSignup`}>Sign Up</Link>
-                  </span>
-                </p>
-                <p className="text-[10px] pl-2 text-blue-600">forgot password</p>
-              </div>
-  
+              <p className="text-[10px]">
+                Have a account?{" "}
+                <span className="text-blue-600">
+                  {" "}
+                  <Link to={`/vendorsignin`}>Sign in</Link>
+                </span>
+              </p>
               <p className="text-[10px] text-red-600">
-                {isError ? isError.message || "something went wrong" : " "}
+                {isError && "something went wrong"}
               </p>
             </div>
           </form>
@@ -113,11 +103,11 @@ function VendorSignin() {
               <span className="bg-green-300 w-20 h-[.1px]"> </span>
             </div>
   
-            <OAuth />
+            <OAuth/>
           </div>
         </div>
       </>
     );
-  }
+}
 
-export default VendorSignin
+export default VendorSignup
