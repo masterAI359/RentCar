@@ -41,7 +41,7 @@ function Header() {
             {currentUser&& !currentUser.isAdmin ?  (
               ""
             ) : (
-              <button id="signin" className={`${styles.button}  `}>
+              <button id="signin" className={`border-[1px] border-green-500 py-1 text-[12px] md:text-[14px] sm:py-[7px] px-2 sm:px-4 font-normal sm:font-semibold rounded-md `}>
                 Sign In
               </button>
             )}

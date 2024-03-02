@@ -47,7 +47,6 @@ export const signIn = async (req, res, next) => {
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).lean();
-    console.log(user)
     if (user) {
       const { password: hashedPassword, ...rest } = user;
       const token = Jwt.sign({ id: user._id }, process.env.SECRET_KEY);

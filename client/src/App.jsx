@@ -10,6 +10,8 @@ import With_nav from "./components/Layout/With_nav";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPrivateRoutes from "./components/AdminPrivateRoutes";
+import Enterprise from "./pages/Enterprise";
+import Contact from "./pages/Contact";
 
 function App() {
   return (
@@ -22,7 +24,8 @@ function App() {
             <Route element={<With_nav />}>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<contact />} />
+              <Route path="/enterprise" element={<Enterprise />} />
+              <Route path="/contact" element={<Contact/>} />
             </Route>
 
             {/* components without Navbar */}
