@@ -38,6 +38,7 @@ function VendorSignin() {
         navigate("/vendorDashboard");
         dispatch(signInSuccess(data));
       }
+      
     } catch (error) {
       dispatch(signInFailure(error));
     }
