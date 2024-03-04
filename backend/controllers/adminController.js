@@ -21,3 +21,4 @@ export const adminProfiile = async (req,res,next)=> {
         next(error)
     }
 }
+

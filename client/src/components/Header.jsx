@@ -38,7 +38,7 @@ function Header() {
       <div className="flex gap-2">
         <div>
           <Link to={"/signIn"}>
-            {currentUser && !currentUser.isAdmin ? (
+            {currentUser && !currentUser.isAdmin && !currentUser.isVendor ? (
               ""
             ) : (
               <button
@@ -51,7 +51,7 @@ function Header() {
           </Link>
         </div>
         <div className="flex items-center justify-center">
-          {currentUser && !currentUser.isAdmin ? (
+          {currentUser && !currentUser.isAdmin && !currentUser.isVendor ? (
             <Link to={"/profile"}>
               <img
                 src={`${currentUser.profilePicture}`}

@@ -74,9 +74,11 @@ export const google = async (req, res, next) => {
         //we cannot set username to req.body.name because other user may also have same name so we generate a random value and concat it to name
         //36 in toString(36) means random value from 0-9 and a-z
       });
-      await newUser.save();
+     const savedUser=  await newUser.save();
+     const userObject = savedUser.toObject();
+      console.log(newUser)
       const token = Jwt.sign({ id: newUser._id }, process.env.SECRET_KEY);
-      const { password: hashedPassword2, ...rest } = newUser;
+      const { password: hashedPassword2, ...rest } = userObject;
       res
         .cookie("access_token", token, {
           httpOnly: true,
