@@ -12,7 +12,7 @@ export const signUp = async (req, res, next) => {
 
   try {
     const hashedPassword = bcryptjs.hashSync(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, email, password: hashedPassword ,isUser:true });
     await newUser.save();
     res.status(200).json({ message: "newUser added successfully" });
   } catch (error) {
@@ -32,8 +32,10 @@ export const signIn = async (req, res, next) => {
     // const expiryDate = new Date(Date.now()  +  3600000) //1 hour
     const responsePayload = { isAdmin,password:hashedPassword, ...rest };
 
-    req.user = { ...rest, isAdmin: validUser.isAdmin };
+    req.user = { ...rest, isAdmin: validUser.isAdmin ,isUser:validUser.isUser };
     next();
+
+    console.log(responsePayload)
 
     res
       .cookie("access_token", token, { httpOnly: true, maxAge: 36000000 }) //10 hours
@@ -71,12 +73,13 @@ export const google = async (req, res, next) => {
           Math.random().toString(36).slice(-8) +
           Math.random().toString(36).slice(-8),
         email: req.body.email,
+        isUser:true,
         //we cannot set username to req.body.name because other user may also have same name so we generate a random value and concat it to name
         //36 in toString(36) means random value from 0-9 and a-z
       });
      const savedUser=  await newUser.save();
      const userObject = savedUser.toObject();
-      console.log(newUser)
+     
       const token = Jwt.sign({ id: newUser._id }, process.env.SECRET_KEY);
       const { password: hashedPassword2, ...rest } = userObject;
       res
@@ -91,3 +94,5 @@ export const google = async (req, res, next) => {
     next(error);
   }
 };
+
+

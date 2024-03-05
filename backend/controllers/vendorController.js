@@ -3,6 +3,9 @@ import bcryptjs from "bcryptjs";
 import Jwt from "jsonwebtoken";
 import { errorHandler } from "../utils/error.js";
 
+
+const expireDate = new Date(Date.now() + 3600000);
+
 export const vendorSignup = async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
@@ -58,3 +61,5 @@ export const vendorSignout = async (req, res, next) => {
     next(error);
   }
 };
+
+

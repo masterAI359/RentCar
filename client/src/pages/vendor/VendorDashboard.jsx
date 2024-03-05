@@ -17,7 +17,7 @@ function VendorDashboard() {
       if(data){
         
         dispatch(signOut())
-        navigate('/')
+        navigate('/vendorsignin')
         
       }
       
