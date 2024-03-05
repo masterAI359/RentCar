@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import OAuth from "../../components/OAuth";
 import styles from "../..";
 import { useState } from "react";
+import VendorOAuth from "../../components/VendorAuth";
 
 
 function VendorSignup() {
@@ -40,11 +40,11 @@ function VendorSignup() {
     return (
       <>
         <div
-          className={`pb-10 max-w-lg mx-auto mt-16  rounded-lg overflow-hidden  shadow-2xl`}
+          className={`pb-10 max-w-lg mx-auto mt-16   rounded-lg overflow-hidden  shadow-2xl`}
         >
-          <div className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}>
-            <h1 className={`${styles.heading2} text-[28px]`}>Sign Up <span className="text-[6px] text-white">as vendor</span></h1>
-            <Link to={'/'} ><div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">x</div></Link>
+          <div className={`  bg-slate-950 px-6 py-2   rounded-t-lg flex justify-between items-center`}>
+            <h1 className={`${styles.heading2} text-[28px] text-white`}>Sign Up <span className="text-[6px] text-white">as vendor</span></h1>
+            <Link to={'/'} ><div className=" px-3  font-bold  hover:bg-slate-700 rounded-md  shadow-inner text-white">x</div></Link>
           </div>
   
           <form
@@ -73,7 +73,7 @@ function VendorSignup() {
               onChange={handleChange}
             />
             <button
-              className={`${styles.button}  disabled:bg-slate-500 text-black disabled:text-white`}
+              className={`${styles.button} bg-slate-950 text-white  disabled:bg-slate-500 disabled:text-white`}
               disabled={isLoading}
             >
               {isLoading ? "Loading ..." : "Register"}
@@ -103,7 +103,7 @@ function VendorSignup() {
               <span className="bg-green-300 w-20 h-[.1px]"> </span>
             </div>
   
-            <OAuth/>
+            <VendorOAuth/>
           </div>
         </div>
       </>

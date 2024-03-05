@@ -3,16 +3,16 @@ import { app } from "../firebase";
 import { signInFailure, signInSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-function OAuth() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const handleGoogleClick = async () => {
+function VendorOAuth() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const handleVendorGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
-      const res = await fetch("/api/auth/google", {
+      const res = await fetch("/api/vendor/vendorgoogle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,20 +23,22 @@ function OAuth() {
           photo: result.user.photoURL,
         }),
       });
+      console.log(res)
       const data = await res.json();
-
-      if (res.ok) {
-        if (data.isUser) {
-          dispatch(signInSuccess(data));
-          navigate("/");
-        } else {
-          dispatch(signInFailure(data));
-        }
-      } else {
-        dispatch(signInFailure(data));
+      console.log(data)
+      if(res.ok){
+        dispatch(signInSuccess(data));
+        navigate('/vendorDashboard')
       }
+      else{
+        dispatch(signInFailure(data))
+        navigate('/vendorSignin')
+        
+      }
+     
+      
     } catch (error) {
-      console.log("could not login with google ", error);
+      console.log('could not login with google ', error);
     }
   };
   return (
@@ -44,20 +46,14 @@ function OAuth() {
       <button
         className="flex w-full gap-3 justify-center border  py-3 rounded-md  items-center  border-black mb-4"
         type="button"
-        onClick={handleGoogleClick}
+        onClick={handleVendorGoogleClick}
       >
         <span className="icon-[devicon--google]"></span>
         <span>Continue with Google</span>
       </button>
-      <button
-        className="flex w-full gap-3 justify-center pl-4 border  py-3 rounded-md  items-center border-black"
-        type="button"
-      >
-        <span className="icon-[logos--facebook]"></span>
-        <span>Continue with Facebook</span>
-      </button>
+     
     </div>
   );
 }
 
-export default OAuth;
+export default VendorOAuth;

@@ -31,7 +31,7 @@ function SignIn() {
       });
       const data = await res.json();
 
-      if (data.succes === false) {
+      if (data.succes === false || !res.ok) {
         dispatch(signInFailure(data));
         return;
       }
@@ -39,10 +39,15 @@ function SignIn() {
         dispatch(signInSuccess(data))
         navigate('/adminDashboard')
       }
-      else{
+     
+      else if(data.isUser){
         dispatch(signInSuccess(data));
         navigate("/");
       }
+      else{
+        dispatch(signInFailure(data))
+      }
+
      
     } catch (error) {
       dispatch(signInFailure(error));
