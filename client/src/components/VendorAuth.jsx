@@ -1,18 +1,18 @@
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "@firebase/auth";
 import { app } from "../firebase";
-import { signInSuccess } from "../redux/user/userSlice";
+import { signInFailure, signInSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-function OAuth() {
+
+function VendorOAuth() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
-
-  const handleGoogleClick = async () => {
+  const handleVendorGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
-      const res = await fetch("/api/auth/google", {
+      const res = await fetch("/api/vendor/vendorgoogle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,8 +26,16 @@ function OAuth() {
       console.log(res)
       const data = await res.json();
       console.log(data)
-      dispatch(signInSuccess(data));
-      navigate('/')
+      if(res.ok){
+        dispatch(signInSuccess(data));
+        navigate('/vendorDashboard')
+      }
+      else{
+        dispatch(signInFailure(data))
+        navigate('/vendorSignin')
+        
+      }
+     
       
     } catch (error) {
       console.log('could not login with google ', error);
@@ -38,20 +46,14 @@ function OAuth() {
       <button
         className="flex w-full gap-3 justify-center border  py-3 rounded-md  items-center  border-black mb-4"
         type="button"
-        onClick={handleGoogleClick}
+        onClick={handleVendorGoogleClick}
       >
         <span className="icon-[devicon--google]"></span>
         <span>Continue with Google</span>
       </button>
-      <button
-        className="flex w-full gap-3 justify-center pl-4 border  py-3 rounded-md  items-center border-black"
-        type="button"
-      >
-        <span className="icon-[logos--facebook]"></span>
-        <span>Continue with Facebook</span>
-      </button>
+     
     </div>
   );
 }
 
-export default OAuth;
+export default VendorOAuth;

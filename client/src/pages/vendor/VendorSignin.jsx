@@ -7,7 +7,9 @@ import {
   signInSuccess,
 } from "../../redux/user/userSlice";
 import styles from "../..";
-import OAuth from "../../components/OAuth";
+import VendorOAuth from "../../components/VendorAuth";
+
+
 
 function VendorSignin() {
   const [formData, setFormData] = useState({});
@@ -50,13 +52,13 @@ function VendorSignin() {
         className={`pb-10 max-w-lg mx-auto mt-16  rounded-lg overflow-hidden  shadow-2xl`}
       >
         <div
-          className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}
+          className={` bg-slate-950 px-6 py-2   rounded-t-lg flex justify-between items-center`}
         >
-          <h1 className={`${styles.heading2}  text-normal `}>
+          <h1 className={`${styles.heading2}  text-normal text-white `}>
             Sign In <span className="text-white text-[8px]">as vendor</span>
           </h1>
           <Link to={"/"}>
-            <div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">
+            <div className=" px-3  font-bold  hover:bg-slate-600 rounded-md text-white  shadow-inner">
               x
             </div>
           </Link>
@@ -81,7 +83,7 @@ function VendorSignin() {
             onChange={handleChange}
           />
           <button
-            className={`${styles.button}  disabled:bg-slate-500 text-black disabled:text-white`}
+            className={`${styles.button} bg-slate-950 text-white  disabled:bg-slate-500 disabled:text-white`}
             disabled={isLoading}
           >
             {isLoading ? "Loading ..." : "Login"}
@@ -115,7 +117,7 @@ function VendorSignin() {
             <span className="bg-green-300 w-20 h-[.1px]"> </span>
           </div>
 
-          <OAuth />
+          <VendorOAuth/>
         </div>
       </div>
     </>
