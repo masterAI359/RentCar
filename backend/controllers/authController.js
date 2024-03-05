@@ -35,7 +35,7 @@ export const signIn = async (req, res, next) => {
     req.user = { ...rest, isAdmin: validUser.isAdmin ,isUser:validUser.isUser };
     next();
 
-    console.log(responsePayload)
+   
 
     res
       .cookie("access_token", token, { httpOnly: true, maxAge: 36000000 }) //10 hours
@@ -49,6 +49,9 @@ export const signIn = async (req, res, next) => {
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).lean();
+    if(user && !user.isUser){
+      return next(errorHandler(409,'email already in use as a vendor'))
+    }
     if (user) {
       const { password: hashedPassword, ...rest } = user;
       const token = Jwt.sign({ id: user._id }, process.env.SECRET_KEY);
