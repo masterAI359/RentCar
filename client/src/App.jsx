@@ -4,7 +4,6 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
-
 import styles from ".";
 import With_nav from "./components/Layout/With_nav";
 import PrivateRoute from "./components/PrivateRoute";
