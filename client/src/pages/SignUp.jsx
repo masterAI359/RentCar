@@ -1,19 +1,35 @@
 import { useState } from "react";
 import styles from "../index";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+//zod validation schema
+const schema = z.object({
+  username: z.string().min(3, { message: "minimum 3 characters required" }),
+  email: z
+    .string()
+    .min(1, { message: "email required" })
+    .refine((value) => /\S+@\S+\.\S+/.test(value), {
+      message: "Invalid email address",
+    }),
+  password: z.string().min(4, { message: "minimum 4 characters required" }),
+});
 
 function SignUp() {
-  const [formData, setFormData] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(schema) });
+
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  const onSubmit = async (formData, e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -29,7 +45,7 @@ function SignUp() {
         return;
       }
       setError(false);
-      navigate('/signin')
+      navigate("/signin");
     } catch (error) {
       setLoading(false);
       setError(true);
@@ -41,36 +57,68 @@ function SignUp() {
       <div
         className={`pb-10 max-w-lg mx-auto mt-16  rounded-lg overflow-hidden  shadow-2xl`}
       >
-        <div className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}>
+        <div
+          className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}
+        >
           <h1 className={`${styles.heading2} text-[28px]`}>Sign Up</h1>
-          <Link to={'/'} ><div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">x</div></Link>
+          <Link to={"/"}>
+            <div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">
+              x
+            </div>
+          </Link>
         </div>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 pt-10 px-5"
         >
-          <input
-            type="text"
-            id="username"
-            className="text-black bg-slate-100 p-3 rounded-md"
-            placeholder="UserName"
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            id="email"
-            className="text-black bg-slate-100 p-3 rounded-md"
-            placeholder="Email"
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            id="password"
-            className="text-black bg-slate-100 p-3 rounded-md"
-            placeholder="Password"
-            onChange={handleChange}
-          />
+          <div>
+            <input
+              type="text"
+              id="username"
+              className="text-black bg-slate-100 p-3 rounded-md w-full"
+              placeholder="UserName"
+              {...register("username")}
+            />
+            {errors.username && (
+              <p className="text-red-500 text-[8px] pt-1">
+                {" "}
+                {errors.username.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="text"
+              id="email"
+              className="text-black bg-slate-100 p-3 rounded-md w-full"
+              placeholder="Email"
+              {...register("email")}
+            />
+
+            {errors.email && (
+              <p className="text-red-500 text-[8px] pt-1">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="text"
+              id="password"
+              className="text-black bg-slate-100 p-3 rounded-md w-full"
+              placeholder="Password"
+              {...register("password", { required: true, minLength: 6 })}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-[8px] pt-1">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
           <button
             className={`${styles.button}  disabled:bg-slate-500 text-black disabled:text-white`}
             disabled={isLoading}
@@ -102,7 +150,7 @@ function SignUp() {
             <span className="bg-green-300 w-20 h-[.1px]"> </span>
           </div>
 
-          <OAuth/>
+          <OAuth />
         </div>
       </div>
     </>

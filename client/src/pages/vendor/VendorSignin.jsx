@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -8,20 +7,32 @@ import {
 } from "../../redux/user/userSlice";
 import styles from "../..";
 import VendorOAuth from "../../components/VendorAuth";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-
+const schema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "email required" })
+    .refine((value) => /\S+@\S+\.\S+/.test(value), {
+      message: "Invalid email address",
+    }),
+  password: z.string().min(1, { message: "password required" }),
+});
 
 function VendorSignin() {
-  const [formData, setFormData] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(schema) });
+
   const { isLoading, isError } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  const onSubmit = async (formData, e) => {
     e.preventDefault();
     try {
       dispatch(signInStart());
@@ -40,7 +51,6 @@ function VendorSignin() {
         navigate("/vendorDashboard");
         dispatch(signInSuccess(data));
       }
-      
     } catch (error) {
       dispatch(signInFailure(error));
     }
@@ -65,23 +75,37 @@ function VendorSignin() {
         </div>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 pt-10 px-5"
         >
-          <input
-            type="text"
-            id="email"
-            className="text-black bg-slate-100 p-3 rounded-md"
-            placeholder="Email"
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            id="password"
-            className="text-black bg-slate-100 p-3 rounded-md"
-            placeholder="Password"
-            onChange={handleChange}
-          />
+          <div>
+            <input
+              type="text"
+              id="email"
+              className="text-black bg-slate-100 p-3 rounded-md w-full"
+              placeholder="Email"
+              {...register("email")}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-[10px]">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="text"
+              id="password"
+              className="text-black bg-slate-100 p-3 rounded-md w-full"
+              placeholder="Password"
+              {...register("password")}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-[10px]">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
           <button
             className={`${styles.button} bg-slate-950 text-white  disabled:bg-slate-500 disabled:text-white`}
             disabled={isLoading}
@@ -117,7 +141,7 @@ function VendorSignin() {
             <span className="bg-green-300 w-20 h-[.1px]"> </span>
           </div>
 
-          <VendorOAuth/>
+          <VendorOAuth />
         </div>
       </div>
     </>
