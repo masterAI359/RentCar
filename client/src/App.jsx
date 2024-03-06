@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import styles from ".";
 import With_nav from "./components/Layout/With_nav";
 import PrivateRoute from "./components/PrivateRoute";
+import { PrivateSignin } from "./components/PrivateRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPrivateRoutes from "./components/AdminPrivateRoutes";
 import Enterprise from "./pages/Enterprise";
@@ -32,10 +33,15 @@ function App() {
 
             {/* components without Navbar */}
             <Route>
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/vendorSignin" element={<VendorSignin />} />
+              {/* Signin not accesible if logedin */}
+              <Route element={<PrivateSignin />}>
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/vendorSignin" element={<VendorSignin />} />
               <Route path="/vendorSignup" element={<VendorSignup />} />
+              </Route>
+
+              
             </Route>
 
             {/* user private routes */}
