@@ -1,7 +1,7 @@
-import User from "../models/userModel.js";
+import User from "../../models/userModel.js";
 import bcryptjs from "bcryptjs";
 import Jwt from "jsonwebtoken";
-import { errorHandler } from "../utils/error.js";
+import { errorHandler } from "../../utils/error.js";
 
 
 const expireDate = new Date(Date.now() + 3600000);
