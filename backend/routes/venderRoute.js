@@ -1,5 +1,5 @@
 
-import {  vendorGoogle, vendorSignin, vendorSignout, vendorSignup } from "../controllers/vendorController.js"
+import {  vendorGoogle, vendorSignin, vendorSignout, vendorSignup } from "../controllers/vendorControllers/vendorController.js"
 import express from "express"
 
 const router = express.Router()

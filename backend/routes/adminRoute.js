@@ -1,7 +1,7 @@
 import express from "express"
-import { adminAuth ,adminProfiile } from "../controllers/adminController.js"
+import { adminAuth ,adminProfiile } from "../controllers/adminControllers/adminController.js"
 import { signIn } from "../controllers/authController.js"
-import { signOut  } from "../controllers/userController.js"
+import { signOut  } from "../controllers/userControllers/userController.js"
 
 const router = express.Router()
 
