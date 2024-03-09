@@ -8,7 +8,7 @@ function Header() {
 
   return (
     <div
-      className={`w-full py-6 flex justify-between items-center ${styles.paddingX} pt-10  `}
+      className={`w-full py-6 flex justify-between items-center  px-28 pt-10  `}
     >
       <Link to="/">
         <div
