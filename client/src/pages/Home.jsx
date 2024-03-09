@@ -7,7 +7,7 @@ function Home() {
       {/* This is div is the container for the dot background */}
       <div className="relative h-full w-full bg-white min-h-[70vh]">
         <div
-          className={`${styles.paddingX} absolute top-0   z-10 w-full   justify-between items-center flex flex-col sm:flex-row mt-[100px] gap-10`}
+          className={`px-28 absolute top-0   z-10 w-full   justify-between items-center flex flex-col sm:flex-row mt-[100px] gap-10`}
         >
           <div className="">
             <p className={`py-2 ${styles.paragraph}`}>Plan your trip now</p>
