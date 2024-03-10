@@ -1,5 +1,6 @@
 import { errorHandler } from "../../utils/error.js";
 import vehicle from "../../models/vehicleModel.js";
+import Vehicle from "../../models/vehicleModel.js";
 
 export const addProduct = async (req, res, next) => {
   try {
@@ -29,7 +30,24 @@ export const showVehicles = async (req, res, next) => {
 
     res.status(200).json(vehicles);
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    next(errorHandler(500, "something went wrong"));
+  }
+};
+
+export const deleteVehicle = async (req, res, next) => {
+  try {
+    const vehicle_id = req.params.id;
+    if (!vehicle_id) {
+      return;
+    }
+
+    const deleted = await Vehicle.findByIdAndDelete(vehicle_id);
+    if (!deleted) {
+      return next(500, "not able to delete");
+    }
+    res.status(200).json({ message: "deleted successfully" });
+  } catch (error) {
     next(errorHandler(500, "something went wrong"));
   }
 };

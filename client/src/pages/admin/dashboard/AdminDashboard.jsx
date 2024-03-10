@@ -3,6 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "../../../redux/user/userSlice";
 import { useEffect, useState } from "react";
 import { addVehicleClicked } from "../../../redux/adminSlices/actions";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+} from "@mui/material";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -48,6 +59,18 @@ function AdminDashboard() {
     fetchVehicles();
   }, []);
 
+  const handleDelete = async (vehicle_id) => {
+    try {
+      setVehicles(allVehicles.filter(cur=> cur._id !== vehicle_id))
+      await fetch(`api/admin/deleteVehicle/${vehicle_id}`,{
+        method:'DELETE'
+      })
+     
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div>AdminDashboard</div>
@@ -57,15 +80,60 @@ function AdminDashboard() {
         </button>
       </div>
 
-      <div className="w-[300px]">
-        {allVehicles.map((cur) => (
-         
-          <li key={cur.registeration_number} className="flex justify-between">
-            <div>{cur.name}</div>
-            <div>{cur.registeration_number}</div>
-            <div>{cur.company}</div>
-          </li>
-        ))}
+      <div className="w-full d-flex   justify-end text-start items-end">
+        <TableContainer
+          sx={{
+            minWidth: "600px",
+            maxWidth: "600px",
+            marginLeft: "auto",
+            marginRight: "40px",
+            textAlign: "right",
+          }}
+        >
+          <Table aria-label="caption table">
+            <caption>A basic table example with a caption</caption>
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ color: "red" }}>Register Number</TableCell>
+                <TableCell style={{ color: "red" }} align="left">
+                  Company
+                </TableCell>
+                <TableCell style={{ color: "red" }} align="left">
+                  name
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {allVehicles.map((cur) => (
+                <TableRow style={{ color: "black" }} key={cur.name}>
+                  <TableCell
+                    style={{ color: "black" }}
+                    component="th"
+                    scope="row"
+                  >
+                    {cur.registeration_number}
+                  </TableCell>
+                  <TableCell style={{ color: "black" }} align="left">
+                    {cur.company}
+                  </TableCell>
+                  <TableCell style={{ color: "black" }} align="left">
+                    {cur.name}
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: "black", padding: 0, align: "right" }}
+                  >
+                    <Button onClick={() => console.log("edit")}>
+                      <ModeEditOutlineIcon />{" "}
+                    </Button>
+                    <Button onClick={()=> handleDelete(cur._id)}>
+                      <DeleteForeverIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     </>
   );
