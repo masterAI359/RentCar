@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "../../../redux/user/userSlice";
 import { useEffect, useState } from "react";
-import { addVehicleClicked } from "../../../redux/adminSlices/actions";
+import { addVehicleClicked, setEditData } from "../../../redux/adminSlices/actions";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import {
@@ -65,11 +65,16 @@ function AdminDashboard() {
       await fetch(`api/admin/deleteVehicle/${vehicle_id}`,{
         method:'DELETE'
       })
-     
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleEditVehicle = (vehicle_id) => {
+
+    dispatch(setEditData({_id:vehicle_id}))
+    navigate(`/adminDashboard/editProduct?vehicle_id=${vehicle_id}`)
+  }
 
   return (
     <>
@@ -122,7 +127,7 @@ function AdminDashboard() {
                   <TableCell
                     sx={{ color: "black", padding: 0, align: "right" }}
                   >
-                    <Button onClick={() => console.log("edit")}>
+                    <Button onClick={() => handleEditVehicle(cur._id)}>
                       <ModeEditOutlineIcon />{" "}
                     </Button>
                     <Button onClick={()=> handleDelete(cur._id)}>

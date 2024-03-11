@@ -9,7 +9,7 @@ import AddVehiclereducer from "./adminSlices/reducer.js";
 const rootReducer = combineReducers({
   user: userReducer,
   global: globalReducer,
-  addVehicle: AddVehiclereducer,
+  addVehicle: AddVehiclereducer
 });
 
 const persistConfig = {

@@ -25,7 +25,6 @@ import { themeSettings } from "./theme";
 import Layout from "./pages/admin/layouts/Layout";
 import AddProductForm from "./pages/admin/dashboard/AddProductForm";
 
-
 function App() {
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
@@ -33,49 +32,52 @@ function App() {
     <>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-          
-            <Routes>
-              {/* components with Navbar */}
-              <Route element={<With_nav />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/enterprise" element={<Enterprise />} />
-                <Route path="/contact" element={<Contact />} />
+          <Routes>
+            {/* components with Navbar */}
+            <Route element={<With_nav />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/enterprise" element={<Enterprise />} />
+              <Route path="/contact" element={<Contact />} />
+            </Route>
+
+            {/* components without Navbar */}
+            <Route>
+              {/* Signin not accesible if logedin */}
+              <Route element={<PrivateSignin />}>
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/vendorSignin" element={<VendorSignin />} />
+                <Route path="/vendorSignup" element={<VendorSignup />} />
               </Route>
+            </Route>
 
-              {/* components without Navbar */}
-              <Route>
-                {/* Signin not accesible if logedin */}
-                <Route element={<PrivateSignin />}>
-                  <Route path="/signin" element={<SignIn />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/vendorSignin" element={<VendorSignin />} />
-                  <Route path="/vendorSignup" element={<VendorSignup />} />
-                </Route>
-              </Route>
+            {/* user private routes */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/profile" element={<Profile />} />
+            </Route>
 
-              {/* user private routes */}
-              <Route element={<PrivateRoute />}>
-                <Route path="/profile" element={<Profile />} />
-              </Route>
+            {/* vendor private routes */}
+            <Route element={<VendorPrivateRoute />}>
+              <Route path="/vendorDashboard" element={<VendorDashboard />} />
+            </Route>
 
-              {/* vendor private routes */}
-              <Route element={<VendorPrivateRoute />}>
-                <Route path="/vendorDashboard" element={<VendorDashboard />} />
-              </Route>
+            {/* admin private routes */}
 
-              {/* admin private routes */}
-
-              <Route element={<AdminPrivateRoutes />}>
-              
-                <Route element={<Layout/>}>
+            <Route element={<AdminPrivateRoutes />}>
+              <Route element={<Layout />}>
                 <Route path="/adminDashboard" element={<AdminDashboard />} />
-                <Route path="/adminDashboard/addProduct" element={<AddProductForm/>} />
-                </Route>
-               
+                <Route
+                  path="/adminDashboard/addProduct"
+                  element={<AddProductForm />}
+                />
+                <Route
+                  path="/adminDashboard/editProduct"
+                  element={<AddProductForm />}
+                />
               </Route>
-            </Routes>
-    
+            </Route>
+          </Routes>
         </ThemeProvider>
       </BrowserRouter>
     </>
