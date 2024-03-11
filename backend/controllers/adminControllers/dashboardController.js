@@ -51,3 +51,43 @@ export const deleteVehicle = async (req, res, next) => {
     next(errorHandler(500, "something went wrong"));
   }
 };
+
+export const editVehicle = async (req, res, next) => {
+  try {
+    const vehicle_id = req.params.id;
+    console.log(vehicle_id);
+    console.log(req.body.formData);
+
+    if (!req.body || !req.body.formData) {
+      return next(errorHandler(404, "Add data to edit first"));
+    }
+
+    const { registeration_number, company, name } = req.body.formData;
+
+    if (!vehicle_id) {
+      return next(errorHandler(401, "cannot be empty"));
+    }
+
+    try{
+      const edited = await Vehicle.findByIdAndUpdate(
+        vehicle_id,
+        { registeration_number, company, name },
+        { new: true }
+      );
+      if (!edited) {
+        return next(errorHandler(404, "data with this id not found"));
+      }
+      res.status(200).json(edited);
+    }
+    catch(error){
+      if(error.code == 11000 && error.keyPattern && error.keyValue){
+        const duplicateField = Object.keys(error.keyPattern)[0];
+        const duplicateValue = error.keyValue[duplicateField];
+        return next(errorHandler(409,`${duplicateField} '${duplicateValue}' already exists`))
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    next(errorHandler(500, "something went wrong"));
+  }
+};
