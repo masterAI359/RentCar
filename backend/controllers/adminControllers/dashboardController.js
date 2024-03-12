@@ -1,15 +1,29 @@
 import { errorHandler } from "../../utils/error.js";
 import vehicle from "../../models/vehicleModel.js";
 import Vehicle from "../../models/vehicleModel.js";
+import cloudinary, { uploadImage } from "../../utils/cloudinary.js";
 
+//admin addVehicle
 export const addProduct = async (req, res, next) => {
+  const { registeration_number, company, name, image } = req.body;
   try {
-    const data = req.body;
-    if (!data) {
+    let url ;
+    try {
+      url = await uploadImage(image);
+    } catch (err) {
+      console.log(err);
+      next(errorHandler(501, "couldnt upload image"));
+    }
+    if (!req.body) {
       return next(errorHandler(404, "no data"));
     }
 
-    const addProduct = new vehicle(data);
+    const addProduct = new vehicle({
+      registeration_number,
+      company,
+      name,
+      image:url
+    });
 
     await addProduct.save();
 
@@ -21,6 +35,7 @@ export const addProduct = async (req, res, next) => {
   }
 };
 
+//show all vehicles to admin
 export const showVehicles = async (req, res, next) => {
   try {
     const vehicles = await vehicle.find();
@@ -35,6 +50,7 @@ export const showVehicles = async (req, res, next) => {
   }
 };
 
+//admin delete vehicle
 export const deleteVehicle = async (req, res, next) => {
   try {
     const vehicle_id = req.params.id;
@@ -52,11 +68,15 @@ export const deleteVehicle = async (req, res, next) => {
   }
 };
 
+//edit vehicle listed by admin
 export const editVehicle = async (req, res, next) => {
   try {
+    //get the id of vehicle to edit through req.params
     const vehicle_id = req.params.id;
-    console.log(vehicle_id);
-    console.log(req.body.formData);
+
+    if (!vehicle_id) {
+      return next(errorHandler(401, "cannot be empty"));
+    }
 
     if (!req.body || !req.body.formData) {
       return next(errorHandler(404, "Add data to edit first"));
@@ -64,30 +84,32 @@ export const editVehicle = async (req, res, next) => {
 
     const { registeration_number, company, name } = req.body.formData;
 
-    if (!vehicle_id) {
-      return next(errorHandler(401, "cannot be empty"));
-    }
-
-    try{
+    try {
       const edited = await Vehicle.findByIdAndUpdate(
         vehicle_id,
-        { registeration_number, company, name },
+        { registeration_number, company, name  },
         { new: true }
       );
       if (!edited) {
         return next(errorHandler(404, "data with this id not found"));
       }
+
       res.status(200).json(edited);
-    }
-    catch(error){
-      if(error.code == 11000 && error.keyPattern && error.keyValue){
+    } catch (error) {
+      if (error.code == 11000 && error.keyPattern && error.keyValue) {
         const duplicateField = Object.keys(error.keyPattern)[0];
         const duplicateValue = error.keyValue[duplicateField];
-        return next(errorHandler(409,`${duplicateField} '${duplicateValue}' already exists`))
+
+        return next(
+          errorHandler(
+            409,
+            `${duplicateField} '${duplicateValue}' already exists`
+          )
+        );
       }
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     next(errorHandler(500, "something went wrong"));
   }
 };
