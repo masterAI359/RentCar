@@ -35,6 +35,7 @@ function AdminDashboard() {
     }
   };
 
+  //add products
   useEffect(() => {
     if (isAddVehicle) {
       navigate("/adminDashboard/addProduct");
@@ -42,6 +43,7 @@ function AdminDashboard() {
     }
   }, [isAddVehicle, dispatch]);
 
+  //show vehicles
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
@@ -59,6 +61,7 @@ function AdminDashboard() {
     fetchVehicles();
   }, []);
 
+  //delete a vehicle
   const handleDelete = async (vehicle_id) => {
     try {
       setVehicles(allVehicles.filter(cur=> cur._id !== vehicle_id))
@@ -70,8 +73,9 @@ function AdminDashboard() {
     }
   };
 
-  const handleEditVehicle = (vehicle_id) => {
 
+  //edit vehicles
+  const handleEditVehicle = (vehicle_id) => {
     dispatch(setEditData({_id:vehicle_id}))
     navigate(`/adminDashboard/editProduct?vehicle_id=${vehicle_id}`)
   }
@@ -99,6 +103,7 @@ function AdminDashboard() {
             <caption>A basic table example with a caption</caption>
             <TableHead>
               <TableRow>
+              <TableCell style={{ color: "red" }}>image</TableCell>
                 <TableCell style={{ color: "red" }}>Register Number</TableCell>
                 <TableCell style={{ color: "red" }} align="left">
                   Company
@@ -109,8 +114,13 @@ function AdminDashboard() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allVehicles.map((cur) => (
-                <TableRow style={{ color: "black" }} key={cur.name}>
+              {allVehicles.map((cur,idx) => (
+                <TableRow style={{ color: "black" }} key={idx}>
+                  <TableCell>
+                    <img key={idx} style={{width:'20px', height:'20px'}} src={cur.image} id="image"/>
+                   
+                    
+                  </TableCell>
                   <TableCell
                     style={{ color: "black" }}
                     component="th"

@@ -8,28 +8,51 @@ function AddProductForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const editData = useSelector((state) => state.addVehicle.editData);
-  console.log(editData)
 
   const location = useLocation();
-const queryParams = new URLSearchParams(location.search);
-const vehicle_id = queryParams.get('vehicle_id');
-  
+  const queryParams = new URLSearchParams(location.search);
+  const vehicle_id = queryParams.get("vehicle_id");
 
+  //converting image file to base64 format
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
 
-  const onSubmit = async (formData, e) => {
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+        console.log(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const onSubmit = async (formdata, e) => {
     e.preventDefault();
+
     try {
       if (editData) {
-        dispatch(setEditData({ _id:vehicle_id,...formData }));
-        await fetch(`/api/admin/editVehicle/${editData._id}`,{
-          method:'PUT',
-          headers:{
-            'Content-Type':'application/json'
+        const formData = formdata;
+        dispatch(setEditData({ _id: vehicle_id, ...formData }));
+        await fetch(`/api/admin/editVehicle/${editData._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ formData }),
-        })
-        
+        });
+        dispatch(setEditData(null));
       } else {
+        const file = formdata.image[0];
+        const base64 = await convertBase64(file);
+        const formData = {
+          ...formdata,
+          image: base64,
+        };
+
         await fetch("/api/admin/addProduct", {
           method: "POST",
           headers: {
@@ -45,8 +68,14 @@ const vehicle_id = queryParams.get('vehicle_id');
     navigate("/adminDashboard");
   };
 
+  const handleClose = () => {
+    navigate("/adminDashboard");
+    dispatch(setEditData(null));
+  };
+
   return (
     <>
+      <button onClick={handleClose}>x</button>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <input
@@ -72,7 +101,12 @@ const vehicle_id = queryParams.get('vehicle_id');
             {...register("name")}
           />
         </div>
-        <button type="submit">{editData ? 'Edit' : 'Add'}</button>
+
+        <div>
+          <input type="file" id="image" {...register("image")} />
+        </div>
+
+        <button type="submit">{editData ? "Edit" : "Add"}</button>
       </form>
     </>
   );
