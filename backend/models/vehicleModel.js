@@ -44,7 +44,7 @@ const vehicleSchema = new mongoose.Schema({
   },
   fuel_type: {
     type: String,
-    enum:["petrol", "disel", "electirc"],
+    enum:["petrol", "disel", "electirc","hybrid"],
     required:false
   },
   rented_by: {
