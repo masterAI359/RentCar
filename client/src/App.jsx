@@ -4,7 +4,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
-import With_nav from "./components/Layout/With_nav";
+import With_nav from "./components/Layout/WithNav";
 import PrivateRoute from "./components/PrivateRoute";
 import { PrivateSignin } from "./components/PrivateRoute";
 import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";

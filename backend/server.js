@@ -7,12 +7,15 @@ import adminRoute from './routes/adminRoute.js'
 import vendorRoute from './routes/venderRoute.js'
 import cors from 'cors'
 import cookieParser from "cookie-parser";
+import { cloudinaryConfig } from "./utils/cloudinaryConfig.js";
 
 
 const App = express();
 
+
 App.use(express.json());
 App.use(cookieParser())
+
 
 dotenv.config();
 const port = 3000;
@@ -22,11 +25,18 @@ mongoose
   .then(console.log("connected"))
   .catch((error) => console.error(error));
 
+  
+
 App.listen(port, () => {
   console.log("server listening !");
 });
 
 App.use(cors());
+
+App.use('*', cloudinaryConfig);
+
+App.get('/*', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
+
 
 App.use("/api/user", userRoute);
 App.use("/api/auth", authRoute);
