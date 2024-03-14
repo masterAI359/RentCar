@@ -63,6 +63,7 @@ export const addProduct = async (req, res, next) => {
 export const showVehicles = async (req, res, next) => {
   try {
     const vehicles = await vehicle.find();
+    
     if (!vehicles) {
       return next(errorHandler(404, "no vehicles found"));
     }

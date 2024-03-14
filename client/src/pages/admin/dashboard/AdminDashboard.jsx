@@ -15,6 +15,7 @@ import {
   Button,
 } from "@mui/material";
 
+
 function AdminDashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -117,7 +118,7 @@ function AdminDashboard() {
               {allVehicles.map((cur,idx) => (
                 <TableRow style={{ color: "black" }} key={idx}>
                   <TableCell>
-                    <img key={idx} style={{width:'20px', height:'20px'}} src={cur.image} id="image"/>
+                    <img key={idx} style={{width:'50px', height:'40px', borderRadius:'5px', objectFit:'cover'}} src={cur.image} id="image"/>
                    
                     
                   </TableCell>
@@ -149,6 +150,7 @@ function AdminDashboard() {
             </TableBody>
           </Table>
         </TableContainer>
+
       </div>
     </>
   );
