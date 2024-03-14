@@ -7,7 +7,7 @@ import Profile from "./pages/Profile";
 import With_nav from "./components/Layout/WithNav";
 import PrivateRoute from "./components/PrivateRoute";
 import { PrivateSignin } from "./components/PrivateRoute";
-import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
+
 import AdminPrivateRoutes from "./components/AdminPrivateRoutes";
 import Enterprise from "./pages/Enterprise";
 import Contact from "./pages/Contact";
@@ -24,6 +24,9 @@ import { useSelector } from "react-redux";
 import { themeSettings } from "./theme";
 import Layout from "./pages/admin/layouts/Layout";
 import AddProductForm from "./pages/admin/dashboard/AddProductForm";
+import AdminDashNew from "./pages/admin/dashboard/AdminDashNew";
+
+
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -66,7 +69,15 @@ function App() {
 
             <Route element={<AdminPrivateRoutes />}>
               <Route element={<Layout />}>
-                <Route path="/adminDashboard" element={<AdminDashboard />} />
+
+                <Route path="/adminDashboard" element={<AdminDashNew />}>
+                  <Route path="allProduct" />
+                  <Route path="allUsers" />
+                </Route>
+                
+                 
+               
+
                 <Route
                   path="/adminDashboard/addProduct"
                   element={<AddProductForm />}

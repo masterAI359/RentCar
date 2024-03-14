@@ -13,29 +13,14 @@ function AddProductForm() {
   const queryParams = new URLSearchParams(location.search);
   const vehicle_id = queryParams.get("vehicle_id");
 
-  //converting image file to base64 format
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
+ 
 
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-        console.log(fileReader.result);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  const onSubmit = async (formdata, e) => {
+  const onSubmit = async (data, e) => {
     e.preventDefault();
 
     try {
       if (editData) {
-        const formData = formdata;
+        const formData = data;
         dispatch(setEditData({ _id: vehicle_id, ...formData }));
         await fetch(`/api/admin/editVehicle/${editData._id}`, {
           method: "PUT",
@@ -46,19 +31,18 @@ function AddProductForm() {
         });
         dispatch(setEditData(null));
       } else {
-        const file = formdata.image[0];
-        const base64 = await convertBase64(file);
-        const formData = {
-          ...formdata,
-          image: base64,
-        };
+        const formData = new FormData()
+
+        formData.append('registeration_number',data.registeration_number)
+        formData.append('company',data.company)
+        formData.append('image', data.image[0]);
+        formData.append('name', data.name);
+        
+        
 
         await fetch("/api/admin/addProduct", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+          body: formData,
         });
       }
       reset();

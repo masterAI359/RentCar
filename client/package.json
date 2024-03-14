@@ -28,7 +28,20 @@
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.22.1",
     "redux-persist": "^6.0.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    
+    "@syncfusion/ej2": "^19.4.48",
+    "@syncfusion/ej2-react-calendars": "^19.4.48",
+    "@syncfusion/ej2-react-charts": "^19.4.50",
+    "@syncfusion/ej2-react-dropdowns": "^19.4.52",
+    "@syncfusion/ej2-react-grids": "^19.4.50",
+    "@syncfusion/ej2-react-inputs": "^19.4.52",
+    "@syncfusion/ej2-react-kanban": "^19.4.48",
+    "@syncfusion/ej2-react-popups": "^19.4.52",
+    "@syncfusion/ej2-react-richtexteditor": "^19.4.50",
+    "@syncfusion/ej2-react-schedule": "^19.4.50",
+    "react-icons": "^4.3.1",
+    "react-scripts": "5.0.0"
   },
   "devDependencies": {
     "@iconify-json/devicon": "^1.1.35",

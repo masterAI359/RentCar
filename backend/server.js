@@ -35,7 +35,7 @@ App.use(cors());
 
 App.use('*', cloudinaryConfig);
 
-App.get('/*', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
+// App.get('/*', (req, res) => res.sendFile(resolve(__dirname, '../public/index.html')));
 
 
 App.use("/api/user", userRoute);
