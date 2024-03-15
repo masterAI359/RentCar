@@ -5,11 +5,13 @@ import storage from "redux-persist/lib/storage";
 import persistStore from "redux-persist/es/persistStore";
 import globalReducer from "./adminSlices/adminSlice.jsx";
 import AddVehiclereducer from "./adminSlices/reducer.js";
+adminDashboardSlice/DashboardSlice.jsx";
 
 const rootReducer = combineReducers({
   user: userReducer,
   global: globalReducer,
-  addVehicle: AddVehiclereducer
+  addVehicle: AddVehiclereducer,
+  adminDashboard:adminDashboardReducer
 });
 
 const persistConfig = {
