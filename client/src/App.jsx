@@ -70,13 +70,8 @@ function App() {
             <Route element={<AdminPrivateRoutes />}>
               <Route element={<Layout />}>
 
-                <Route path="/adminDashboard" element={<AdminDashNew />}>
-                  <Route path="allProduct" />
-                  <Route path="allUsers" />
-                </Route>
-                
-                 
-               
+                <Route path="/adminDashboard/*" element={<AdminDashNew />}/>
+
 
                 <Route
                   path="/adminDashboard/addProduct"

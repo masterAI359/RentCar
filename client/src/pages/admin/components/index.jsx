@@ -1,5 +1,5 @@
 export {default as Button} from  '../components/Button.jsx'
-export {default as ChartHead} from "../components/CahrtHead.jsx"
+export {default as CartHead} from "../components/CartHead.jsx" 
 export {default as Chat} from "../components/Chat.jsx"
 export {default as Footer} from '../components/Footer.jsx'
 export {default as Header} from '../components/Header.jsx'

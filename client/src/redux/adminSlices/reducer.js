@@ -11,6 +11,7 @@ const initial_state = {
     error: null,
     imageUrl: '',
  },
+ 
 };
 
 const AddVehiclereducer = (state = initial_state, action) => {
