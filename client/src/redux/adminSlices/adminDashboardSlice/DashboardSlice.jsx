@@ -1,26 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
 const initialState = {
     chat: false,
     cart: false,
     userProfile: false,
     notification: false,
-    isActiveMenu:true,
+    activeMenu:true,
+    isClicked:false,
+    screenSize: window.innerWidth,
 };
+
+
 
 export const adminDashboardSlice = createSlice({
     name: "adminDashboardSlice",
     initialState,
     reducers: {
-        hideSidebar: (state) => {
-           state.isActiveMenu=false
+        toggleSidebar:(state)=> {
+            state.activeMenu = !state.activeMenu
         },
-
-        
-
+        openPages:(state,action)=> {
+            Object.keys(state).forEach(key => {
+                if(key !== "activeMenu" && key!=="screenSize" && key!== action.payload){
+                    state[key] = false
+                }
+            })
+            state[action.payload] = true
+        },
+        setScreenSize:(state,action)=> {
+            state.screenSize = action.payload
+        },
+        showSidebarOrNot:(state,action)=> {
+            state.activeMenu = action.payload
+        }
+    
     }
 });
 
-export const { showSidebar } = adminDashboardSlice.actions;
-
+export const {toggleSidebar,openPages,setScreenSize ,showSidebarOrNot} = adminDashboardSlice.actions;
 export default adminDashboardSlice.reducer;

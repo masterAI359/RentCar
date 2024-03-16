@@ -4,11 +4,15 @@ import {Routes,Route} from 'react-router-dom'
 
 import {Button,CartHead,Chat,Footer,Header,Navbar,Notification,SideBar,ThemeSetter,UserProfile} from '../components/index.jsx'
 import {Products, AllUsers,AllVendors,Calender,ColorPicker,Customers,Editor } from "../pages";
+import { useDispatch, useSelector } from "react-redux";
+import { RxHamburgerMenu } from "react-icons/rx";
+
 
 
 
 function AdminDashNew() {
-  const isActiveMenu = true;
+  const {activeMenu} = useSelector(state=> state.adminDashboardSlice)
+  const dispatch = useDispatch()
 
   return (
     <div>
@@ -24,7 +28,7 @@ function AdminDashNew() {
             </button>
           </TooltipComponent>
         </div>
-        {isActiveMenu ? (
+        {activeMenu ? (
           <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg">
             <SideBar/>
           </div>
@@ -33,14 +37,17 @@ function AdminDashNew() {
         )}
 
         <div
-          className={`dark:bg-white bg-white min-h-screen w-full ${isActiveMenu ? 'md:ml-7': "flex-2"} `}
+          className={`dark:bg-white bg-white min-h-screen w-full ${activeMenu ? 'ml-72 md:ml-72': "flex-2"} `}
         >
-          <div className={`fixed md:static bg-white  w-full hidden `}>
+          
+          
+          <div className={`fixed md:static bg-white  w-full   `}>
             <Navbar/>
           </div>
         </div>
 
         <Routes>
+          <Route path="/adminDashboard" element ={<AdminDashNew/>}/>
           <Route path="/allProduct" element={<Products/>}/>
           <Route path="/allUsers" element={<AllUsers/>}/>
           <Route path="/allVendors" element={<AllVendors/>}/>
