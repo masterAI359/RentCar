@@ -8,13 +8,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../../../redux/user/userSlice.jsx";
 
 
+
 const SideBar = () => {
+
+  const {activeMenu} = useSelector((state)=> state.adminDashboardSlice)
 
   const navigate = useNavigate();
   const dispatch  = useDispatch();
 
-  let activeMenu = useSelector((state)=> state.isActive)
-  console.log(activeMenu)
+  
+
   const activeLink =
     "flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg text-white text-md m-2";
   const normalLink =
@@ -47,7 +50,7 @@ const SideBar = () => {
               shopy
             </Link>
             <TooltipComponent content={"menu"} position="BottomCenter">
-              <button className="text-xl rounded-full p-3 mt-4 block md:hidden hover:bg-gray-50">
+              <button className="text-xl rounded-full p-3 mt-4 block md:hidden hover:bg-gray-500" onClick={()=> {}}>
                 <MdOutlineCancel />
               </button>
             </TooltipComponent>
