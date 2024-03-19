@@ -1,8 +1,11 @@
 
 
-function Button() {
+function Button({bgColor,color,size,text,borderRadius}) {
   return (
-    <div className="text-black">Button</div>
+    <button type="button" style={{backgroundColor:bgColor,color,borderRadius}} className={`text-${size} p-3 hover:drop-shadow-xl`}>
+      Download
+
+    </button>
   )
 }
 

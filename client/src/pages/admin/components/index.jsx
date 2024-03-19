@@ -9,6 +9,8 @@ export {default as SideBar } from '../components/SideBar.jsx'
 export {default as ThemeSetter} from '../components/ThemeSetter.jsx'
 export {default as UserProfile} from '../components/UserProfile.jsx'
 
-
+export {default as Stacked} from '../components/charts/Stack.jsx'
+export {default as LineChart} from '../components/charts/LineCahrt.jsx'
+export {default as Pie} from '../components/charts/Pie.jsx'
 
 

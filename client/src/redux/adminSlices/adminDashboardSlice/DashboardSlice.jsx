@@ -33,10 +33,19 @@ export const adminDashboardSlice = createSlice({
         },
         showSidebarOrNot:(state,action)=> {
             state.activeMenu = action.payload
+        },
+        toggleNavbarPage:(state,action)=> {
+            Object.entries(state).forEach(([key,value])=> {
+               
+                if(key === action.payload){
+                    state[key] = false
+                    
+                }
+            })
         }
     
     }
 });
 
-export const {toggleSidebar,openPages,setScreenSize ,showSidebarOrNot} = adminDashboardSlice.actions;
+export const {toggleSidebar,openPages,setScreenSize ,showSidebarOrNot,toggleNavbarPage} = adminDashboardSlice.actions;
 export default adminDashboardSlice.reducer;

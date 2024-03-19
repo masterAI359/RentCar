@@ -1,13 +1,14 @@
 
 import { AiOutlineCalendar, AiOutlineShoppingCart, AiOutlineAreaChart, AiOutlineBarChart, AiOutlineStock } from 'react-icons/ai';
-import { FiShoppingBag, FiEdit, FiPieChart } from 'react-icons/fi';
-import { BsKanban, BsBarChart  } from 'react-icons/bs';
+import { FiShoppingBag, FiEdit, FiPieChart,  } from 'react-icons/fi';
+import { BsKanban, BsBarChart,   } from 'react-icons/bs';
 import { BiColorFill } from 'react-icons/bi';
 import { IoMdContacts } from 'react-icons/io';
 import { RiContactsLine, RiStockLine } from 'react-icons/ri';
 
 import { GiLouvrePyramid } from 'react-icons/gi';
 import { GrLocation } from 'react-icons/gr';
+import {  } from 'react-icons/md';
 
 
 
@@ -3567,3 +3568,5 @@ export const PyramidData = [
   { x: 'Fruits', y: 520, text: '520 cal' },
   { x: 'Bread, Rice, Pasta', y: 930, text: '930 cal' },
 ];
+
+

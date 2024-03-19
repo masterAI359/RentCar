@@ -4,15 +4,16 @@ import {Routes,Route} from 'react-router-dom'
 
 import {Button,CartHead,Chat,Footer,Header,Navbar,Notification,SideBar,ThemeSetter,UserProfile} from '../components/index.jsx'
 import {Products, AllUsers,AllVendors,Calender,ColorPicker,Customers,Editor } from "../pages";
-import { useDispatch, useSelector } from "react-redux";
-import { RxHamburgerMenu } from "react-icons/rx";
+import {  useSelector } from "react-redux";
+import AdminHomeMain from "../pages/AdminHomeMain.jsx";
+
 
 
 
 
 function AdminDashNew() {
   const {activeMenu} = useSelector(state=> state.adminDashboardSlice)
-  const dispatch = useDispatch()
+
 
   return (
     <div>
@@ -44,10 +45,10 @@ function AdminDashNew() {
           <div className={`fixed md:static bg-white  w-full   `}>
             <Navbar/>
           </div>
-        </div>
 
-        <Routes>
-          <Route path="/adminDashboard" element ={<AdminDashNew/>}/>
+          <div className="main_section mx-8  ">
+          <Routes>
+          <Route path="/adminHome" element ={<AdminHomeMain/>}/>
           <Route path="/allProduct" element={<Products/>}/>
           <Route path="/allUsers" element={<AllUsers/>}/>
           <Route path="/allVendors" element={<AllVendors/>}/>
@@ -58,6 +59,14 @@ function AdminDashNew() {
 
           
         </Routes>
+          </div>
+          
+        </div>
+
+          
+          
+         
+       
 
         
         
