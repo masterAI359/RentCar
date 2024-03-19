@@ -49,11 +49,11 @@ function AddProductForm() {
     } catch (error) {
       console.log(error);
     }
-    navigate("/adminDashboard");
+    navigate("/adminDashboard/allProduct");
   };
 
   const handleClose = () => {
-    navigate("/adminDashboard");
+    navigate("/adminDashboard/allProduct");
     dispatch(setEditData(null));
   };
 

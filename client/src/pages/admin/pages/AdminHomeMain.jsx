@@ -1,10 +1,6 @@
-import { BsCurrencyDollar } from "react-icons/bs";
 
-import { IoIosMore } from "react-icons/io";
-import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
+import {  LineChart, Button } from "../components";
 
-import { Stacked, Pie, LineChart, Button } from "../components";
-import { SparklineAreaData, ecomPieChartData } from "../data/dummy";
 import { earningData } from "../data/dummys.jsx";
 
 const AdminHomeMain = () => {
