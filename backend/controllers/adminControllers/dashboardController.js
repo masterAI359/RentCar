@@ -15,7 +15,7 @@ export const addProduct = async (req, res, next) => {
       return next(errorHandler(500,"image cannot be empty"))
     }
 
-    const { registeration_number, company, name , model,title,base_package,price,year_made,fuel_type,description } = req.body;
+    const { registeration_number, company, name , model,title,base_package,price,year_made,fuel_type,description,seat,transmition_type ,registeration_end_date,insurance_end_date,polution_end_date} = req.body;
 
     if (req.file) {
       
@@ -40,8 +40,12 @@ export const addProduct = async (req, res, next) => {
               base_package,
               price,
               year_made,
-              
-             
+              fuel_type,
+              seats:seat,
+              transmition:transmition_type,
+              insurance_end:insurance_end_date,
+              registeration_end:registeration_end_date,
+              pollution_end:polution_end_date
             });
 
             await addVehicle.save();

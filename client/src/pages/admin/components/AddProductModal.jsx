@@ -52,8 +52,12 @@ const AddProductModal = () => {
         formData.append("base_package", data.base_package);
         formData.append("price", data.price);
         formData.append("fuel_type", data.fuel_type);
-        formData.append("description", data.description);
-
+        formData.append("seat", data.seat);
+        formData.append("transmition_type", data.transmition_type);
+        formData.append("insurance_end_date", data.insurance_end_date);
+        formData.append("registeration_end_date", data.registeration_end_date);
+        formData.append("polution_end_date", data.polution_end_date);
+        
 
         let tostID;
         if (formData) {
@@ -239,7 +243,7 @@ const AddProductModal = () => {
                 <div>
                   <label htmlFor="car_type">Select car type:</label>
                   <Controller
-                    name="carType"
+                    name="car_type"
                     control={control}
                     defaultValue="sedan"
                     render={({ field }) => (

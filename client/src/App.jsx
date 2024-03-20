@@ -1,16 +1,16 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import SignUp from "./pages/SignUp";
-import SignIn from "./pages/SignIn";
-import About from "./pages/About";
-import Profile from "./pages/Profile";
+import Home from "./pages/user/Home";
+import SignUp from "./pages/user/SignUp";
+import SignIn from "./pages/user/SignIn";
+import Vehicles from "./pages/user/Vehicles";
+import Profile from "./pages/user/Profile";
 import With_nav from "./components/Layout/WithNav";
 import PrivateRoute from "./components/PrivateRoute";
 import { PrivateSignin } from "./components/PrivateRoute";
 
 import AdminPrivateRoutes from "./components/AdminPrivateRoutes";
-import Enterprise from "./pages/Enterprise";
-import Contact from "./pages/Contact";
+import Enterprise from "./pages/user/Enterprise";
+import Contact from "./pages/user/Contact";
 import VendorSignin from "./pages/vendor/VendorSignin";
 import VendorSignup from "./pages/vendor/VendorSignup";
 import VendorPrivateRoute from "./components/VendorPrivateRoute";
@@ -39,7 +39,7 @@ function App() {
             {/* components with Navbar */}
             <Route element={<With_nav />}>
               <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
+              <Route path="/vehicles" element={<Vehicles />} />
               <Route path="/enterprise" element={<Enterprise />} />
               <Route path="/contact" element={<Contact />} />
             </Route>
