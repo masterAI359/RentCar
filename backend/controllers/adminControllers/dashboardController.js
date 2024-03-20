@@ -15,7 +15,7 @@ export const addProduct = async (req, res, next) => {
       return next(errorHandler(500,"image cannot be empty"))
     }
 
-    const { registeration_number, company, name } = req.body;
+    const { registeration_number, company, name , model,title,base_package,price,year_made,fuel_type,description } = req.body;
 
     if (req.file) {
       
@@ -34,6 +34,14 @@ export const addProduct = async (req, res, next) => {
               company,
               name,
               image: result.secure_url,
+              model,
+              car_title:title,
+              car_description: description,
+              base_package,
+              price,
+              year_made,
+              
+             
             });
 
             await addVehicle.save();
@@ -46,9 +54,13 @@ export const addProduct = async (req, res, next) => {
             );
           }
         } catch (error) {
-          if (error.code === 11000)
+          if (error.code === 11000){
             return next(errorHandler(409, "product already exists"));
+          }
+            
+          console.log(error)
           next(errorHandler(500, "product not uploaded"));
+          
         }
       } catch (error) {
         next(errorHandler(500, "could not upload image to cloudinary"));

@@ -6,19 +6,18 @@ import {
   toggleSidebar,
 } from "../../../redux/adminSlices/adminDashboardSlice/DashboardSlice";
 import { AiOutlineMenu } from "react-icons/ai";
-import { FiShoppingCart } from "react-icons/fi";
 import { BsChatLeft } from "react-icons/bs";
 import { RiNotification3Line } from "react-icons/ri";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { CartHead, Chat, Notification, UserProfile } from ".";
+import {  Chat, Notification, UserProfile } from ".";
 import profiile from "../../../Assets/profile dummy image.png";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const { cart, chat, notification, userProfile, screenSize } = useSelector(
+  const {  chat, notification, userProfile, screenSize } = useSelector(
     (state) => state.adminDashboardSlice
   );
 
@@ -77,14 +76,7 @@ const Navbar = () => {
       </div>
 
       <div className="flex justify-between">
-        <NavButton
-          title="Cart"
-          customFunc={() => {
-            dispatch(openPages("cart"));
-          }}
-          color={"blue"}
-          icon={<FiShoppingCart />}
-        />
+       
 
         <NavButton
           title="Chat"
@@ -117,7 +109,7 @@ const Navbar = () => {
           </div>
         </TooltipComponent>
 
-        {cart && <div className="relative top-9 right-0"><CartHead /></div>}
+        
         {chat && <div className="relative top-9 right-0"><Chat /></div>}
         {notification && <div className="relative top-9 right-0"><Notification /></div>}
         {userProfile && <div className="relative top-9 right-0"><UserProfile /></div>}

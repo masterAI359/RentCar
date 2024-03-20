@@ -3,12 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     chat: false,
-    cart: false,
     userProfile: false,
     notification: false,
     activeMenu:true,
     isClicked:false,
     screenSize: window.innerWidth,
+    
 };
 
 
@@ -35,7 +35,7 @@ export const adminDashboardSlice = createSlice({
             state.activeMenu = action.payload
         },
         toggleNavbarPage:(state,action)=> {
-            Object.entries(state).forEach(([key,value])=> {
+            Object.entries(state).forEach(([key])=> {
                
                 if(key === action.payload){
                     state[key] = false

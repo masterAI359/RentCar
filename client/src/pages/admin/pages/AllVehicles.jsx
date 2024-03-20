@@ -1,8 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { signOut } from "../../../redux/user/userSlice";
 import { useEffect, useState } from "react";
-import { addVehicleClicked, setEditData } from "../../../redux/adminSlices/actions";
+import { setEditData } from "../../../redux/adminSlices/actions";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import {
@@ -14,35 +13,18 @@ import {
   TableRow,
   Button,
 } from "@mui/material";
+import { Header } from "../components";
+import AddProductModal from "../components/AddProductModal";
+import toast, { Toaster } from "react-hot-toast";
 
-
-function AdminDashboard() {
+function AllVehicles() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAddVehicle = useSelector(
-    (state) => state.addVehicle.isAddVehicleClicked
-  );
+  
+  const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
 
   const [allVehicles, setVehicles] = useState([]);
-
-  const handleSignout = async () => {
-    const res = await fetch("/api/admin/signout", {
-      method: "GET",
-    });
-    const data = await res.json();
-    if (data) {
-      dispatch(signOut());
-      navigate("/signin");
-    }
-  };
-
-  //add products
-  useEffect(() => {
-    if (isAddVehicle) {
-      navigate("/adminDashboard/addProduct");
-      dispatch(addVehicleClicked(false));
-    }
-  }, [isAddVehicle, dispatch]);
+  console.log(allVehicles)
 
   //show vehicles
   useEffect(() => {
@@ -60,41 +42,43 @@ function AdminDashboard() {
       }
     };
     fetchVehicles();
-  }, []);
+  }, [isAddVehicleClicked]);
 
   //delete a vehicle
   const handleDelete = async (vehicle_id) => {
     try {
-      setVehicles(allVehicles.filter(cur=> cur._id !== vehicle_id))
-      await fetch(`api/admin/deleteVehicle/${vehicle_id}`,{
-        method:'DELETE'
-      })
+      setVehicles(allVehicles.filter((cur) => cur._id !== vehicle_id));
+      const res = await fetch(`/api/admin/deleteVehicle/${vehicle_id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        toast.success("deleted", {
+          duration: 800,
+
+          style: {
+            color: "white",
+            background:'#c48080'
+          },
+        });
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-
   //edit vehicles
   const handleEditVehicle = (vehicle_id) => {
-    dispatch(setEditData({_id:vehicle_id}))
-    navigate(`/adminDashboard/editProduct?vehicle_id=${vehicle_id}`)
-  }
+    dispatch(setEditData({ _id: vehicle_id }));
+    navigate(`/adminDashboard/editProduct?vehicle_id=${vehicle_id}`);
+  };
 
   return (
     <>
-      <div>AdminDashboard</div>
-      <div>
-        <button type="button" onClick={handleSignout} className="text-red-400">
-          SignOut
-        </button>
-      </div>
-
-      <div className="w-full d-flex   justify-end text-start items-end">
+      <div className="w-full d-flex   justify-end text-start items-end p-10">
+        <Header title="AllVehicles" />
+        <Toaster />
         <TableContainer
           sx={{
-            minWidth: "600px",
-            maxWidth: "600px",
             marginLeft: "auto",
             marginRight: "40px",
             textAlign: "right",
@@ -104,7 +88,7 @@ function AdminDashboard() {
             <caption>A basic table example with a caption</caption>
             <TableHead>
               <TableRow>
-              <TableCell style={{ color: "red" }}>image</TableCell>
+                <TableCell style={{ color: "red" }}>Image</TableCell>
                 <TableCell style={{ color: "red" }}>Register Number</TableCell>
                 <TableCell style={{ color: "red" }} align="left">
                   Company
@@ -115,12 +99,20 @@ function AdminDashboard() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allVehicles.map((cur,idx) => (
+              {allVehicles.map((cur, idx) => (
                 <TableRow style={{ color: "black" }} key={idx}>
                   <TableCell>
-                    <img key={idx} style={{width:'50px', height:'40px', borderRadius:'5px', objectFit:'cover'}} src={cur.image} id="image"/>
-                   
-                    
+                    <img
+                      key={idx}
+                      style={{
+                        width: "50px",
+                        height: "40px",
+                        borderRadius: "5px",
+                        objectFit: "cover",
+                      }}
+                      src={cur.image}
+                      id="image"
+                    />
                   </TableCell>
                   <TableCell
                     style={{ color: "black" }}
@@ -141,7 +133,7 @@ function AdminDashboard() {
                     <Button onClick={() => handleEditVehicle(cur._id)}>
                       <ModeEditOutlineIcon />{" "}
                     </Button>
-                    <Button onClick={()=> handleDelete(cur._id)}>
+                    <Button onClick={() => handleDelete(cur._id)}>
                       <DeleteForeverIcon />
                     </Button>
                   </TableCell>
@@ -151,9 +143,11 @@ function AdminDashboard() {
           </Table>
         </TableContainer>
 
+        {/* addProduct modal */}
+        <AddProductModal />
       </div>
     </>
   );
 }
 
-export default AdminDashboard;
+export default AllVehicles;
