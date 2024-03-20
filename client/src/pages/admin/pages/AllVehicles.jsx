@@ -1,9 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  setEditData,
-} from "../../../redux/adminSlices/actions";
+import { setEditData } from "../../../redux/adminSlices/actions";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import {
@@ -17,17 +15,16 @@ import {
 } from "@mui/material";
 import { Header } from "../components";
 import AddProductModal from "../components/AddProductModal";
+import toast, { Toaster } from "react-hot-toast";
 
 function AllVehicles() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAddVehicle = useSelector(
-    (state) => state.addVehicle.isAddVehicleClicked
-  );
+  
+  const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
 
   const [allVehicles, setVehicles] = useState([]);
-
-  
+  console.log(allVehicles)
 
   //show vehicles
   useEffect(() => {
@@ -45,16 +42,25 @@ function AllVehicles() {
       }
     };
     fetchVehicles();
-  }, [isAddVehicle]);
+  }, [isAddVehicleClicked]);
 
   //delete a vehicle
   const handleDelete = async (vehicle_id) => {
     try {
-      console.log(vehicle_id);
       setVehicles(allVehicles.filter((cur) => cur._id !== vehicle_id));
-      await fetch(`/api/admin/deleteVehicle/${vehicle_id}`, {
+      const res = await fetch(`/api/admin/deleteVehicle/${vehicle_id}`, {
         method: "DELETE",
       });
+      if (res.ok) {
+        toast.success("deleted", {
+          duration: 800,
+
+          style: {
+            color: "white",
+            background:'#c48080'
+          },
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -70,7 +76,7 @@ function AllVehicles() {
     <>
       <div className="w-full d-flex   justify-end text-start items-end p-10">
         <Header title="AllVehicles" />
-
+        <Toaster />
         <TableContainer
           sx={{
             marginLeft: "auto",
@@ -140,7 +146,6 @@ function AllVehicles() {
         {/* addProduct modal */}
         <AddProductModal />
       </div>
-      
     </>
   );
 }
