@@ -4,7 +4,7 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   signOut,
-} from "../redux/user/userSlice";
+} from "../../redux/user/userSlice";
 
 function Profile() {
   const { currentUser, isError, isLoading } = useSelector(

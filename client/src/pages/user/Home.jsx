@@ -1,5 +1,5 @@
-import styles from "../index";
-import Herocar from "../Assets/homepage_car_copy.jpeg";
+import styles from "../../index";
+import Herocar from "../../Assets/homepage_car_copy.jpeg";
 
 function Home() {
   return (
