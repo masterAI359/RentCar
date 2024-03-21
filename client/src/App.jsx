@@ -25,6 +25,7 @@ import { themeSettings } from "./theme";
 import Layout from "./pages/admin/layouts/Layout";
 import AddProductForm from "./pages/admin/dashboard/AddProductForm";
 import AdminDashNew from "./pages/admin/dashboard/AdminDashNew";
+import VehicleDetails from "./pages/user/VehicleDetails";
 
 
 
@@ -58,6 +59,7 @@ function App() {
             {/* user private routes */}
             <Route element={<PrivateRoute />}>
               <Route path="/profile" element={<Profile />} />
+              <Route path="/vehicleDetails" element={<VehicleDetails/>} />
             </Route>
 
             {/* vendor private routes */}

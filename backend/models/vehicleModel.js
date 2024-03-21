@@ -60,8 +60,8 @@ const vehicleSchema = new mongoose.Schema({
     required: false,
   },
   transmition: {
-    type: ["manual", "automatic"],
-    required:false,
+    type: String,
+    enum:["manual","automatic"]
   },
   image: {
     type:String,
@@ -72,10 +72,6 @@ const vehicleSchema = new mongoose.Schema({
     required: false,
   },
   title: {
-    type: String,
-    required: false,
-  },
-  image: {
     type: String,
     required: false,
   },
@@ -122,9 +118,13 @@ const vehicleSchema = new mongoose.Schema({
     },
   },
   car_type: {
-    type: ["sedan", "hatchback", "suv", "jeep"],
-    required: false,
+    type: String,
   },
+  isDeleted:{
+    type:String,
+    default:false,
+    required:false
+  }
 
 });
 

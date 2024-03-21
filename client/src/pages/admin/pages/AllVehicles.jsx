@@ -24,8 +24,7 @@ function AllVehicles() {
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
 
   const [allVehicles, setVehicles] = useState([]);
-  console.log(allVehicles)
-
+  
   //show vehicles
   useEffect(() => {
     const fetchVehicles = async () => {

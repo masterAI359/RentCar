@@ -27,7 +27,6 @@ const AddProductModal = () => {
 
   const onSubmit = async (data) => {
     
-    console.log(data)
     try {
       if (editData) {
         const formData = data;
@@ -51,12 +50,14 @@ const AddProductModal = () => {
         formData.append("title", data.title);
         formData.append("base_package", data.base_package);
         formData.append("price", data.price);
+        formData.append('year_made', data.year_made)
         formData.append("fuel_type", data.fuel_type);
         formData.append("seat", data.seat);
         formData.append("transmition_type", data.transmition_type);
         formData.append("insurance_end_date", data.insurance_end_date);
         formData.append("registeration_end_date", data.registeration_end_date);
         formData.append("polution_end_date", data.polution_end_date);
+        formData.append("car_type", data.car_type);
         
 
         let tostID;
@@ -250,7 +251,7 @@ const AddProductModal = () => {
                       <select {...field} id="car_type" className="p-2">
                         <option value="sedan">sedan</option>
                         <option value="suv">suv </option>
-                        <option value="hach back">hach back </option>
+                        <option value="hatchback">hatchback </option>
                       </select>
                     )}
                   />
