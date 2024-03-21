@@ -15,7 +15,8 @@ export const addProduct = async (req, res, next) => {
       return next(errorHandler(500,"image cannot be empty"))
     }
 
-    const { registeration_number, company, name , model,title,base_package,price,year_made,fuel_type,description,seat,transmition_type ,registeration_end_date,insurance_end_date,polution_end_date} = req.body;
+    const { registeration_number, company, name , model,title,base_package,price,year_made,fuel_type,description,seat,transmition_type ,registeration_end_date,insurance_end_date,polution_end_date,car_type} = req.body;
+
 
     if (req.file) {
       
@@ -45,7 +46,9 @@ export const addProduct = async (req, res, next) => {
               transmition:transmition_type,
               insurance_end:insurance_end_date,
               registeration_end:registeration_end_date,
-              pollution_end:polution_end_date
+              pollution_end:polution_end_date,
+              car_type,
+              created_at: Date.now(),
             });
 
             await addVehicle.save();
@@ -102,7 +105,7 @@ export const deleteVehicle = async (req, res, next) => {
       return;
     }
 
-    const deleted = await Vehicle.findByIdAndDelete(vehicle_id);
+    const deleted = await Vehicle.findByIdAndUpdate(vehicle_id,{isDeleted:true});
     if (!deleted) {
       return next(500, "not able to delete");
     }
@@ -135,7 +138,7 @@ export const editVehicle = async (req, res, next) => {
       const edited = await Vehicle.findByIdAndUpdate(
         vehicle_id,
         { registeration_number, company, name },
-        { new: true }
+        { new: true },{updated_at:Date.now()},
       );
       if (!edited) {
         return next(errorHandler(404, "data with this id not found"));
