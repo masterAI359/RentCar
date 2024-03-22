@@ -59,7 +59,7 @@ const SideBar = () => {
           <div className="mt-10">
             {links.map((cur, idx) => (
               <div key={idx}>
-                <p className="text-gray-700 m-3 mt-4 uppercase">{cur.title} </p>
+                <p className="text-gray-700 m-3 mt-4 text-uppercase">{cur.title}</p>
                 {cur.links.map((link) => (
                   <NavLink
                     to={`/adminDashboard/${link.name}`}
@@ -74,7 +74,7 @@ const SideBar = () => {
                     }
                   >
                     {link.icon}
-                    <span className="capitalise text-gray-600">{link.name}</span>
+                    <span className="capitalize text-gray-600">{link.name}</span>
                   </NavLink>
                 ))}
               </div>

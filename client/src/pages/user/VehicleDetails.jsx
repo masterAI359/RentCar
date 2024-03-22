@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import { FaStar } from "react-icons/fa";
 
 import ButtonBase from "@mui/material/ButtonBase";
 
@@ -58,10 +59,16 @@ const VehicleDetails = () => {
               <Typography variant="body2" color="text.secondary">
                 Seats : {singleVehicleDetail.seats}
               </Typography>
+              <Typography sx={{ cursor: "pointer" }} variant="body2">
+                Registeration Number : {singleVehicleDetail.registeration_number}
+              </Typography>
+              <Typography sx={{ cursor: "pointer" }} variant="body2">
+                Rating: {singleVehicleDetail.ratting} <span style={{ color: 'gold' }}><FaStar /></span>
+              </Typography>
             </Grid>
             <Grid item>
               <Typography sx={{ cursor: "pointer" }} variant="body2">
-                Re
+                Registeration
               </Typography>
             </Grid>
           </Grid>

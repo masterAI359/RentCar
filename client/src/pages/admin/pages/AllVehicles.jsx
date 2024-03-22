@@ -99,6 +99,7 @@ function AllVehicles() {
             </TableHead>
             <TableBody>
               {allVehicles.map((cur, idx) => (
+                cur.isDeleted === 'false' &&
                 <TableRow style={{ color: "black" }} key={idx}>
                   <TableCell>
                     <img
