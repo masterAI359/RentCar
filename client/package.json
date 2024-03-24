@@ -10,14 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
     "@firebase/auth": "^1.6.0",
     "@hookform/resolvers": "^3.3.4",
     "@material-tailwind/react": "^2.1.9",
     "@mui/icons-material": "^5.15.12",
-    "@mui/material": "^5.15.12",
     "@mui/x-data-grid": "^6.19.6",
+    "@mui/x-date-pickers": "^7.0.0",
     "@nivo/bar": "^0.85.1",
     "@nivo/core": "^0.85.1",
     "@nivo/geo": "^0.85.1",
@@ -33,6 +31,7 @@
     "@syncfusion/ej2-react-popups": "^19.4.52",
     "@syncfusion/ej2-react-richtexteditor": "^19.4.50",
     "@syncfusion/ej2-react-schedule": "^19.4.50",
+    "dayjs": "^1.11.10",
     "flowbite-react": "^0.7.3",
     "react-datepicker": "^6.2.0",
     "react-dom": "^18.2.0",

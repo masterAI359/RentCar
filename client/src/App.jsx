@@ -17,25 +17,26 @@ import VendorPrivateRoute from "./components/VendorPrivateRoute";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 
 //admin
-import { ThemeProvider } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { themeSettings } from "./theme";
+// import { ThemeProvider } from "@mui/material";
+// import { createTheme } from "@mui/material/styles";
+// import { useMemo } from "react";
+// import { useSelector } from "react-redux";
+// import { themeSettings } from "./theme";
 import Layout from "./pages/admin/layouts/Layout";
 import AddProductForm from "./pages/admin/dashboard/AddProductForm";
 import AdminDashNew from "./pages/admin/dashboard/AdminDashNew";
 import VehicleDetails from "./pages/user/VehicleDetails";
+import EditProductComponent from "./pages/admin/components/EditProductComponent";
 
 
 
 function App() {
-  const mode = useSelector((state) => state.global.mode);
-  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  // const mode = useSelector((state) => state.global.mode);
+  // const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   return (
     <>
       <BrowserRouter>
-        <ThemeProvider theme={theme}>
+        {/* <ThemeProvider theme={theme}> */}
           <Routes>
             {/* components with Navbar */}
             <Route element={<With_nav />}>
@@ -79,6 +80,10 @@ function App() {
                   path="/adminDashboard/addProduct"
                   element={<AddProductForm />}
                 />
+                 <Route
+                  path="/adminDashboard/editProducts"
+                  element={<EditProductComponent />}
+                />
                 <Route
                   path="/adminDashboard/editProduct"
                   element={<AddProductForm />}
@@ -86,7 +91,7 @@ function App() {
               </Route>
             </Route>
           </Routes>
-        </ThemeProvider>
+        {/* </ThemeProvider> */}
       </BrowserRouter>
     </>
   );

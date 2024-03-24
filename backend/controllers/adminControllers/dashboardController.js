@@ -49,6 +49,7 @@ export const addProduct = async (req, res, next) => {
               pollution_end:polution_end_date,
               car_type,
               created_at: Date.now(),
+             
             });
 
             await addVehicle.save();
