@@ -3,7 +3,7 @@ import userReducer from "./user/userSlice.jsx";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import persistStore from "redux-persist/es/persistStore";
-import globalReducer from "./adminSlices/adminSlice.jsx";
+// import globalReducer from "./adminSlices/adminSlice.jsx";
 import AddVehiclereducer from "./adminSlices/reducer.js";
 import adminReducer from "./adminSlices/adminDashboardSlice/DashboardSlice.jsx";
 import userListVehiclesReducer from './user/listAllVehicleSlice.jsx'
@@ -12,7 +12,7 @@ import userListVehiclesReducer from './user/listAllVehicleSlice.jsx'
 
 const rootReducer = combineReducers({
   user: userReducer,
-  global: globalReducer,
+  // global: globalReducer,
   addVehicle: AddVehiclereducer,
   adminDashboardSlice:adminReducer,
   userListVehicles:userListVehiclesReducer

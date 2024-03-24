@@ -6,7 +6,6 @@ import {
 } from "../../../redux/adminSlices/actions";
 import { useForm, Controller } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 const AddProductModal = () => {
@@ -23,7 +22,7 @@ const AddProductModal = () => {
   const queryParams = new URLSearchParams(location.search);
   const vehicle_id = queryParams.get("vehicle_id");
 
-  useEffect(() => {}, [isAddVehicleClicked]);
+  
 
   const onSubmit = async (data) => {
     
@@ -50,6 +49,7 @@ const AddProductModal = () => {
         formData.append("title", data.title);
         formData.append("base_package", data.base_package);
         formData.append("price", data.price);
+        formData.append("description",data.description)
         formData.append('year_made', data.year_made)
         formData.append("fuel_type", data.fuel_type);
         formData.append("seat", data.seat);
