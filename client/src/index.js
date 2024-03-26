@@ -2,7 +2,7 @@ const styles = {
   boxWidth: "xl:max-w-[1280px] w-full",
 
   heading2:
-    "font-poppins font-semibold xs:text-[48px] text-[28px] text-black xs:leading-[76.8px] leading-[66.8px] w-full",
+    "font-poppins font-semibold xs:text-[48px] text-[28px] text-black xs:leading-[76.8px] lg:leading-[66.8px] w-full",
   paragraph:
     "font-poppins font-normal text-dimWhite text-[18px] leading-[30.8px]",
 
@@ -16,7 +16,7 @@ const styles = {
   marginX: "sm:mx-16 mx-6",
   marginY: "sm:my-16 my-6",
   button: "bg-green-500 py-1 text-[12px] md:text-[14px] sm:py-2 px-2 sm:px-4 font-normal sm:font-semibold rounded-md ",
-  iconFlex:"flex justify-start items-center gap-1"
+  iconFlex:"flex justify-start items-center gap-2"
 };
 
 export const layout = {

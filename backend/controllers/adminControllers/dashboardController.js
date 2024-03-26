@@ -133,13 +133,27 @@ export const editVehicle = async (req, res, next) => {
       return next(errorHandler(404, "Add data to edit first"));
     }
 
-    const { registeration_number, company, name } = req.body.formData;
+    const { registeration_number, company, name,  model,title,base_package,price,year_made,description,Seats,transmitionType ,Registeration_end_date,insurance_end_date,polution_end_date,carType,fuelType } = req.body.formData;
 
     try {
       const edited = await Vehicle.findByIdAndUpdate(
         vehicle_id,
-        { registeration_number, company, name },
-        { new: true },{updated_at:Date.now()},
+        { registeration_number, company, name ,
+              model,
+              car_title:title,
+              car_description: description,
+              base_package,
+              price,
+              year_made,
+              fuel_type:fuelType,
+              seats:Seats,
+              transmition:transmitionType,
+              insurance_end:insurance_end_date,
+              registeration_end:Registeration_end_date,
+              pollution_end:polution_end_date,
+              car_type:carType,
+              updated_at:Date.now() },
+        { new: true },
       );
       if (!edited) {
         return next(errorHandler(404, "data with this id not found"));
