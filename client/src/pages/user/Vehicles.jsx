@@ -53,22 +53,22 @@ const Vehicles = () => {
 
   return (
     <div>
-    <div className="text-center flex flex-col mt-10 justify-center items-center ">
-    <h2 className="text-[24px]">Choose From Options</h2>
-    <p className="text-[12px] text-center w-[550px]">Choose from our modern variety vehicles colllection . Feel like home just like your own car Our clients have experienced our service and results, and they are eager to share their positive experiences with you.</p>
+    <div className="text-center flex flex-col  mt-10 justify-center items-center sm:max-w-[500px] mx-auto">
+    <h2 className="text-[18px] lg:text-[24px]">Choose From Options</h2>
+    <p className="text-center text-[8px] px-6  lg:text-[12px]  lg:w-[550px]">Choose from our modern variety vehicles colllection . Feel like home just like your own car Our clients have experienced our service and results, and they are eager to share their positive experiences with you.</p>
   </div>
 
-    <div className=" w-full grid max-w-[1000px] mx-auto grid-cols-3 justify-center items-center gap-5 flex-wrap mt-10">
+    <div className=" mx-auto flex sm:flex-row  w-full  lg:grid lg:max-w-[1000px]  lg:grid-cols-3 justify-center items-center gap-5 flex-wrap mt-10">
       
       {userAllVehicles.map((cur, idx) => (
         cur.isDeleted==="false" &&
         <div className="bg-white box-shadow rounded-lg  drop-shadow " key={idx}>
-          <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
-            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden object-contain rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-80">
+          <div className="mx-auto max-w-[320px] px-4 py-2 sm:px-6 sm:py-0 lg:max-w-7xl lg:px-8">
+            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden object-contain rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-80 mb-3">
               <img
                 src={`${cur.image}`}
                 alt={`cur.name`}
-                className="h-full w-full object-contain object-center lg:h-full lg:w-full"
+                className=" w-full object-contain object-center lg:h-full lg:w-full"
               />
             </div>
             <div className="flex justify-between items-start">
