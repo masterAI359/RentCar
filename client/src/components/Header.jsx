@@ -2,13 +2,17 @@ import styles from "../index";
 import { navLinks } from "../constants";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { MdMenuOpen } from "react-icons/md";
+import { useState } from "react";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
+  const [nav, setNav] = useState(false);
 
   return (
     <div
-      className={`w-full py-6 flex justify-between items-center  px-28 pt-10  `}
+      className={`w-full  flex justify-between items-center px-6 lg:py-6 lg:px-28 pt-10  `}
     >
       <Link to="/">
         <div
@@ -36,9 +40,9 @@ function Header() {
         </ul>
       </div>
       <div className="flex gap-2">
-        <div>
+        <div className="hidden md:inline-flex">
           <Link to={"/signIn"}>
-            {currentUser && !currentUser.isAdmin && !currentUser.isVendor  ? (
+            {currentUser && !currentUser.isAdmin && !currentUser.isVendor ? (
               ""
             ) : (
               <button
@@ -50,7 +54,7 @@ function Header() {
             )}
           </Link>
         </div>
-        <div className="flex items-center justify-center">
+        <div className="hidden lg:flex items-center justify-center">
           {currentUser && !currentUser.isAdmin && !currentUser.isVendor ? (
             <Link to={"/profile"}>
               <img
@@ -61,11 +65,75 @@ function Header() {
               />
             </Link>
           ) : (
-            <Link to={"/signup"}>
-              <button id="signup" className={`${styles.button} `}>
-                Sign Up
-              </button>
-            </Link>
+            <div className="hidden lg:inline-flex">
+              <Link to={"/signup"}>
+                <button id="signup" className={`${styles.button} `}>
+                  Sign Up
+                </button>
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/*  Mobile Menu */}
+        <div className="relative lg:hidden flex justify-center items-center">
+          <button onClick={() => setNav(!nav)}>
+            <div>{nav ? <MdMenuOpen /> : <RxHamburgerMenu />}</div>
+          </button>
+          {nav && (
+            <div>
+              <div className="relative top-6 z-10 right-5">
+                <Link to={"/signIn"}>
+                  {currentUser &&
+                  !currentUser.isAdmin &&
+                  !currentUser.isVendor ? (
+                    ""
+                  ) : (
+                    <button
+                      id="signin"
+                      className={`border-[1px] border-green-500 py-1 text-[12px] md:text-[14px] sm:py-[7px] px-2 sm:px-4 font-normal sm:font-semibold  `}
+                    >
+                      Sign In
+                    </button>
+                  )}
+                </Link>
+              </div>
+              <ul className="flex flex-col  gap-y-1   items-center justify-start  absolute top-[70px] right-0  overflow-hidden z-10  list-none max-w-20  ">
+                {navLinks.map((navlink, index) => (
+                  <li key={index} className="rounded-lg px-10">
+                    {index != 3 && (
+                      <Link
+                        to={navlink.path}
+                        className={`text-white bg-black text-[8px]   rounded-lg px-10 py-2  font-poppins cursor-pointer font-semibold  text-center `}
+                        onClick={() => setNav(false)}
+                      >
+                        {navlink.title}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              
+              <div>
+                {currentUser &&
+                !currentUser.isAdmin &&
+                !currentUser.isVendor ? (
+                  <Link to={"/profile"}>
+                    <div className="text-white z-10 absolute top-[106px] right-0 text-[9px] hover:text-red-200 px-[26px] py-[5px] rounded-sm bg-black">
+                      Profile
+                    </div>
+                  </Link>
+                ) : (
+                  <div className="hidden lg:inline-flex">
+                    <Link to={"/signup"}>
+                      <button id="signup" className={`${styles.button} `}>
+                        Sign Up
+                      </button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
         </div>
       </div>

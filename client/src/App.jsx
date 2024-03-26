@@ -16,14 +16,10 @@ import VendorSignup from "./pages/vendor/VendorSignup";
 import VendorPrivateRoute from "./components/VendorPrivateRoute";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 
-//admin
-// import { ThemeProvider } from "@mui/material";
-// import { createTheme } from "@mui/material/styles";
-// import { useMemo } from "react";
-// import { useSelector } from "react-redux";
-// import { themeSettings } from "./theme";
+
+
 import Layout from "./pages/admin/layouts/Layout";
-import AddProductForm from "./pages/admin/dashboard/AddProductForm";
+// import AddProductForm from "./pages/admin/dashboard/AddProductForm";
 import AdminDashNew from "./pages/admin/dashboard/AdminDashNew";
 import VehicleDetails from "./pages/user/VehicleDetails";
 import EditProductComponent from "./pages/admin/components/EditProductComponent";
@@ -31,8 +27,7 @@ import EditProductComponent from "./pages/admin/components/EditProductComponent"
 
 
 function App() {
-  // const mode = useSelector((state) => state.global.mode);
-  // const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+ 
   return (
     <>
       <BrowserRouter>
@@ -76,22 +71,16 @@ function App() {
                 <Route path="/adminDashboard/*" element={<AdminDashNew />}/>
 
 
-                <Route
-                  path="/adminDashboard/addProduct"
-                  element={<AddProductForm />}
-                />
+               
                  <Route
                   path="/adminDashboard/editProducts"
                   element={<EditProductComponent />}
                 />
-                <Route
-                  path="/adminDashboard/editProduct"
-                  element={<AddProductForm />}
-                />
+                
               </Route>
             </Route>
           </Routes>
-        {/* </ThemeProvider> */}
+        
       </BrowserRouter>
     </>
   );

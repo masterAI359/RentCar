@@ -68,7 +68,7 @@ function AllVehicles() {
   //edit vehicles
   const handleEditVehicle = (vehicle_id) => {
     dispatch(setEditData({ _id: vehicle_id }));
-    navigate(`/adminDashboard/editProduct?vehicle_id=${vehicle_id}`);
+    navigate(`/adminDashboard/editProducts?vehicle_id=${vehicle_id}`);
   };
 
   return (
@@ -84,7 +84,6 @@ function AllVehicles() {
           }}
         >
           <Table aria-label="caption table">
-            <caption>A basic table example with a caption</caption>
             <TableHead>
               <TableRow>
                 <TableCell style={{ color: "red" }}>Image</TableCell>

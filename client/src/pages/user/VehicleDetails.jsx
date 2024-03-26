@@ -53,7 +53,7 @@ const VehicleDetails = () => {
                     >
                       <img
                         className="h-full w-full object-cover"
-                        src="/images/JHxMnVrtPMdcNU1s_7g7f.png"
+                        src={ singleVehicleDetail.image}
                         alt=""
                       />
                     </button>
@@ -63,7 +63,7 @@ const VehicleDetails = () => {
                     >
                       <img
                         className="h-full w-full object-cover"
-                        src="/images/JHxMnVrtPMdcNU1s_7g7f.png"
+                        src={ singleVehicleDetail.image}
                         alt=""
                       />
                     </button>
@@ -73,7 +73,7 @@ const VehicleDetails = () => {
                     >
                       <img
                         className="h-full w-full object-cover"
-                        src="/images/JHxMnVrtPMdcNU1s_7g7f.png"
+                        src={ singleVehicleDetail.image}
                         alt=""
                       />
                     </button>
@@ -90,50 +90,50 @@ const VehicleDetails = () => {
               <div className="mt-3 flex flex-col justify-center items-start select-none flex-wrap  gap-4 font-mono text-[14px]">
                 <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   
-                  <span className="border-r  border-[10px]">
-                  <FaCarAlt style={{color:'slate-200'}} /> </span>Model - {singleVehicleDetail.model}
+                  <span>
+                  <FaCarAlt/> </span>Model - {singleVehicleDetail.model}
                 </div>
-                <div className={`${styles.iconFlex} capitalize`}>
+                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   <span>
                     <FaBuilding />
                   </span>
                   Company - {singleVehicleDetail.company}
                 </div>
-                <div className={`${styles.iconFlex} capitalize`}>
+                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   <span>
                     <CiCalendarDate />
                   </span>
                   Year model : {singleVehicleDetail.year_made}
                 </div>
-                <div className={`${styles.iconFlex} capitalize`}>
+                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   <span>
                     <GiGearStickPattern />
                   </span>
                   Transmission : {singleVehicleDetail.transmition}
                 </div>
-                <div className={`${styles.iconFlex} capitalize`}>
+                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   <span>
                     <FaCarSide />
                   </span>
                   Car Type : {singleVehicleDetail.car_type}
                 </div>
-                <div className={`${styles.iconFlex} capitalize`}>
+                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   <span>
                     <MdAirlineSeatReclineExtra />
                   </span>
                   Seats : {singleVehicleDetail.seats}
                 </div>
-                <div className={`${styles.iconFlex} capitalize`}>
+                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   <span>
                     <BsFillFuelPumpFill />
                   </span>
                   Fuel type : {singleVehicleDetail.fuel_type}
                 </div>
-                <div className="capitalize">
+                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   Registeration Number :{" "}
                   {singleVehicleDetail.registeration_number}
                 </div>
-                <div className={`${styles.iconFlex}`}>
+                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
                   Rating: {singleVehicleDetail.ratting}5{" "}
                   <span style={{ color: "gold" }}>
                     <FaStar />

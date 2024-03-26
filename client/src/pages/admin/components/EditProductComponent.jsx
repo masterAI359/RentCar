@@ -1,23 +1,80 @@
-import { Button } from "@mui/base";
+import Button from "@mui/material/Button";
 import { MenuItem } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Controller, useForm } from "react-hook-form";
+import { IoMdClose } from "react-icons/io";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useDispatch, useSelector } from "react-redux";
+import { setEditData } from "../../../redux/adminSlices/actions";
+import { useLocation, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function EditProductComponent() {
-  const { register, handleSubmit, control } = useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { register, handleSubmit, control, reset } = useForm();
+  const { userAllVehicles } = useSelector((state) => state.userListVehicles);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const vehicle_id = queryParams.get("vehicle_id");
+
+  let updateingItem = "";
+  userAllVehicles.forEach((cur) => {
+    if (cur._id === vehicle_id) {
+      updateingItem = cur;
+    }
+  });
+
+  const insuranceDefaultDate = updateingItem.insurance_end
+    ? dayjs(new Date(updateingItem.insurance_end))
+    : null;
+  const registerationDefaultDate = updateingItem.registeration_end
+    ? dayjs(new Date(updateingItem.registeration_end))
+    : null;
+    const pollutionDefaultDate = updateingItem.pollution_end
+    ? dayjs(new Date(updateingItem.pollution_end))
+    : null;
+
+  const onEditSubmit = async (editData) => {
+    try {
+      if (editData && vehicle_id) {
+        const formData = editData;
+        dispatch(setEditData({ _id: vehicle_id, ...formData }));
+        await fetch(`/api/admin/editVehicle/${vehicle_id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ formData }),
+        });
+        dispatch(setEditData(null));
+      }
+      reset();
+    } catch (error) {
+      console.log(error);
+    }
+    navigate("/adminDashboard/allProduct");
+  };
+
+  const handleClose = () => {
+    navigate("/adminDashboard/allProduct");
+    dispatch(setEditData(null));
+  };
+
   return (
     <div>
-      <form
-        onSubmit={handleSubmit((data, e) => {
-          e.preventDefault();
-          console.log(data);
-        })}
-      >
+      <button onClick={handleClose} className="relative left-10 top-5">
+        <div className="padding-5 padding-2 rounded-full bg-slate-100 drop-shadow-md hover:shadow-lg hover:bg-blue-200 hover:translate-y-1 hover:translate-x-1 ">
+          <IoMdClose style={{ fontSize: "30" }} />
+        </div>
+      </button>
+      <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="bg-white -z-10 max-w-[1000px] mx-auto">
           <Box
             sx={{
@@ -28,8 +85,8 @@ export default function EditProductComponent() {
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "black", // Set outline color to black
                 },
-                '@media (max-width: 640px)': {
-                 width:'30ch',
+                "@media (max-width: 640px)": {
+                  width: "30ch",
                 },
               },
             }}
@@ -42,31 +99,46 @@ export default function EditProductComponent() {
                 id="registeration_number"
                 label="registeration_number"
                 {...register("registeration_number")}
+                defaultValue={updateingItem?.registeration_number || ""}
               />
               <TextField
                 required
                 id="company"
                 label="company"
                 {...register("company")}
+                defaultValue={updateingItem?.company || ""}
               />
               <TextField
                 required
                 id="name"
                 label="name"
                 {...register("name")}
+                defaultValue={updateingItem?.name || ""}
               />
-              <TextField id="model" label="model" {...register("model")} />
-              <TextField id="title" label="title" {...register("title")} />
+              <TextField
+                id="model"
+                label="model"
+                {...register("model")}
+                defaultValue={updateingItem?.model || ""}
+              />
+              <TextField
+                id="title"
+                label="title"
+                {...register("title")}
+                defaultValue={updateingItem?.car_title || ""}
+              />
               <TextField
                 id="base_package"
                 label="base_package"
                 {...register("base_package")}
+                defaultValue={updateingItem?.base_package || ""}
               />
               <TextField
                 id="price"
                 type="number"
                 label="Price"
                 {...register("price")}
+                defaultValue={updateingItem?.price || ""}
               />
 
               <TextField
@@ -75,14 +147,36 @@ export default function EditProductComponent() {
                 type="number"
                 label="year_made"
                 {...register("year_made")}
+                defaultValue={updateingItem?.year_made || ""}
               />
+              <Controller
+                control={control}
+                name="fuelType"
+                defaultValue={updateingItem?.fuel_type || ""}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    id="fuel_type"
+                    select
+                    label="Fuel type"
+                    error={Boolean(field.value == "")}
+                  >
+                    <MenuItem value={"petrol"}>petrol</MenuItem>
+                    <MenuItem value={"diesel"}>diesel</MenuItem>
+                    <MenuItem value={"electirc"}>electric</MenuItem>
+                    <MenuItem value={"hybrid"}>hybrid</MenuItem>
+                  </TextField>
+                )}
+              ></Controller>
+             
             </div>
 
             <div>
               <Controller
                 name="carType"
                 control={control}
-                defaultValue={""} // Set default value to an empty string
+                defaultValue={updateingItem?.car_type || ""}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -101,8 +195,8 @@ export default function EditProductComponent() {
 
               <Controller
                 control={control}
-                defaultValue={""}
                 name="Seats"
+                defaultValue={updateingItem?.seats || ""}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -111,6 +205,7 @@ export default function EditProductComponent() {
                     select
                     label="Seats"
                     error={Boolean(field.value === "")}
+                    defaultValue={updateingItem.seats}
                   >
                     <MenuItem value={"5"}>5</MenuItem>
                     <MenuItem value={"7"}>7</MenuItem>
@@ -122,7 +217,7 @@ export default function EditProductComponent() {
               <Controller
                 control={control}
                 name="transmitionType"
-                defaultValue={""}
+                defaultValue={updateingItem?.transmition || ""}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -138,9 +233,12 @@ export default function EditProductComponent() {
                 )}
               ></Controller>
 
+
+
               <TextField
                 id="description"
                 label="description"
+                defaultValue={updateingItem?.car_description || ""}
                 multiline
                 rows={4}
                 sx={{
@@ -150,13 +248,14 @@ export default function EditProductComponent() {
                     minWidth: 565,
                   },
                 }}
+                {...register("description")}
               />
             </div>
             <div>
               <Controller
                 name="insurance_end_date"
                 control={control}
-                defaultValue={""} // Set the default value of your date field
+                defaultValue={insuranceDefaultDate}
                 render={({ field }) => (
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -174,7 +273,7 @@ export default function EditProductComponent() {
               <Controller
                 control={control}
                 name="Registeration_end_date"
-                defaultValue={""}
+                defaultValue={registerationDefaultDate}
                 render={({ field }) => (
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -192,7 +291,7 @@ export default function EditProductComponent() {
               <Controller
                 control={control}
                 name="polution_end_date"
-                defaultValue={""}
+                defaultValue={pollutionDefaultDate}
                 render={({ field }) => (
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -207,8 +306,10 @@ export default function EditProductComponent() {
                 )}
               ></Controller>
 
+              {/* editing for image is not done yet , default value for image is also not done yet */}
+
               {/* file upload section */}
-              <div className="lg:flex gap-4 ml-7">
+              <div className="flex flex-col items-start justify-center lg:flex-row gap-10 lg:justify-between lg:items-start   ml-7 mt-10">
                 <div className="max-w-[300px] sm:max-w-[600px]">
                   <label
                     className="block mb-2 text-sm font-medium text-gray-900 "
@@ -252,7 +353,7 @@ export default function EditProductComponent() {
                   <input
                     className="block w-full p-2 text-sm text-gray-50 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-black focus:outline-none dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-900"
                     aria-describedby="user_avatar_help"
-                    id="user_avatar"
+                    id="polution_image"
                     type="file"
                     multiple
                     {...register("polution_image")}
@@ -277,7 +378,11 @@ export default function EditProductComponent() {
                 </div>
               </div>
             </div>
-            <Button type="submit">submit</Button>
+            <div className="mt-10 flex justify-start items-center ml-7 mb-10">
+              <Button variant="contained" type="submit">
+                Submit
+              </Button>
+            </div>
           </Box>
         </div>
       </form>
