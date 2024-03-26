@@ -64,7 +64,7 @@ function SignIn() {
   return (
     <>
       <div
-        className={`pb-10 max-w-lg mx-auto mt-16  rounded-lg overflow-hidden  shadow-2xl`}
+        className={`max-w-[340px] pb-10 md:max-w-md min-h-[500px] mx-auto mt-[70px] md:mt-[80px] rounded-lg overflow-hidden  shadow-2xl`}
       >
         <div
           className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}
