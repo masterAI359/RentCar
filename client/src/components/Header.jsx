@@ -12,7 +12,7 @@ function Header() {
 
   return (
     <div
-      className={`w-full  flex justify-between items-center px-6 lg:py-6 lg:px-28 pt-10  `}
+      className={`w-full   flex justify-between items-center px-6 sm:px-12 md:px-18 lg:py-6 lg:px-28 pt-10 mt-5 md:mt-10 sm:max-w-[900px] lg:max-w-[1500px] mx-auto `}
     >
       <Link to="/">
         <div
@@ -47,7 +47,7 @@ function Header() {
             ) : (
               <button
                 id="signin"
-                className={`border-[1px] border-green-500 py-1 text-[12px] md:text-[14px] sm:py-[7px] px-2 sm:px-4 font-normal sm:font-semibold rounded-md `}
+                className={`border-[1px] hidden lg:inline-flex border-green-500 py-1 text-[12px] md:text-[14px] sm:py-[7px] px-2 sm:px-4 font-normal sm:font-semibold rounded-md `}
               >
                 Sign In
               </button>
@@ -82,7 +82,7 @@ function Header() {
           </button>
           {nav && (
             <div>
-              <div className="relative top-6 z-10 right-5">
+              <div className="absolute top-6 z-10 right-0  ">
                 <Link to={"/signIn"}>
                   {currentUser &&
                   !currentUser.isAdmin &&
@@ -91,14 +91,14 @@ function Header() {
                   ) : (
                     <button
                       id="signin"
-                      className={`border-[1px] border-green-500 py-1 text-[12px] md:text-[14px] sm:py-[7px] px-2 sm:px-4 font-normal sm:font-semibold  `}
+                      className={`border-[1px] w-[80px]  border-green-500 bg-green-500  py-1 text-[10px]   px-2  font-normal sm:font-semibold  `}
                     >
                       Sign In
                     </button>
                   )}
                 </Link>
               </div>
-              <ul className="flex flex-col  gap-y-1   items-center justify-start  absolute top-[70px] right-0  overflow-hidden z-10  list-none max-w-20  ">
+              <ul className="flex flex-col  gap-y-1   items-center justify-start  absolute top-[52px] right-0  overflow-hidden z-10  list-none max-w-20  ">
                 {navLinks.map((navlink, index) => (
                   <li key={index} className="rounded-lg px-10">
                     {index != 3 && (
@@ -113,13 +113,13 @@ function Header() {
                   </li>
                 ))}
               </ul>
-              
+
               <div>
                 {currentUser &&
                 !currentUser.isAdmin &&
                 !currentUser.isVendor ? (
                   <Link to={"/profile"}>
-                    <div className="text-white z-10 absolute top-[106px] right-0 text-[9px] hover:text-red-200 px-[26px] py-[5px] rounded-sm bg-black">
+                    <div className="text-white z-10 absolute top-[110px] right-0 text-[9px] hover:text-red-200 px-[26px] py-[5px] rounded-sm bg-black">
                       Profile
                     </div>
                   </Link>

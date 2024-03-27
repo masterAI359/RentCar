@@ -25,6 +25,7 @@ const VehicleDetails = () => {
   return (
     <div>
       <section className="py-12 sm:py-8 bg-slate-100">
+     
         <div className="container mx-auto px-4">
           <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt- lg:grid-cols-5 lg:gap-16">
             <div className="lg:col-span-3 lg:row-end-1">
@@ -38,7 +39,7 @@ const VehicleDetails = () => {
                     />
                   </div>
                 </div>
-                <div className="absolute top-2 left-10">
+                <div className="absolute top-2 left-5 md:left-10">
                  <TooltipComponent content={"back"} position="BottomCenter">
                       <Link to={'/vehicles'} ><IoArrowBackCircleSharp style={{fontSize:'40', hover:"fill-red-700"}} className="hover:fill-slate-500"/></Link>
                       </TooltipComponent>
