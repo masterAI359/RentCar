@@ -15,6 +15,7 @@ import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 
 import { Link } from "react-router-dom";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 
 
 const VehicleDetails = () => {
@@ -146,8 +147,8 @@ const VehicleDetails = () => {
 
               <div className="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                 <div className="flex items-end">
-                  <h1 className="text-3xl font-bold">
-                    ${singleVehicleDetail.price}
+                  <h1 className="text-3xl font-bold flex items-center justify-center">
+                  <FaIndianRupeeSign style={{width:'20', height:"20"}} />{singleVehicleDetail.price}
                   </h1>
                   <span className="text-base">/Day</span>
                 </div>

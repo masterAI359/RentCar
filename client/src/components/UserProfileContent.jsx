@@ -1,186 +1,56 @@
-import { useForm } from "react-hook-form";
+
+import { useSelector } from "react-redux";
+import ProfileEdit from "../pages/user/ProfileEdit";
 
 const UserProfileContent = () => {
-
-    const {register} = useForm();
+  const { email, username ,profilePicture} = useSelector((state) => state.user.currentUser);
+  
+  
   return (
-    <div className="px-4 mx-auto mt-12  bg-white max-w-7xl sm:px-6 lg:px-8">
-    <div className="px-4 py-6 border-t border-gray-200 sm:px-6">
-        <h1 className="my-5 text-4xl font-bold tracking-tight text-gray-900">
-          Name: { "New User"}
-        </h1>
-        <h3 className="my-5 text-xl font-bold tracking-tight text-red-900">
-          email address :
-        </h3>
-     
-          <h3 className="my-5 text-xl font-bold tracking-tight text-red-900">
-            role : 
-          </h3>
-    
+    <div className="px-4 mx-auto mt-12  bg-white w-full sm:px-6 lg:px-8">
+      <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-1/2 overflow-hidden">
+        <div className="h-[140px] bg-gradient-to-r from-cyan-500 to-blue-500"></div>
+        <div className="px-5 py-2 flex flex-col gap-3 pb-6">
+          <div className="h-[90px] relative shadow-md w-[90px] rounded-full border-4  -mt-14 border-white">
+            <img
+              src={profilePicture} alt="profile_picture"
+              className="w-full h-full rounded-full object-center object-cover"
+            />
+             <div className="absolute bottom-0 left-[60px] z-10 ">
+           
+           <button
+             type="button"
+             className=" p-3"
+           >
+             <ProfileEdit/>
+           </button>
+         </div>
+          </div>
+          <div className="">
+            <h3 className="text-xl text-slate-900 relative font-bold leading-6">
+              {username}
+            </h3>
+            <p className="text-sm text-gray-600">{email}</p>
+           
+
+          </div>
+          <div>
+          <h4 className="text-sm font-medium leading-1 mb-2">User Informations</h4>
+          <div className="flex flex-col gap-y-2">
+          <p className="text-sm text-gray-600">Phone:110100101001</p>
+          <p className="text-sm text-gray-600 max-w-[150px]">Adress:jeevan joji oollirickal house manjadi po thiruvalla 689105</p>
+          </div>
+          
+
+          </div>
+         
+          
+          
+         
+        </div>
       </div>
-    <div className="space-y-12">
-                <div className="pb-12 border-b border-gray-900/10">
-                  <h2 className="text-2xl font-semibold leading-7 text-gray-900">
-                    Personal Information
-                  </h2>
-                  <p className="mt-1 text-sm leading-6 text-gray-600">
-                    Use a permanent address where you can receive mail.
-                  </p>
+    </div>
+  );
+};
 
-                  <div className="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-6">
-                    <div className="sm:col-span-4">
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Full name
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="text"
-                          {...register("name", {
-                            required: "name is required",
-                          })}
-                          id="name"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                       
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-4">
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Email address
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          id="email"
-                          {...register("email", {
-                            required: "email is required",
-                          })}
-                          type="email"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                        
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-3">
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Phone
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          id="phoneNo"
-                          {...register("phoneNo", {
-                            required: "phone number is required",
-                          })}
-                          type="tel"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                        
-                      </div>
-                    </div>
-
-                    <div className="col-span-full">
-                      <label
-                        htmlFor="additionalLocation"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Street/Apartement/Floor etc
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="text"
-                          {...register("additionalLocation")}
-                          id="street"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                       
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-2 sm:col-start-1">
-                      <label
-                        htmlFor="city"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        City
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="text"
-                          {...register("city", {
-                            
-                          })}
-                          id="city"
-                          autoComplete="address-level2"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                        
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label
-                        htmlFor="state"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Company (optional)
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="text"
-                          {...register("company")}
-                          id="state"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                       
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label
-                        htmlFor="postalCode"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        ZIP / Postal code
-                      </label>
-                      <div className="mt-2">
-                        <input
-                          type="text"
-                          {...register("postalCode", {
-                            required: "postalCode is required",
-                          })}
-                          id="postalCode"
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        />
-                       
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end mt-6 gap-x-6">
-                  <button
-                    
-                    className="text-black btn btn-neutral"
-                  >
-                    cancel
-                  </button>
-                  <button type="submit" className="text-black btn btn-neutral">
-                    Add Address
-                  </button>
-                </div>
-              </div>
-              </div>
-  )
-}
-
-export default UserProfileContent
+export default UserProfileContent;

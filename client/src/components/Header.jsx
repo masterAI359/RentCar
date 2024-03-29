@@ -98,7 +98,7 @@ function Header() {
                   )}
                 </Link>
               </div>
-              <ul className="flex flex-col  gap-y-1   items-center justify-start  absolute top-[52px] right-0  overflow-hidden z-10  list-none max-w-20  ">
+              <ul className="flex flex-col  gap-y-1   items-center justify-start  absolute top-[52px] right-0  overflow-hidden z-20 md:z-10  list-none max-w-20  ">
                 {navLinks.map((navlink, index) => (
                   <li key={index} className="rounded-lg px-10">
                     {index != 3 && (
@@ -119,7 +119,7 @@ function Header() {
                 !currentUser.isAdmin &&
                 !currentUser.isVendor ? (
                   <Link to={"/profile"}>
-                    <div className="text-white z-10 absolute top-[110px] right-0 text-[9px] hover:text-red-200 px-[26px] py-[5px] rounded-sm bg-black">
+                    <div className="text-white z-20  absolute top-[110px] right-0 text-[9px] hover:text-red-200 px-[26px] py-[5px] rounded-sm bg-black">
                       Profile
                     </div>
                   </Link>
