@@ -18,7 +18,9 @@ const UserProfileSidebar = () => {
     (state) => state.adminDashboardSlice
   );
 
-  const { currentUser, isLoading } = useSelector((state) => state.user);
+  const { currentUser, isLoading } = useSelector(
+    (state) => state.user
+  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,9 +66,9 @@ const UserProfileSidebar = () => {
         <>
           <div className="flex justify-between items-center">
             <Link
-              to={`/home`}
+              to={`/`}
               onClick={() => {}}
-              className="items-center flex gap-3 mt-4 ml-3 text-xl font-extrabold text-blue-500 tracking-tight "
+              className="items-center flex gap-3 mt-4 ml-3 text-xl font-extrabold text-black tracking-tight "
             >
               <SiShopware />
               Rent a Ride
@@ -108,8 +110,9 @@ const UserProfileSidebar = () => {
               </div>
             ))}
 
-            <div>
-              <div className="flex items-center mt-10 gap-2">
+            <div className="flex flex-col gap-y-5">
+
+            <div className="flex items-center mt-10 gap-2">
                 <button
                   type="button"
                   className="ml-4 text-red-400"
@@ -120,14 +123,17 @@ const UserProfileSidebar = () => {
                 <CiLogout />
               </div>
               <div className="ml-4">
-                <button
-                  className="text-red-400"
-                  onClick={handleDelete}
-                  type="button"
-                >
-                  {isLoading ? "Loading..." : "Delete User"}
-                </button>
+              <button
+                className="text-red-400"
+                onClick={handleDelete}
+                type="button"
+              >
+                {isLoading ? "Loading..." : "Delete User"}
+              </button>
               </div>
+              
+
+              
             </div>
           </div>
         </>
