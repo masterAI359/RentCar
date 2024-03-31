@@ -8,3 +8,4 @@ function Contact() {
 }
 
 export default Contact
+// this is our contact page
