@@ -14,7 +14,7 @@ export default {
       backgroundImage: {
         'hero-pattern':
           "url('/Users/jeevan/copy/Rent a drive/client/src/pages/admin/data/welcome-bg.svg')",
-      },
+      }
     },
    
   },

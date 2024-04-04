@@ -5,12 +5,6 @@ import { setEditData } from "../../../redux/adminSlices/actions";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Button,
 } from "@mui/material";
 import { Header } from "../components";
@@ -19,6 +13,10 @@ import toast, { Toaster } from "react-hot-toast";
 import { DataGrid } from "@mui/x-data-grid";
 
 import Box from "@mui/material/Box";
+import { showVehicles } from "../../../redux/user/listAllVehicleSlice";
+
+
+
 
 function AllVehicles() {
   const navigate = useNavigate();
@@ -27,6 +25,7 @@ function AllVehicles() {
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
 
   const [allVehicles, setVehicles] = useState([]);
+  
 
   //show vehicles
   useEffect(() => {
@@ -38,6 +37,7 @@ function AllVehicles() {
         if (res.ok) {
           const data = await res.json();
           setVehicles(data);
+          dispatch(showVehicles(data))
         }
       } catch (error) {
         console.log(error);
@@ -75,124 +75,73 @@ function AllVehicles() {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
     {
-      field: "firstName",
-      headerName: "First name",
+      field: "image",
+      headerName: "Image",
       width: 150,
-      editable: true,
+      renderCell: (params) => (
+        <img
+          src={params.value}
+          style={{
+            width: "50px",
+            height: "40px",
+            borderRadius: "5px",
+            objectFit: "cover",
+          }}
+          alt="vehicle"
+          
+        />
+      ),
     },
     {
-      field: "lastName",
-      headerName: "Last name",
+      field: "registeration_number",
+      headerName: "Register Number",
       width: 150,
-      editable: true,
+    },
+    { field: "company", headerName: "Company", width: 150 },
+    { field: "name", headerName: "Name", width: 150 },
+    {
+      field: "edit",
+      headerName: "Edit",
+      width: 100,
+      renderCell: (params) => (
+       
+        <Button onClick={() => handleEditVehicle(params.row.id)}>
+          <ModeEditOutlineIcon />
+        </Button>
+      ),
     },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      width: 110,
-      editable: true,
+      field: "delete",
+      headerName: "Delete",
+      width: 100,
+      renderCell: (params) => (
+        <Button onClick={() => handleDelete(params.row.id)}>
+          <DeleteForeverIcon />
+        </Button>
+      ),
     },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-     
-    },
+    
   ];
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 14 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 31 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 31 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 11 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
+  const rows = allVehicles
+    .filter((vehicle) => vehicle.isDeleted === "false")
+    .map((vehicle) => ({
+      id: vehicle._id,
+      image: vehicle.image,
+      registeration_number: vehicle.registeration_number,
+      company: vehicle.company,
+      name: vehicle.name,
+    }));
 
+ 
   return (
     <>
-      <div className="w-full d-flex   justify-end text-start items-end p-10">
+      <div className="max-w-[1000px]  d-flex   justify-end text-start items-end p-10">
         <Header title="AllVehicles" />
         <Toaster />
-        <TableContainer
-          sx={{
-            marginLeft: "auto",
-            marginRight: "40px",
-            textAlign: "right",
-          }}
-        >
-          <Table aria-label="caption table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ color: "red" }}>Image</TableCell>
-                <TableCell style={{ color: "red" }}>Register Number</TableCell>
-                <TableCell style={{ color: "red" }} align="left">
-                  Company
-                </TableCell>
-                <TableCell style={{ color: "red" }} align="left">
-                  name
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allVehicles.map(
-                (cur, idx) =>
-                  cur.isDeleted === "false" && (
-                    <>
-                      <TableRow style={{ color: "black" }} key={idx}>
-                        <TableCell>
-                          <img
-                            key={idx}
-                            style={{
-                              width: "50px",
-                              height: "40px",
-                              borderRadius: "5px",
-                              objectFit: "cover",
-                            }}
-                            src={cur.image}
-                            id="image"
-                          />
-                        </TableCell>
-                        <TableCell
-                          style={{ color: "black" }}
-                          component="th"
-                          scope="row"
-                        >
-                          {cur.registeration_number}
-                        </TableCell>
-                        <TableCell style={{ color: "black" }} align="left">
-                          {cur.company}
-                        </TableCell>
-                        <TableCell style={{ color: "black" }} align="left">
-                          {cur.name}
-                        </TableCell>
-                        <TableCell
-                          sx={{ color: "black", padding: 0, align: "right" }}
-                        >
-                          <Button onClick={() => handleEditVehicle(cur._id)}>
-                            <ModeEditOutlineIcon />{" "}
-                          </Button>
-                          <Button onClick={() => handleDelete(cur._id)}>
-                            <DeleteForeverIcon />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    </>
-                  )
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
 
-        <Box sx={{ height: 400, width: "100%" }}>
+        <Box sx={{ height: "100%", width: "100%" }}>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -206,6 +155,18 @@ function AllVehicles() {
             pageSizeOptions={[5]}
             checkboxSelection
             disableRowSelectionOnClick
+            
+            sx={{
+              '.MuiDataGrid-columnSeparator': {
+                display: 'none',
+                
+              },
+              '&.MuiDataGrid-root': {
+                border: 'none',
+               
+
+              },
+            }}
           />
         </Box>
 
