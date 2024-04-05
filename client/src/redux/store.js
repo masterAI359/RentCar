@@ -6,22 +6,21 @@ import persistStore from "redux-persist/es/persistStore";
 // import globalReducer from "./adminSlices/adminSlice.jsx";
 import AddVehiclereducer from "./adminSlices/reducer.js";
 import adminReducer from "./adminSlices/adminDashboardSlice/DashboardSlice.jsx";
-import userListVehiclesReducer from './user/listAllVehicleSlice.jsx'
-
-
+import userListVehiclesReducer from "./user/listAllVehicleSlice.jsx";
 
 const rootReducer = combineReducers({
   user: userReducer,
   // global: globalReducer,
   addVehicle: AddVehiclereducer,
-  adminDashboardSlice:adminReducer,
-  userListVehicles:userListVehiclesReducer
+  adminDashboardSlice: adminReducer,
+  userListVehicles: userListVehiclesReducer,
 });
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
+  whitelist: ["user"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
