@@ -9,7 +9,6 @@ const UserProfileContent = () => {
   );
   const dispatch = useDispatch();
   const isUpdated = useSelector((state) => state.user.isUpdated);
-  console.log(isUpdated);
   if (isUpdated) {
     toast.success("successfully updated");
     dispatch(setUpdated(false));
@@ -18,7 +17,7 @@ const UserProfileContent = () => {
   return (
     <div className="px-4 mx-auto mt-12  bg-white w-full sm:px-6 lg:px-8">
       <Toaster />
-      <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-1/2 overflow-hidden">
+      <div className="bg-white md:mx-auto rounded shadow-xl w-full  overflow-hidden">
         <div className="h-[140px] bg-gradient-to-r from-cyan-500 to-blue-500"></div>
         <div className="px-5 py-2 flex flex-col gap-3 pb-6">
           <div className="h-[90px] relative shadow-md w-[90px] rounded-full border-4  -mt-14 border-white">

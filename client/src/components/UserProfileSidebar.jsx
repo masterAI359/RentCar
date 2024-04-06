@@ -73,10 +73,11 @@ const UserProfileSidebar = () => {
               <SiShopware />
               Rent a Ride
             </Link>
+            {/* hide sidebar button */}
             <TooltipComponent content={"menu"} position="BottomCenter">
               <button
-                className="text-xl rounded-full p-3 mt-4 block md:hidden hover:bg-gray-500"
-                onClick={() => {}}
+                className="text-xl rounded-full p-3 mt-4 block  hover:bg-gray-500"
+                onClick={() => {dispatch(showSidebarOrNot(false))}}
               >
                 <MdOutlineCancel />
               </button>
