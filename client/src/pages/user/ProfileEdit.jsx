@@ -16,7 +16,7 @@ const ProfileEdit = () => {
   );
 
   const dispatch = useDispatch();
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const editProfileData = async (data, id) => {
     try {
@@ -47,14 +47,14 @@ const ProfileEdit = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        className="bg-white rounded-md max-w-[600px]"
+        className="bg-white mt-10 rounded-md max-w-[600px] min-w-[360px]"
       >
         <form onSubmit={handleSubmit((data) => editProfileData(data, _id))}>
           <div className="p-8">
             <h2 className="font-bold">Make changes to your profile</h2>
             {/* mui components */}
 
-            <div className="flex flex-col mx-auto md:min-w-[500px] gap-10 my-10">
+            <div className="flex flex-col mx-auto md:min-w-[500px]  gap-10 my-10">
               <TextField
                 id="username"
                 label="Name"
@@ -93,10 +93,10 @@ const ProfileEdit = () => {
 
             <div className="flex justify-end items-center gap-x-2">
               <button
+                type="button"
                 className="w-[100px] rounded-sm text-white bg-red-500 p-2"
                 onClick={() => {
                   setIsModalOpen(false);
-                  reset();
                 }}
               >
                 Close
