@@ -2,10 +2,10 @@ import { Button, Modal } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addVehicleClicked,
-  setEditData,
+  // setEditData,
 } from "../../../redux/adminSlices/actions";
 import { useForm, Controller } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 const AddProductModal = () => {
@@ -13,32 +13,16 @@ const AddProductModal = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const { isAddVehicleClicked, editData } = useSelector(
+  const { isAddVehicleClicked } = useSelector(
     (state) => state.addVehicle
   );
-
-  //get vehicle id from request
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const vehicle_id = queryParams.get("vehicle_id");
 
   
 
   const onSubmit = async (data) => {
     
     try {
-      if (editData) {
-        const formData = data;
-        dispatch(setEditData({ _id: vehicle_id, ...formData }));
-        await fetch(`/api/admin/editVehicle/${editData._id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ formData }),
-        });
-        dispatch(setEditData(null));
-      } else {
+     
         const formData = new FormData();
 
         formData.append("registeration_number", data.registeration_number);
@@ -78,7 +62,7 @@ const AddProductModal = () => {
           toast.success("added");
           toast.dismiss(tostID);
         }
-      }
+      
       reset();
     } catch (error) {
       console.log(error);
