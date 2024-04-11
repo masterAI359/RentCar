@@ -7,6 +7,7 @@ import persistStore from "redux-persist/es/persistStore";
 import AddVehiclereducer from "./adminSlices/reducer.js";
 import adminReducer from "./adminSlices/adminDashboardSlice/DashboardSlice.jsx";
 import userListVehiclesReducer from "./user/listAllVehicleSlice.jsx";
+import modelDataSlice from './adminSlices/adminDashboardSlice/CarModelDataSlice.jsx';
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   addVehicle: AddVehiclereducer,
   adminDashboardSlice: adminReducer,
   userListVehicles: userListVehiclesReducer,
+  modelDataSlice : modelDataSlice,
 });
 
 const persistConfig = {

@@ -7,62 +7,110 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
+import {
+  setModelData,
+  setCompanyData,
+  setLocationData,
+  setDistrictData,
+} from "../../../redux/adminSlices/adminDashboardSlice/CarModelDataSlice";
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 const AddProductModal = () => {
   const { register, handleSubmit, reset, control } = useForm();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const { isAddVehicleClicked } = useSelector(
-    (state) => state.addVehicle
-  );
+  const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
+  const { modelData,  companyData, locationData, districtData } =
+    useSelector((state) => state.modelDataSlice);
 
-  
+  const fetchModelData = async () => {
+    try {
+      const res = await fetch("/api/admin/getVehicleModels", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+
+        //getting models from data
+        const models = data
+          .filter((cur) => cur.type === "car")
+          .map((cur) => cur.model);
+        dispatch(setModelData(models));
+
+        //getting comapnys from data
+        const brand = data
+          .filter((cur) => cur.type === "car")
+          .map((cur) => cur.brand);
+        dispatch(setCompanyData(brand));
+
+        //getting locations from data
+        const locations = data
+          .filter((cur) => cur.type === "location")
+          .map((cur) => cur.location);
+        dispatch(setLocationData(locations));
+
+        //getting districts from data
+        const districts = data
+          .filter((cur) => cur.type === "location")
+          .map((cur) => cur.district);
+        dispatch(setDistrictData(districts));
+      } else {
+        return "no data found";
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchModelData();
+  }, []);
 
   const onSubmit = async (data) => {
-    
     try {
-     
-        const formData = new FormData();
+      const formData = new FormData();
 
-        formData.append("registeration_number", data.registeration_number);
-        formData.append("company", data.company);
-        formData.append("image", data.image[0]);
-        formData.append("name", data.name);
-        formData.append("model", data.model);
-        formData.append("title", data.title);
-        formData.append("base_package", data.base_package);
-        formData.append("price", data.price);
-        formData.append("description",data.description)
-        formData.append('year_made', data.year_made)
-        formData.append("fuel_type", data.fuel_type);
-        formData.append("seat", data.seat);
-        formData.append("transmition_type", data.transmition_type);
-        formData.append("insurance_end_date", data.insurance_end_date);
-        formData.append("registeration_end_date", data.registeration_end_date);
-        formData.append("polution_end_date", data.polution_end_date);
-        formData.append("car_type", data.car_type);
-        
+      formData.append("registeration_number", data.registeration_number);
+      formData.append("company", data.company);
+      formData.append("image", data.image[0]);
+      formData.append("name", data.name);
+      formData.append("model", data.model);
+      formData.append("title", data.title);
+      formData.append("base_package", data.base_package);
+      formData.append("price", data.price);
+      formData.append("description", data.description);
+      formData.append("year_made", data.year_made);
+      formData.append("fuel_type", data.fuel_type);
+      formData.append("seat", data.seat);
+      formData.append("transmition_type", data.transmition_type);
+      formData.append("insurance_end_date", data.insurance_end_date);
+      formData.append("registeration_end_date", data.registeration_end_date);
+      formData.append("polution_end_date", data.polution_end_date);
+      formData.append("car_type", data.car_type);
 
-        let tostID;
-        if (formData) {
-          
-          tostID = toast.loading("saving...", { position: "bottom-center" });
-        }
-        const res = await fetch("/api/admin/addProduct", {
-          method: "POST",
-          body: formData,
-        });
+      let tostID;
+      if (formData) {
+        tostID = toast.loading("saving...", { position: "bottom-center" });
+      }
+      const res = await fetch("/api/admin/addProduct", {
+        method: "POST",
+        body: formData,
+      });
 
-        if (!res.ok) {
-          toast.error("error");
-          toast.dismiss(tostID);
-        }
-        if (res.ok) {
-          toast.success("added");
-          toast.dismiss(tostID);
-        }
-      
+      if (!res.ok) {
+        toast.error("error");
+        toast.dismiss(tostID);
+      }
+      if (res.ok) {
+        toast.success("added");
+        toast.dismiss(tostID);
+      }
+
       reset();
     } catch (error) {
       console.log(error);
@@ -73,7 +121,7 @@ const AddProductModal = () => {
 
   return (
     <>
-     <Toaster />
+      <Toaster />
       {isAddVehicleClicked && (
         <Modal
           show={isAddVehicleClicked}
@@ -86,18 +134,16 @@ const AddProductModal = () => {
           <Modal.Body className="bg-blue-100 px-2">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="">
+                <div>
+                  <input
+                    className="p-2"
+                    type="file"
+                    multiple
+                    id="image"
+                    {...register("image")}
+                  />
+                </div>
 
-              <div>
-                 
-                 <input
-                   className="p-2"
-                   type="file"
-                   multiple
-                   id="image"
-                   {...register("image")}
-                 />
-               </div>
-               
                 <div>
                   <input
                     className="mx-auto px-10 py-3 rounded-md"
@@ -107,15 +153,65 @@ const AddProductModal = () => {
                     {...register("registeration_number")}
                   />
                 </div>
+
                 <div>
-                  <input
-                    className="mx-auto px-10 py-3 rounded-md"
-                    type="text"
-                    placeholder="company"
-                    id="company"
-                    {...register("company")}
+                  <label htmlFor="company">company</label>
+                  <Controller
+                    name="company"
+                    control={control}
+                    render={({ field }) => (
+                      <select {...field} id="company" className="p-2">
+                        {companyData.map((cur, idx) => (
+                          <option value={cur} key={idx}>
+                            {cur}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   />
                 </div>
+
+
+                <div>
+                  <FormControl fullWidth>
+                    <InputLabel htmlFor="districts">districts</InputLabel>
+                    <Controller
+                      name="districts"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          id="districts"
+                          className="p-2"
+                        >
+                          {districtData.map((cur, idx) => (
+                            <MenuItem value={cur} key={idx}>
+                              {cur}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </FormControl>
+                </div>
+
+                <div>
+                  <label htmlFor="location">location</label>
+                  <Controller
+                    name="location"
+                    control={control}
+                    render={({ field }) => (
+                      <select {...field} id="location" className="p-2">
+                        {locationData.map((cur, idx) => (
+                          <option value={cur} key={idx}>
+                            {cur}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  />
+                </div>
+
                 <div>
                   <input
                     className="mx-auto px-10 py-3 rounded-md"
@@ -127,12 +223,19 @@ const AddProductModal = () => {
                 </div>
 
                 <div>
-                  <input
-                    className="mx-auto px-10 py-3 rounded-md"
-                    type="text"
-                    placeholder="model"
-                    id="model"
-                    {...register("model")}
+                  <label htmlFor="model">Model</label>
+                  <Controller
+                    name="model"
+                    control={control}
+                    render={({ field }) => (
+                      <select {...field} id="model" className="p-2">
+                        {modelData.map((cur, idx) => (
+                          <option value={cur} key={idx}>
+                            {cur}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   />
                 </div>
 
@@ -155,7 +258,6 @@ const AddProductModal = () => {
                     {...register("base_package")}
                   />
                 </div>
-
 
                 <div>
                   <input
@@ -250,7 +352,6 @@ const AddProductModal = () => {
                   />
                 </div>
 
-             
                 <div>
                   <label htmlFor="insurance_end_date">Insurance end date</label>
                   <input
@@ -263,7 +364,9 @@ const AddProductModal = () => {
                 </div>
 
                 <div>
-                <label htmlFor="registeration_end_date">Registeration end date</label>
+                  <label htmlFor="registeration_end_date">
+                    Registeration end date
+                  </label>
                   <input
                     className="mx-auto px-10 py-3 rounded-md"
                     type="Date"
@@ -317,10 +420,6 @@ const AddProductModal = () => {
                     {...register("polution_image")}
                   />
                 </div>
-
-
-
-
               </div>
               <div className="flex justify-end w-full gap-2">
                 <Button
@@ -328,7 +427,6 @@ const AddProductModal = () => {
                   className="bg-red-500 text-white px-3 py-1"
                 >
                   Cancel
-                 
                 </Button>
                 <button
                   type="submit"
@@ -346,4 +444,3 @@ const AddProductModal = () => {
 };
 
 export default AddProductModal;
-

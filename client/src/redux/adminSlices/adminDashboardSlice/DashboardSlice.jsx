@@ -8,7 +8,6 @@ const initialState = {
     activeMenu:true,
     isClicked:false,
     screenSize: window.innerWidth,
-
 };
 
 
