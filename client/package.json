@@ -31,6 +31,7 @@
     "@syncfusion/ej2-react-popups": "^19.4.52",
     "@syncfusion/ej2-react-richtexteditor": "^19.4.50",
     "@syncfusion/ej2-react-schedule": "^19.4.50",
+    "@tabler/icons-react": "^3.2.0",
     "dayjs": "^1.11.10",
     "flowbite-react": "^0.7.3",
     "react-datepicker": "^6.2.0",

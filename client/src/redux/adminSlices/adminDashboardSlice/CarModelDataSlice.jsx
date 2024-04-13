@@ -19,7 +19,7 @@ export const ModelDataSlice = createSlice({
       state.companyData = action.payload;
     },
     setLocationData: (state, action) => {
-      state.locationData = action.payload;
+      state.locationData = (action.payload)
     },
     setDistrictData : (state,action)=> {
       state.districtData = action.payload;

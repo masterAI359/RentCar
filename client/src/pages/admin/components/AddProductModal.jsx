@@ -15,60 +15,66 @@ import {
   setDistrictData,
 } from "../../../redux/adminSlices/adminDashboardSlice/CarModelDataSlice";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { setWholeData } from "../../../redux/user/selectRideSlice";
+
+export const fetchModelData = async (dispatch) => {
+  try {
+    const res = await fetch("/api/admin/getVehicleModels", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+
+      //getting models from data
+      const models = data
+        .filter((cur) => cur.type === "car")
+        .map((cur) => cur.model);
+      dispatch(setModelData(models));
+
+      //getting comapnys from data
+      const brand = data
+        .filter((cur) => cur.type === "car")
+        .map((cur) => cur.brand);
+      dispatch(setCompanyData(brand));
+
+      //getting locations from data
+      const locations = data
+        .filter((cur) => cur.type === "location")
+        .map((cur) => cur.location);
+      dispatch(setLocationData(locations));
+
+      //getting districts from data
+      const districts = data
+        .filter((cur) => cur.type === "location")
+        .map((cur) => cur.district);
+      dispatch(setDistrictData(districts));
+
+      //setting whole data
+      const wholeData = data.filter(cur => cur.type==="location")
+      dispatch(setWholeData(wholeData))
+      
+
+    } else {
+      return "no data found";
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const AddProductModal = () => {
+  
   const { register, handleSubmit, reset, control } = useForm();
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
-  const { modelData,  companyData, locationData, districtData } =
-    useSelector((state) => state.modelDataSlice);
-
-  const fetchModelData = async () => {
-    try {
-      const res = await fetch("/api/admin/getVehicleModels", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.ok) {
-        const data = await res.json();
-
-        //getting models from data
-        const models = data
-          .filter((cur) => cur.type === "car")
-          .map((cur) => cur.model);
-        dispatch(setModelData(models));
-
-        //getting comapnys from data
-        const brand = data
-          .filter((cur) => cur.type === "car")
-          .map((cur) => cur.brand);
-        dispatch(setCompanyData(brand));
-
-        //getting locations from data
-        const locations = data
-          .filter((cur) => cur.type === "location")
-          .map((cur) => cur.location);
-        dispatch(setLocationData(locations));
-
-        //getting districts from data
-        const districts = data
-          .filter((cur) => cur.type === "location")
-          .map((cur) => cur.district);
-        dispatch(setDistrictData(districts));
-      } else {
-        return "no data found";
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { modelData, companyData, locationData, districtData } = useSelector((state) => state.modelDataSlice);
 
   useEffect(() => {
-    fetchModelData();
+    fetchModelData(dispatch);
   }, []);
 
   const onSubmit = async (data) => {
@@ -171,7 +177,6 @@ const AddProductModal = () => {
                   />
                 </div>
 
-
                 <div>
                   <FormControl fullWidth>
                     <InputLabel htmlFor="districts">districts</InputLabel>
@@ -179,11 +184,7 @@ const AddProductModal = () => {
                       name="districts"
                       control={control}
                       render={({ field }) => (
-                        <Select
-                          {...field}
-                          id="districts"
-                          className="p-2"
-                        >
+                        <Select {...field} id="districts" className="p-2">
                           {districtData.map((cur, idx) => (
                             <MenuItem value={cur} key={idx}>
                               {cur}
