@@ -14,7 +14,7 @@ const masterDataSchema = new mongoose.Schema({
    
   },
   location: {
-    type: String,
+    type: Object,
   },
   type: {
     type: String,
