@@ -303,6 +303,7 @@ body {
   display: flex;
   flex-direction: column;
   color: #010103;
+
 }
 
 @media (max-width: 400px) {
@@ -323,6 +324,7 @@ body {
   grid-template-rows: auto auto auto;
   gap: 1rem;
 }
+
 
 .book-content__box .box-form b {
   color: black;
@@ -381,7 +383,7 @@ body {
   outline: none;
   color: #878585;
   padding-right: 3rem;
-  border: 1px solid #ccd7e6;
+  border: none;
 }
 
 .book-content__box .box-form__car-time label {
@@ -404,7 +406,9 @@ body {
   
 }
 
-.book-content__box button {
+
+
+ .book-content__box_button {
   padding: 1rem 1rem;
   height: -moz-fit-content;
   height: fit-content;
@@ -418,11 +422,15 @@ body {
   box-shadow: 0 10px 15px rgba(117, 115, 115, 0.35);
   cursor: pointer;
   transition: all 0.3s;
+  
+}
+.book-content__box_button:active{
+  background-color: black;
+  box-shadow: 0 10px 15px rgba(12, 10, 10, 0.35);
+  color:white;
+
 }
 
-.book-content__box button:hover {
-  box-shadow: 0 10px 15px rgba(154, 152, 152, 0.55);
-}
 
 .error-message {
   color: #721c24;

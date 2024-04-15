@@ -6,32 +6,32 @@ import { errorHandler } from "../../utils/error.js";
 const dummyData = [
 
     //kochi
-    { id: uuidv4(), district: 'Kochi', location: {'kalamassery' : 'skoda service'}, type: 'location' },
-    { id: uuidv4(), district: 'Kochi', location: {'kalamassery' : 'volkswagen'}, type: 'location' },
-    { id: uuidv4(), district: 'Kochi', location: {'cheranallur' : 'volkswagen'}, type: 'location' },
+    { id: uuidv4(), district: 'Kochi', location: 'kalamassery : skoda service', type: 'location' },
+    { id: uuidv4(), district: 'Kochi', location: 'kalamassery : volkswagen', type: 'location' },
+    { id: uuidv4(), district: 'Kochi', location: 'cheranallur : volkswagen', type: 'location' },
 
     //kottayam
 
-    { id: uuidv4(), district: 'Kottayam', location: {'ettumanoor' : 'skoda service'}, type: 'location' },
-    { id: uuidv4(), district: 'Kottayam', location: {'kottayam' : 'railway station'}, type: 'location' },
-    { id: uuidv4(), district: 'Kottayam', location: {'thellakom' : 'volkswagen'}, type: 'location' },
+    { id: uuidv4(), district: 'Kottayam', location: 'ettumanoor : skoda service', type: 'location' },
+    { id: uuidv4(), district: 'Kottayam', location: 'kottayam : railway station', type: 'location' },
+    { id: uuidv4(), district: 'Kottayam', location: 'thellakom : volkswagen', type: 'location' },
 
     //trivandrum
 
-    { id: uuidv4(), district: 'Trivandrum', location: {'Nh 66 bybass' : 'kochuveli railway station'}, type: 'location' },
-    { id: uuidv4(), district: 'Trivandrum', location: {'tampanur' : 'central railway station'}, type: 'location' },
-    { id: uuidv4(), district: 'Trivandrum', location: {'kazhakootam' : 'railway station'}, type: 'location' },
+    { id: uuidv4(), district: 'Trivandrum', location: 'Nh 66 bybass : kochuveli railway station', type: 'location' },
+    { id: uuidv4(), district: 'Trivandrum', location: 'tampanur : central railway station', type: 'location' },
+    { id: uuidv4(), district: 'Trivandrum', location: 'kazhakootam : railway station', type: 'location' },
 
     //thrissur
-    { id: uuidv4(), district: 'Thrissur', location: {'thrissur' : 'railway station'}, type: 'location' },
-    { id: uuidv4(), district: 'Thrissur', location: {'valarkavu' : 'near ganam theater'}, type: 'location' },
-    { id: uuidv4(), district: 'Thrissur', location: {'paliyekara' : 'evm mg'}, type: 'location' },
+    { id: uuidv4(), district: 'Thrissur', location: 'thrissur : railway station', type: 'location' },
+    { id: uuidv4(), district: 'Thrissur', location: 'valarkavu : near ganam theater', type: 'location' },
+    { id: uuidv4(), district: 'Thrissur', location: 'paliyekara : evm mg', type: 'location' },
     
 
     //calicut
-    { id:uuidv4() , district: 'Calicut', location: {'calicut' : 'railway'}, type: 'location' },
-    { id: uuidv4(), district: 'Calicut', location: {'calicut' : 'airport'}, type: 'location' },
-    { id: uuidv4(), district: 'Calicut', location: {'pavangad' : 'evm nissan'}, type: 'location' },
+    { id:uuidv4() , district: 'Calicut', location: 'calicut : railway', type: 'location' },
+    { id: uuidv4(), district: 'Calicut', location: 'calicut : airport', type: 'location' },
+    { id: uuidv4(), district: 'Calicut', location: 'pavangad : evm nissan', type: 'location' },
     
 
     //cars
