@@ -3,6 +3,10 @@ import {
   IconMapPinFilled,
   IconX,
 } from "@tabler/icons-react";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchModelData } from "../admin/components/AddProductModal";
@@ -42,11 +46,22 @@ const CarSearch = () => {
     }
   }, [selectedDistrict]);
 
+  const hanldeData = (data) => {
+    try {
+      if (data) {
+        console.log(data)
+        
+      }  
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <section
         id="booking-section"
-        className="book-section relative z-10 mt-[50px] sm:mt-[-100px] lg:mt-[80px] bg-white"
+        className="book-section relative z-10 mt-[50px]  mx-auto max-w-[1500px] bg-white"
       >
         {/* overlay */}
 
@@ -64,25 +79,27 @@ const CarSearch = () => {
                 <IconX width={20} height={20} />
               </p>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(hanldeData)}>
                 <div className="box-form">
                   <div className="box-form__car-type">
-                    <label htmlFor="company">
-                      <IconMapPinFilled className="input-icon" /> &nbsp; Pick-up{" "}
+                    <label htmlFor="pickup_district">
+                      <IconMapPinFilled className="input-icon"/> &nbsp; Pick-up{" "}
                       <p className="text-red-500">*</p>
                     </label>
                     <Controller
-                      name="company"
+                      name="pickup_district"
                       control={control}
                       render={({ field }) => (
                         <select
                           {...field}
-                          id="company"
+                          id="pickup_district"
                           className="p-2 capitalize"
-                          onChange={(e) =>
-                            dispatch(setSelectedDistrict(e.target.value))
-                          }
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            dispatch(setSelectedDistrict(e.target.value));
+                          }}
                         >
+                          <option value="">Select a Place</option>
                           {uniqueDistrict.map((cur, idx) => (
                             <option value={cur} key={idx}>
                               {cur}
@@ -94,29 +111,39 @@ const CarSearch = () => {
                   </div>
 
                   <div className="box-form__car-type">
-                    <label>
+                    <label htmlFor="pickup_location">
                       <IconMapPinFilled className="input-icon" /> &nbsp; Pick-up{" "}
                       <p className="text-red-500">*</p>
                     </label>
-                    <select
-                      className="md:mb-10 capitalize"
-                      placeholder={"pick up location"}
-                      
-                    >
-                        {/* conditionaly rendering options based on district selected or not */}
-                      {locationsOfDistrict
-                        ? locationsOfDistrict.map((availableLocations, idx) => (
-                            <option value={availableLocations} key={idx}>
-                              {Object.keys(availableLocations)+ " : " + Object.values(availableLocations)}
-                            
-                            </option>
-                          ))
-                        : uniqueDistrict.map((cur, idx) => (
-                            <option value={cur} key={idx}>
-                              {cur}
-                            </option>
-                          ))}
-                    </select>
+                    <Controller
+                      name="pickup_location"
+                      control={control}
+                      render={({ field }) => (
+                        <select
+                          {...field}
+                          id="pickup_location"
+                          className="md:mb-10 capitalize"
+                          placeholder={"pick up location"}
+                          onChange={(e) => field.onChange(e.target.value)}
+                        >
+                          <option value="">Select a specific location</option>
+                          {/* conditionaly rendering options based on district selected or not */}
+                          {locationsOfDistrict
+                            ? locationsOfDistrict.map(
+                                (availableLocations, idx) => (
+                                  <option value={availableLocations} key={idx}>
+                                    {availableLocations}
+                                  </option>
+                                )
+                              )
+                            : uniqueDistrict.map((cur, idx) => (
+                                <option value={cur} key={idx}>
+                                  {cur}
+                                </option>
+                              ))}
+                        </select>
+                      )}
+                    />
                   </div>
 
                   <div className="box-form__car-type">
@@ -124,7 +151,33 @@ const CarSearch = () => {
                       <IconMapPinFilled className="input-icon" /> &nbsp; Drop-of{" "}
                       <p className="text-red-500">*</p>
                     </label>
-                    <select></select>
+                    <Controller
+                      name="dropoff_location"
+                      control={control}
+                      render={({ field }) => (
+                        <select
+                          {...field}
+                          id="dropoff_location"
+                          className="md:mb-10 capitalize"
+                          placeholder={"pick up location"}
+                          onChange={(e) => field.onChange(e.target.value)}
+                        >
+                          <option value="">
+                            Select a specific location to dropoff
+                          </option>
+                          {/* conditionaly rendering options based on district selected or not */}
+                          {locationsOfDistrict
+                            ? locationsOfDistrict.map(
+                                (availableLocations, idx) => (
+                                  <option value={availableLocations} key={idx}>
+                                    {availableLocations}
+                                  </option>
+                                )
+                              )
+                            : ""}
+                        </select>
+                      )}
+                    />
                   </div>
 
                   <div className="box-form__car-time">
@@ -132,7 +185,20 @@ const CarSearch = () => {
                       <IconCalendarEvent className="input-icon" /> &nbsp;
                       Pick-up <p className="text-red-500">*</p>
                     </label>
-                    <input id="picktime" type="date"></input>
+                    <Controller
+                      name={"pickuptime"}
+                      control={control}
+                      render={({ field }) => (
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["DateTimePicker"]}>
+                            <DateTimePicker
+                              label="when you want to pickup the vehicle"
+                              {...field}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      )}
+                    />
                   </div>
 
                   <div className="box-form__car-time">
@@ -140,181 +206,31 @@ const CarSearch = () => {
                       <IconCalendarEvent className="input-icon" /> &nbsp;
                       Drop-of <p className="text-red-500">*</p>
                     </label>
-                    <input id="droptime" type="date"></input>
+                    <Controller
+                      name={"dropofftime"}
+                      control={control}
+                      render={({ field }) => (
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["DateTimePicker"]}>
+                            <DateTimePicker
+                              label="when will you return the vehicle"
+                             
+                              {...field}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                      )}
+                    />
                   </div>
 
-                  <button type="submit">Search</button>
+
+                  <button type="submit" className="book-content__box_button"   >Search</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
       </section>
-
-      {/* modal ------------------------------------ */}
-
-      <div className={`booking-modal `}>
-        {/* title */}
-        <div className="booking-modal__title">
-          <h2>Complete Reservation</h2>
-        </div>
-        {/* message */}
-        <div className="booking-modal__message">
-          <h4>Upon completing this reservation enquiry, you will receive:</h4>
-          <p>
-            Your rental voucher to produce on arrival at the rental desk and a
-            toll-free customer support number.
-          </p>
-        </div>
-        {/* car info */}
-        <div className="booking-modal__car-info">
-          <div className="dates-div">
-            <div className="booking-modal__car-info__dates">
-              <h5>Location & Date</h5>
-              <span>
-                <IconMapPinFilled />
-                <div>
-                  <h6>Pick-Up Date & Time</h6>
-                  <p>
-                    / <input type="time" className="input-time"></input>
-                  </p>
-                </div>
-              </span>
-            </div>
-
-            <div className="booking-modal__car-info__dates">
-              <span>
-                <IconMapPinFilled />
-                <div>
-                  <h6>Drop-Off Date & Time</h6>
-                  <p>
-                    / <input type="time" className="input-time"></input>
-                  </p>
-                </div>
-              </span>
-            </div>
-
-            <div className="booking-modal__car-info__dates">
-              <span>
-                <IconMapPinFilled />
-                <div>
-                  <h6>Pick-Up Location</h6>
-                  <p>Pick up</p>
-                </div>
-              </span>
-            </div>
-
-            <div className="booking-modal__car-info__dates">
-              <span>
-                <IconMapPinFilled />
-                <div>
-                  <h6>Drop-Off Location</h6>
-                  <p>dropp off</p>
-                </div>
-              </span>
-            </div>
-          </div>
-          <div className="booking-modal__car-info__model">
-            <h5>
-              <span>Car -</span> car types
-            </h5>
-          </div>
-        </div>
-        {/* personal info */}
-        <div className="booking-modal__person-info">
-          <h4>Personal Information</h4>
-          <form className="info-form">
-            <div className="info-form__2col">
-              <span>
-                <label>
-                  First Name <b>*</b>
-                </label>
-                <input
-                  value={name}
-                  type="text"
-                  placeholder="Enter your first name"
-                ></input>
-                <p className="error-modal">This field is required.</p>
-              </span>
-
-              <span>
-                <label>
-                  Last Name <b>*</b>
-                </label>
-                <input type="text" placeholder="Enter your last name"></input>
-                <p className="error-modal ">This field is required.</p>
-              </span>
-
-              <span>
-                <label>
-                  Phone Number <b>*</b>
-                </label>
-                <input type="tel" placeholder="Enter your phone number"></input>
-                <p className="error-modal">This field is required.</p>
-              </span>
-
-              <span>
-                <label>
-                  Age <b>*</b>
-                </label>
-                <input type="number" placeholder="18"></input>
-                <p className="error-modal ">This field is required.</p>
-              </span>
-            </div>
-
-            <div className="info-form__1col">
-              <span>
-                <label>
-                  Email <b>*</b>
-                </label>
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                ></input>
-                <p className="error-modal">This field is required.</p>
-              </span>
-
-              <span>
-                <label>
-                  Address <b>*</b>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter your street address"
-                ></input>
-                <p className="error-modal ">This field is required.</p>
-              </span>
-            </div>
-
-            <div className="info-form__2col">
-              <span>
-                <label>
-                  City <b>*</b>
-                </label>
-                <input type="text" placeholder="Enter your city"></input>
-                <p className="error-modal">This field is required.</p>
-              </span>
-
-              <span>
-                <label>
-                  Zip Code <b>*</b>
-                </label>
-                <input type="text" placeholder="Enter your zip code"></input>
-                <p className="error-modal ">This field is required.</p>
-              </span>
-            </div>
-
-            <span className="info-form__checkbox">
-              <input type="checkbox"></input>
-              <p>Please send me latest news and updates</p>
-            </span>
-
-            <div className="reserve-button">
-              <button>Reserve Now</button>
-            </div>
-          </form>
-        </div>
-      </div>
     </>
   );
 };
