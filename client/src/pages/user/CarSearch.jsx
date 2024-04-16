@@ -46,14 +46,23 @@ const CarSearch = () => {
     }
   }, [selectedDistrict]);
 
-  const hanldeData = (data) => {
+//search cars
+  const hanldeData = async (data) => {
     try {
       if (data) {
-        console.log(data)
-        
-      }  
+       const res =  await fetch("api/user/searchCar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+       const result =  await res.json()
+       console.log("success",result)
+      }
     } catch (error) {
-      console.log(error);
+      console.log('Error  : ',error);
     }
   };
 
@@ -83,7 +92,7 @@ const CarSearch = () => {
                 <div className="box-form">
                   <div className="box-form__car-type">
                     <label htmlFor="pickup_district">
-                      <IconMapPinFilled className="input-icon"/> &nbsp; Pick-up{" "}
+                      <IconMapPinFilled className="input-icon" /> &nbsp; Pick-up{" "}
                       <p className="text-red-500">*</p>
                     </label>
                     <Controller
@@ -214,7 +223,6 @@ const CarSearch = () => {
                           <DemoContainer components={["DateTimePicker"]}>
                             <DateTimePicker
                               label="when will you return the vehicle"
-                             
                               {...field}
                             />
                           </DemoContainer>
@@ -223,8 +231,9 @@ const CarSearch = () => {
                     />
                   </div>
 
-
-                  <button type="submit" className="book-content__box_button"   >Search</button>
+                  <button type="submit" className="book-content__box_button">
+                    Search
+                  </button>
                 </div>
               </form>
             </div>
