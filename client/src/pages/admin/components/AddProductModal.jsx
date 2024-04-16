@@ -17,6 +17,7 @@ import {
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { setWholeData } from "../../../redux/user/selectRideSlice";
 
+
 export const fetchModelData = async (dispatch) => {
   try {
     const res = await fetch("/api/admin/getVehicleModels", {
@@ -37,8 +38,11 @@ export const fetchModelData = async (dispatch) => {
       //getting comapnys from data
       const brand = data
         .filter((cur) => cur.type === "car")
-        .map((cur) => cur.brand);
-      dispatch(setCompanyData(brand));
+        .map((cur) => cur.brand)
+      const uniqueBrand = brand.filter((cur, index) => {
+        return brand.indexOf(cur) === index;
+      });
+      dispatch(setCompanyData(uniqueBrand));
 
       //getting locations from data
       const locations = data
@@ -49,8 +53,11 @@ export const fetchModelData = async (dispatch) => {
       //getting districts from data
       const districts = data
         .filter((cur) => cur.type === "location")
-        .map((cur) => cur.district);
-      dispatch(setDistrictData(districts));
+        .map((cur) => cur.district)
+      const uniqueDistricts = districts.filter((cur,idx)=> {
+        return districts.indexOf(cur) === idx
+      })
+      dispatch(setDistrictData(uniqueDistricts));
 
       //setting whole data
       const wholeData = data.filter(cur => cur.type==="location")
@@ -72,6 +79,7 @@ const AddProductModal = () => {
   const dispatch = useDispatch();
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
   const { modelData, companyData, locationData, districtData } = useSelector((state) => state.modelDataSlice);
+ 
 
   useEffect(() => {
     fetchModelData(dispatch);
@@ -98,6 +106,8 @@ const AddProductModal = () => {
       formData.append("registeration_end_date", data.registeration_end_date);
       formData.append("polution_end_date", data.polution_end_date);
       formData.append("car_type", data.car_type);
+      formData.append('location',data.location);
+      formData.append('district',data.districts);
 
       let tostID;
       if (formData) {
@@ -289,7 +299,7 @@ const AddProductModal = () => {
                     render={({ field }) => (
                       <select {...field} id="fuel_type" className="p-2">
                         <option value="petrol">Petrol</option>
-                        <option value="disel">Disel</option>
+                        <option value="diesel">Disel</option>
                         <option value="electric">Electric</option>
                         <option value="hybrid">Hybrid</option>
                       </select>

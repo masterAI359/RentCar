@@ -124,6 +124,14 @@ const vehicleSchema = new mongoose.Schema({
     type:String,
     default:false,
     required:false
+  },
+  location:{
+    type:String,
+    required:true
+  },
+  district:{
+    type:String,
+    required:true
   }
 
 });

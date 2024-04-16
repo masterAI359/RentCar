@@ -35,3 +35,19 @@ export const listAllVehicles = async (req, res, next) => {
       next(errorHandler(500, "something went wrong"));
     }
   };
+
+
+
+
+  //search car filter in homepage
+  export const searchCar = async (req,res,next)=> {
+    try{
+      if(req && req.body){
+          const {pickup_district} = req.body
+          
+      }
+    }
+    catch(error){
+      next(errorHandler(500, "something went wrong while Searching car"))
+    }
+  }
