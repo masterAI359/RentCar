@@ -135,7 +135,7 @@ export const editVehicle = async (req, res, next) => {
       return next(errorHandler(404, "Add data to edit first"));
     }
 
-    const { registeration_number, company, name,  model,title,base_package,price,year_made,description,Seats,transmitionType ,Registeration_end_date,insurance_end_date,polution_end_date,carType,fuelType } = req.body.formData;
+    const { registeration_number, company, name,  model,title,base_package,price,year_made,description,Seats,transmitionType ,Registeration_end_date,insurance_end_date,polution_end_date,carType,fuelType,vehicleLocation,vehicleDistrict} = req.body.formData;
 
     try {
       const edited = await Vehicle.findByIdAndUpdate(
@@ -154,7 +154,12 @@ export const editVehicle = async (req, res, next) => {
               registeration_end:Registeration_end_date,
               pollution_end:polution_end_date,
               car_type:carType,
-              updated_at:Date.now() },
+              updated_at:Date.now(),
+              location:vehicleLocation,
+              district:vehicleDistrict,
+            },
+              
+              
         { new: true },
       );
       if (!edited) {

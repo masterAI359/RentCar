@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setEditData } from "../../../redux/adminSlices/actions";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import toast from "react-hot-toast";
+import { setadminEditVehicleSuccess } from "../../../redux/adminSlices/adminDashboardSlice/StatusSlice";
 
 export default function EditProductComponent() {
   const dispatch = useDispatch();
@@ -19,6 +21,9 @@ export default function EditProductComponent() {
 
   const { register, handleSubmit, control, reset } = useForm();
   const { userAllVehicles } = useSelector((state) => state.userListVehicles);
+  const { modelData, companyData, locationData, districtData } = useSelector(
+    (state) => state.modelDataSlice
+  );
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -37,22 +42,35 @@ export default function EditProductComponent() {
   const registerationDefaultDate = updateingItem.registeration_end
     ? dayjs(new Date(updateingItem.registeration_end))
     : null;
-    const pollutionDefaultDate = updateingItem.pollution_end
+  const pollutionDefaultDate = updateingItem.pollution_end
     ? dayjs(new Date(updateingItem.pollution_end))
     : null;
 
   const onEditSubmit = async (editData) => {
+    let tostID;
     try {
       if (editData && vehicle_id) {
+        tostID = toast.loading("saving...", { position: "bottom-center" });
         const formData = editData;
         dispatch(setEditData({ _id: vehicle_id, ...formData }));
-        await fetch(`/api/admin/editVehicle/${vehicle_id}`, {
+        const res = await fetch(`/api/admin/editVehicle/${vehicle_id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ formData }),
         });
+
+        if(!res.ok){
+        toast.error("error");
+        toast.dismiss(tostID);
+        }
+
+        if (res.ok) {
+          toast.dismiss(tostID);
+          dispatch(setadminEditVehicleSuccess(true))
+        }
+
         dispatch(setEditData(null));
       }
       reset();
@@ -70,7 +88,6 @@ export default function EditProductComponent() {
   return (
     <div>
       <button onClick={handleClose} className="relative left-10 top-5">
-        
         <div className="padding-5 padding-2 rounded-full bg-slate-100 drop-shadow-md hover:shadow-lg hover:bg-blue-200 hover:translate-y-1 hover:translate-x-1 ">
           <IoMdClose style={{ fontSize: "30" }} />
         </div>
@@ -101,15 +118,30 @@ export default function EditProductComponent() {
                 label="registeration_number"
                 {...register("registeration_number")}
                 defaultValue={updateingItem?.registeration_number || ""}
+              />
 
-              />
-              <TextField
-                required
-                id="company"
-                label="company"
-                {...register("company")}
+              <Controller
+                control={control}
+                name="company"
                 defaultValue={updateingItem?.company || ""}
-              />
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    id="company"
+                    select
+                    label="Company"
+                    error={Boolean(field.value == "")}
+                  >
+                    {companyData.map((cur, idx) => (
+                      <MenuItem value={cur} key={idx}>
+                        {cur}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              ></Controller>
+
               <TextField
                 required
                 id="name"
@@ -117,12 +149,29 @@ export default function EditProductComponent() {
                 {...register("name")}
                 defaultValue={updateingItem?.name || ""}
               />
-              <TextField
-                id="model"
-                label="model"
-                {...register("model")}
+              
+              <Controller
+                control={control}
+                name="model"
                 defaultValue={updateingItem?.model || ""}
-              />
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    id="model"
+                    select
+                    label="Model"
+                    error={Boolean(field.value == "")}
+                  >
+                    {modelData.map((cur, idx) => (
+                      <MenuItem value={cur} key={idx}>
+                        {cur}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              ></Controller>
+
               <TextField
                 id="title"
                 label="title"
@@ -171,7 +220,6 @@ export default function EditProductComponent() {
                   </TextField>
                 )}
               ></Controller>
-             
             </div>
 
             <div>
@@ -235,7 +283,49 @@ export default function EditProductComponent() {
                 )}
               ></Controller>
 
+              <Controller
+                control={control}
+                name="vehicleLocation"
+                defaultValue={updateingItem?.location || ""}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    id="vehicleLocation"
+                    select
+                    label="vehicleLocation"
+                    error={Boolean(field.value == "")}
+                  >
+                    {locationData.map((cur, idx) => (
+                      <MenuItem value={cur} key={idx}>
+                        {cur}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              ></Controller>
 
+              <Controller
+                control={control}
+                name="vehicleDistrict"
+                defaultValue={updateingItem?.district || ""}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    id="vehicleDistrict"
+                    select
+                    label="vehicleDistrict"
+                    error={Boolean(field.value == "")}
+                  >
+                    {districtData.map((cur, idx) => (
+                      <MenuItem value={cur} key={idx}>
+                        {cur}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              ></Controller>
 
               <TextField
                 id="description"

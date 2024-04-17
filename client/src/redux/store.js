@@ -9,6 +9,7 @@ import adminReducer from "./adminSlices/adminDashboardSlice/DashboardSlice.jsx";
 import userListVehiclesReducer from "./user/listAllVehicleSlice.jsx";
 import modelDataSlice from './adminSlices/adminDashboardSlice/CarModelDataSlice.jsx';
 import selectRideSlice from "./user/selectRideSlice.jsx";
+import statusSlice from "./adminSlices/adminDashboardSlice/StatusSlice.jsx";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   userListVehicles: userListVehiclesReducer,
   modelDataSlice : modelDataSlice,
   selectRideSlice : selectRideSlice,
+  statusSlice:statusSlice,
 });
 
 const persistConfig = {

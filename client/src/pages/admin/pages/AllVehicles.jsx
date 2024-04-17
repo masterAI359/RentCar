@@ -9,11 +9,12 @@ import {
 } from "@mui/material";
 import { Header } from "../components";
 import AddProductModal from "../components/AddProductModal";
-import toast, { Toaster } from "react-hot-toast";
+import toast, { Toaster} from "react-hot-toast";
 import { DataGrid } from "@mui/x-data-grid";
 
 import Box from "@mui/material/Box";
 import { showVehicles } from "../../../redux/user/listAllVehicleSlice";
+import { setadminEditVehicleSuccess } from "../../../redux/adminSlices/adminDashboardSlice/StatusSlice";
 
 
 
@@ -25,6 +26,7 @@ function AllVehicles() {
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
 
   const [allVehicles, setVehicles] = useState([]);
+ const {adminEditVehicleSuccess} = useSelector(state => state.statusSlice)
   
 
   //show vehicles
@@ -134,12 +136,23 @@ function AllVehicles() {
       name: vehicle.name,
     }));
 
+//edit success
+    useEffect(()=> {
+      if(adminEditVehicleSuccess){
+        toast.success('success')
+        dispatch(setadminEditVehicleSuccess(false))
+      }
+    },[adminEditVehicleSuccess])
+
  
   return (
     <>
+    
       <div className="max-w-[1000px]  d-flex   justify-end text-start items-end p-10">
         <Header title="AllVehicles" />
-        <Toaster />
+        <Toaster/>
+        {adminEditVehicleSuccess ? <Toaster /> : ''}
+       
 
         <Box sx={{ height: "100%", width: "100%" }}>
           <DataGrid
@@ -148,7 +161,7 @@ function AllVehicles() {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 4,
+                  pageSize: 8,
                 },
               },
             }}
