@@ -133,6 +133,7 @@ const AddProductModal = () => {
     }
     dispatch(addVehicleClicked(false));
     navigate("/adminDashboard/allProduct");
+    
   };
 
   return (
