@@ -119,8 +119,8 @@ const CarSearch = () => {
         {/* overlay */}
 
         <div className="container bg-white">
-          <div className="book-content sm:px-[0px] md:px-[55px] ">
-            <div className="book-content__box">
+          <div className="book-content   ">
+            <div className="book-content__box ">
               <h2>Book a car</h2>
 
               <p className="error-message">
@@ -279,7 +279,7 @@ const CarSearch = () => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DemoContainer components={["DateTimePicker"]}>
                             <DateTimePicker
-                              label="when you want to pickup the vehicle"
+                              label="Pickup time"
                               {...field}
                               value={field.value}
                             />
@@ -303,7 +303,7 @@ const CarSearch = () => {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DemoContainer components={["DateTimePicker"]}>
                             <DateTimePicker
-                              label="when will you return the vehicle"
+                              label="Dropoff time"
                               {...field}
                               value={field.value}
                             />
