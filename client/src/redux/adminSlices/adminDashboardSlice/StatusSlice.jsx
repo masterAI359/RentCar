@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
-    adminEditVehicleSuccess:true,
+    adminEditVehicleSuccess:false,
     adminEditVehicleError:false,
     adminEditVehicleLoading:false,
 }
