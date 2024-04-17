@@ -361,16 +361,6 @@ body {
 
 
 
-.book-content__box .box-form__car-type select {
-  font-size: 0.9rem;
-  color: #ababab;
-  font-family: "Rubik", sans-serif;
-  border: 1px solid #ccd7e6;
-  border-radius: 3px;
-  font-weight: 400;
-  padding: 1.2rem 1rem;
-  outline: none;
-}
 
 .book-content__box .box-form__car-time {
   display: flex;
@@ -384,6 +374,7 @@ body {
   color: #878585;
   padding-right: 3rem;
   border: none;
+ 
 }
 
 .book-content__box .box-form__car-time label {
@@ -508,6 +499,9 @@ body {
   color: #010103;
 }
 
+
+
+
 @media (max-width: 800px) {
   .booking-modal {
     width: 100%;
@@ -518,7 +512,19 @@ body {
   .booking-modal {
     top: 50%;
   }
+  .book-content__box .box-form__car-time label {
+    font-size: 0.7rem;
+  }
+  .book-content__box .box-form__car-type label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+  }
+  
 }
+
 
 
 @media (max-width: 1000px) {
@@ -547,9 +553,12 @@ body {
   .book-content__box .box-form {
     display: flex;
     flex-direction: column;
+    
+    
   }
   .book-content__box h2{
     padding-left: 10px;
+    font-size: 18px;
   }
 
  .book-content__box_button {
@@ -562,3 +571,4 @@ body {
 
  }
 }
+

@@ -22,48 +22,56 @@ import {
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Navigate } from "react-router-dom";
 
 const schema = z.object({
   dropoff_location: z.string().min(1, { message: "Dropoff location needed" }),
   pickup_district: z.string().min(1, { message: "Pickup District needed" }),
   pickup_location: z.string().min(1, { message: "Pickup Location needed" }),
-  
-  pickuptime: z.object({
-    '$L': z.string(), // Language code
-    '$d': z.date(), // Date object
-    '$y': z.number(), // Year
-    '$M': z.number(), // Month (0-indexed)
-    '$D': z.number(), // Day of month
-    '$W': z.number(), // Day of week (0-indexed, starting from Sunday)
-    '$H': z.number(), // Hour
-    '$m': z.number(), // Minute
-    '$s': z.number(), // Second
-    '$ms': z.number(), // Millisecond
-    '$isDayjsObject': z.boolean(), // Indicator for Day.js object
-  }, { message: 'pickup time is required' }),
 
-  dropofftime: z.object({
-    '$L': z.string(), // Language code
-    '$d': z.date(), // Date object
-    '$y': z.number(), // Year
-    '$M': z.number(), // Month (0-indexed)
-    '$D': z.number(), // Day of month
-    '$W': z.number(), // Day of week (0-indexed, starting from Sunday)
-    '$H': z.number(), // Hour
-    '$m': z.number(), // Minute
-    '$s': z.number(), // Second
-    '$ms': z.number(), // Millisecond
-    '$isDayjsObject': z.boolean(), // Indicator for Day.js object
-  }, { message: 'drop-off time is required' }),
+  pickuptime: z.object(
+    {
+      $L: z.string(), // Language code
+      $d: z.date(), // Date object
+      $y: z.number(), // Year
+      $M: z.number(), // Month (0-indexed)
+      $D: z.number(), // Day of month
+      $W: z.number(), // Day of week (0-indexed, starting from Sunday)
+      $H: z.number(), // Hour
+      $m: z.number(), // Minute
+      $s: z.number(), // Second
+      $ms: z.number(), // Millisecond
+      $isDayjsObject: z.boolean(), // Indicator for Day.js object
+    },
+    { message: "pickup time is required" }
+  ),
+
+  dropofftime: z.object(
+    {
+      $L: z.string(), // Language code
+      $d: z.date(), // Date object
+      $y: z.number(), // Year
+      $M: z.number(), // Month (0-indexed)
+      $D: z.number(), // Day of month
+      $W: z.number(), // Day of week (0-indexed, starting from Sunday)
+      $H: z.number(), // Hour
+      $m: z.number(), // Minute
+      $s: z.number(), // Second
+      $ms: z.number(), // Millisecond
+      $isDayjsObject: z.boolean(), // Indicator for Day.js object
+    },
+    { message: "drop-off time is required" }
+  ),
 });
-
 
 const CarSearch = () => {
   const {
     handleSubmit,
     control,
-    formState:{ errors } } = useForm({ resolver: zodResolver(schema) });
-    console.log(errors)
+    reset,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(schema) });
+
   const { districtData } = useSelector((state) => state.modelDataSlice);
   const uniqueDistrict = districtData.filter((cur, idx) => {
     return cur !== districtData[idx + 1];
@@ -94,6 +102,16 @@ const CarSearch = () => {
   const hanldeData = async (data) => {
     try {
       if (data) {
+        Navigate('')
+        // resetting the form on form submission have to move this after fetch
+        reset({
+          pickuptime: null, // Reset pickuptime to null
+          dropofftime: null, // Reset dropofftime to null
+        });
+        document.getElementById("pickup_district").innerHTML = "";
+        document.getElementById("pickup_location").innerHTML = "";
+        document.getElementById("dropoff_location").innerHTML = "";
+       
         const res = await fetch("api/user/searchCar", {
           method: "POST",
           headers: {
@@ -171,7 +189,7 @@ const CarSearch = () => {
                     )}
                   </div>
 
-                  <div className="box-form__car-type">
+                  <div className="box-form__car-type ">
                     <label htmlFor="pickup_location">
                       <IconMapPinFilled className="input-icon" /> &nbsp; Pick-up{" "}
                       <p className="text-red-500">*</p>
@@ -194,27 +212,22 @@ const CarSearch = () => {
                             Select a specific location
                           </MenuItem>
                           {/* conditionaly rendering options based on district selected or not */}
-                          {locationsOfDistrict
-                            ? locationsOfDistrict.map(
-                                (availableLocations, idx) => (
-                                  <MenuItem
-                                    value={availableLocations}
-                                    key={idx}
-                                  >
-                                    {availableLocations}
-                                  </MenuItem>
-                                )
-                              )
-                            : uniqueDistrict.map((cur, idx) => (
-                                <MenuItem value={cur} key={idx}>
-                                  {cur}
+                          {locationsOfDistrict &&
+                            locationsOfDistrict.map(
+                              (availableLocations, idx) => (
+                                <MenuItem value={availableLocations} key={idx}>
+                                  {availableLocations}
                                 </MenuItem>
-                              ))}
+                              )
+                            )}
                         </TextField>
                       )}
                     />
-                    {errors.pickup_location && 
-                    <p className="text-red-500">{errors.pickup_location.message}</p>}
+                    {errors.pickup_location && (
+                      <p className="text-red-500">
+                        {errors.pickup_location.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="box-form__car-type">
@@ -241,22 +254,14 @@ const CarSearch = () => {
                             Select a specific location
                           </MenuItem>
                           {/* conditionaly rendering options based on district selected or not */}
-                          {locationsOfDistrict
-                            ? locationsOfDistrict.map(
-                                (availableLocations, idx) => (
-                                  <MenuItem
-                                    value={availableLocations}
-                                    key={idx}
-                                  >
-                                    {availableLocations}
-                                  </MenuItem>
-                                )
-                              )
-                            : uniqueDistrict.map((cur, idx) => (
-                                <MenuItem value={cur} key={idx}>
-                                  {cur}
+                          {locationsOfDistrict &&
+                            locationsOfDistrict.map(
+                              (availableLocations, idx) => (
+                                <MenuItem value={availableLocations} key={idx}>
+                                  {availableLocations}
                                 </MenuItem>
-                              ))}
+                              )
+                            )}
                         </TextField>
                       )}
                     />
@@ -287,8 +292,11 @@ const CarSearch = () => {
                         </LocalizationProvider>
                       )}
                     />
-                   {errors.pickuptime && <p className="text-red-500">{errors.pickuptime.message}</p>}
-                    
+                    {errors.pickuptime && (
+                      <p className="text-red-500">
+                        {errors.pickuptime.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="box-form__car-time">
@@ -311,8 +319,11 @@ const CarSearch = () => {
                         </LocalizationProvider>
                       )}
                     />
-                    {errors.dropofftime && <p className="text-red-500">{errors.dropofftime.message}</p>}
-                    {console.log(errors)}
+                    {errors.dropofftime && (
+                      <p className="text-red-500">
+                        {errors.dropofftime.message}
+                      </p>
+                    )}
                   </div>
 
                   <button type="submit" className="book-content__box_button">
