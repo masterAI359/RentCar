@@ -16,13 +16,14 @@ import { MenuItem } from "@mui/material";
 
 //reducers
 import {
+  setAvailableCars,
   setLocationsOfDistrict,
   setSelectedDistrict,
 } from "../../redux/user/selectRideSlice";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   dropoff_location: z.string().min(1, { message: "Dropoff location needed" }),
@@ -71,7 +72,7 @@ const CarSearch = () => {
     reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
-
+  const navigate = useNavigate();
   const { districtData } = useSelector((state) => state.modelDataSlice);
   const uniqueDistrict = districtData.filter((cur, idx) => {
     return cur !== districtData[idx + 1];
@@ -102,16 +103,9 @@ const CarSearch = () => {
   const hanldeData = async (data) => {
     try {
       if (data) {
-        Navigate('')
+        navigate("/availableVehicles");
         // resetting the form on form submission have to move this after fetch
-        reset({
-          pickuptime: null, // Reset pickuptime to null
-          dropofftime: null, // Reset dropofftime to null
-        });
-        document.getElementById("pickup_district").innerHTML = "";
-        document.getElementById("pickup_location").innerHTML = "";
-        document.getElementById("dropoff_location").innerHTML = "";
-       
+
         const res = await fetch("api/user/searchCar", {
           method: "POST",
           headers: {
@@ -120,8 +114,37 @@ const CarSearch = () => {
           body: JSON.stringify(data),
         });
 
-        const result = await res.json();
-        console.log("success", result);
+        if(res.ok){
+          const result = await res.json();
+          dispatch(setAvailableCars(result))
+          console.log("success", result);
+        }
+        
+
+
+        if (res.ok) {
+          reset({
+            pickuptime: null, // Reset pickuptime to null
+            dropofftime: null, // Reset dropofftime to null
+          });
+
+          const pickupDistrictElement =
+            document.getElementById("pickup_district");
+          const pickupLocationElement =
+            document.getElementById("pickup_location");
+          const dropoffLocationElement =
+            document.getElementById("dropoff_location");
+
+          if (pickupDistrictElement) {
+            pickupDistrictElement.innerHTML = "";
+          }
+          if (pickupLocationElement) {
+            pickupLocationElement.innerHTML = "";
+          }
+          if (dropoffLocationElement) {
+            dropoffLocationElement.innerHTML = "";
+          }
+        }
       }
     } catch (error) {
       console.log("Error  : ", error);

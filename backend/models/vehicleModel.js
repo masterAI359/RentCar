@@ -132,6 +132,10 @@ const vehicleSchema = new mongoose.Schema({
   district:{
     type:String,
     required:true
+  },
+  isBooked:{
+    type:Boolean,
+    default:false
   }
 
 });

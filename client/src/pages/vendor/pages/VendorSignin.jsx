@@ -4,9 +4,9 @@ import {
   signInFailure,
   signInStart,
   signInSuccess,
-} from "../../redux/user/userSlice";
-import styles from "../..";
-import VendorOAuth from "../../components/VendorAuth";
+} from "../../../redux/user/userSlice";
+import styles from "../../..";
+import VendorOAuth from "../../../components/VendorAuth";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
