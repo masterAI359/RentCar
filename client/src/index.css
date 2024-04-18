@@ -306,9 +306,15 @@ body {
 
 }
 
-@media (max-width: 400px) {
+@media (max-width: 1000px) {
   .book-content__box {
-    padding: 4rem 2.5rem 5rem 2.5rem;
+    padding: 4rem 0rem 5rem 0rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .book-content__box {
+    padding: 4rem .8rem 5rem .8rem;
   }
 }
 
@@ -326,25 +332,18 @@ body {
 }
 
 
+
+
 .book-content__box .box-form b {
   color: black;
 }
 
-@media (max-width: 1000px) {
-  .book-content__box .box-form {
-    grid-template-columns: 1fr 1fr;
-  }
-}
 
-@media (max-width: 630px) {
-  .book-content__box .box-form {
-    grid-template-columns: 1fr;
-  }
-}
 
 .book-content__box .box-form__car-type {
   display: flex;
   flex-direction: column;
+  width: 100%;
   
 }
 
@@ -362,21 +361,12 @@ body {
 
 
 
-.book-content__box .box-form__car-type select {
-  font-size: 0.9rem;
-  color: #ababab;
-  font-family: "Rubik", sans-serif;
-  border: 1px solid #ccd7e6;
-  border-radius: 3px;
-  font-weight: 400;
-  padding: 1.2rem 1rem;
-  outline: none;
-}
 
 .book-content__box .box-form__car-time {
   display: flex;
   flex-direction: column;
   position: relative;
+  width: 100%;
 }
 
 .book-content__box .box-form__car-time input {
@@ -384,6 +374,7 @@ body {
   color: #878585;
   padding-right: 3rem;
   border: none;
+ 
 }
 
 .book-content__box .box-form__car-time label {
@@ -508,6 +499,9 @@ body {
   color: #010103;
 }
 
+
+
+
 @media (max-width: 800px) {
   .booking-modal {
     width: 100%;
@@ -518,5 +512,63 @@ body {
   .booking-modal {
     top: 50%;
   }
+  .book-content__box .box-form__car-time label {
+    font-size: 0.7rem;
+  }
+  .book-content__box .box-form__car-type label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+  }
+  
+}
+
+
+
+@media (max-width: 1000px) {
+  .book-content__box .box-form {
+   /* display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   padding:20px; */
+   grid-template-columns: 1fr 1fr;
+   padding:10px;
+   
+  }
+  .book-content__box h2{
+    padding-left: 20px;
+  }
+}
+
+/* @media (max-width: 630px) {
+  .book-content__box .box-form {
+    grid-template-columns: 1fr;
+    width: 100%;
+  
+  }
+} */
+@media (max-width: 600px) {
+  .book-content__box .box-form {
+    display: flex;
+    flex-direction: column;
+    
+    
+  }
+  .book-content__box h2{
+    padding-left: 10px;
+    font-size: 18px;
+  }
+
+ .book-content__box_button {
+    font-size: 14px;
+    padding:10px 40px;
+    border-radius: 4px;
+    position: relative;
+    top:30px;
+    color: black;
+
+ }
 }
 

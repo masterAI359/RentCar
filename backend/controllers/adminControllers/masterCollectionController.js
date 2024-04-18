@@ -97,7 +97,6 @@ const dummyData = [
   export const getCarModelData = async (req,res,next)=> {
     try{
             const availableVehicleModels  = await MasterData.find()
-            console.log(availableVehicleModels)
             if(!availableVehicleModels){
                 return next(errorHandler(404,"no model found"))
             }

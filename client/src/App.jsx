@@ -11,10 +11,10 @@ import { PrivateSignin } from "./components/PrivateRoute";
 import AdminPrivateRoutes from "./components/AdminPrivateRoutes";
 import Enterprise from "./pages/user/Enterprise";
 import Contact from "./pages/user/Contact";
-import VendorSignin from "./pages/vendor/VendorSignin";
-import VendorSignup from "./pages/vendor/VendorSignup";
+import VendorSignin from "./pages/vendor/pages/VendorSignin";
+import VendorSignup from "./pages/vendor/pages/VendorSignup";
 import VendorPrivateRoute from "./components/VendorPrivateRoute";
-import VendorDashboard from "./pages/vendor/VendorDashboard";
+import VendorDashboard from "./pages/vendor/Dashboard/VendorDashboard";
 
 import Layout from "./pages/admin/layouts/Layout";
 // import AddProductForm from "./pages/admin/dashboard/AddProductForm";
@@ -22,6 +22,7 @@ import AdminDashNew from "./pages/admin/dashboard/AdminDashNew";
 import VehicleDetails from "./pages/user/VehicleDetails";
 import EditProductComponent from "./pages/admin/components/EditProductComponent";
 import Orders from "./pages/user/Orders";
+import AvailableVehicles from "./pages/user/AvailableVehiclesAfterSearch";
 
 function App() {
   return (
@@ -53,11 +54,12 @@ function App() {
             <Route path="/profile/*" element={<Profile />} />
             <Route path="/vehicleDetails" element={<VehicleDetails />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/availableVehicles" element={<AvailableVehicles/>}/>
           </Route>
 
           {/* vendor private routes */}
           <Route element={<VendorPrivateRoute />}>
-            <Route path="/vendorDashboard" element={<VendorDashboard />} />
+            <Route path="/vendorDashboard/*" element={<VendorDashboard />} />
           </Route>
 
           {/* admin private routes */}

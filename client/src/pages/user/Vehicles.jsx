@@ -9,6 +9,22 @@ import { BsFillFuelPumpFill } from "react-icons/bs";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
 import { Link } from "react-router-dom";
 
+export const onVehicleDetail = async (id,dispatch) => {
+  try {
+    const res = await fetch("/api/user/showVehicleDetails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+    });
+    const data = await res.json();
+    dispatch(setVehicleDetail(data));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const Vehicles = () => {
   const { userAllVehicles } = useSelector((state) => state.userListVehicles);
   const dispatch = useDispatch();
@@ -29,21 +45,7 @@ const Vehicles = () => {
     fetchData();
   }, [dispatch]);
 
-  const onVehicleDetail = async (id) => {
-    try {
-      const res = await fetch("/api/user/showVehicleDetails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
-      const data = await res.json();
-      dispatch(setVehicleDetail(data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   return (
     <div>
@@ -121,7 +123,7 @@ const Vehicles = () => {
                       <Link to={"/vehicleDetails"}>
                         <button
                           className="bg-green-500 px-4 py-2 w-[100px] rounded-sm"
-                          onClick={() => onVehicleDetail(cur._id)}
+                          onClick={() => onVehicleDetail(cur._id,dispatch)}
                         >
                           <div className="text-[12px] ">Book Ride</div>
                         </button>
@@ -130,7 +132,7 @@ const Vehicles = () => {
                       <Link to={"/vehicleDetails"}>
                         <button
                           className="bg-black px-4 py-2 w-[100px] rounded-sm"
-                          onClick={() => onVehicleDetail(cur._id)}
+                          onClick={() => onVehicleDetail(cur._id,dispatch)}
                         >
                           <div className="text-[12px] text-white">Details</div>
                         </button>
@@ -145,5 +147,6 @@ const Vehicles = () => {
     </div>
   );
 };
+
 
 export default Vehicles;
