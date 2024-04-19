@@ -136,6 +136,10 @@ const vehicleSchema = new mongoose.Schema({
   isBooked:{
     type:Boolean,
     default:false
+  },
+  isAdminAdded:{
+    type:Boolean,
+    default:true
   }
 
 });

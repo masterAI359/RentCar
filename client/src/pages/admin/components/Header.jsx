@@ -23,7 +23,8 @@ const Header = ({category,title}) => {
       </p>
       </div>
       <button className='bg-blue-600 rounded-lg '>
-        <div className='text-white px-5 py-2 font-bold ' onClick={handleAddVehicle}>Add+</div></button>
+        <div className='text-white px-5 py-2 font-bold ' onClick={handleAddVehicle}>Add+</div>
+      </button>
       
         
     </div>
