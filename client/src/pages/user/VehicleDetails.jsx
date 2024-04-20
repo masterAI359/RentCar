@@ -1,5 +1,5 @@
 import { GrSecure } from "react-icons/gr";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { FaStar } from "react-icons/fa";
 import { CiCalendarDate } from "react-icons/ci";
@@ -16,6 +16,8 @@ import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 
 import { Link } from "react-router-dom";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import { useEffect } from "react";
+import { showVehicles } from "../../redux/user/listAllVehicleSlice";
 
 
 const VehicleDetails = () => {
@@ -23,10 +25,27 @@ const VehicleDetails = () => {
     (state) => state.userListVehicles
   );
 
+  const dispatch  = useDispatch()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/user/listAllVehicles");
+        if (!res.ok) {
+          console.log("not success");
+        }
+        const data = await res.json();
+        dispatch(showVehicles(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div>
       <section className="py-12 sm:py-8 bg-white">
-     
         <div className="container mx-auto px-4">
           <div className="lg:col-gap-12 xl:col-gap-16 mt-10 grid grid-cols-1 gap-12 lg:mt- lg:grid-cols-5 lg:gap-16">
             <div className="lg:col-span-3 lg:row-end-1">
@@ -35,50 +54,37 @@ const VehicleDetails = () => {
                   <div className="max-w-xl overflow-hidden rounded-lg relative">
                     <img
                       className="h-full w-full max-w-full object-cover"
-                      src={singleVehicleDetail.image}
+                      src={singleVehicleDetail && singleVehicleDetail.image[0]}
                       alt={singleVehicleDetail.model}
                     />
                   </div>
                 </div>
                 <div className="absolute top-2 left-5 md:left-10">
-                 <TooltipComponent content={"back"} position="BottomCenter">
-                      <Link to={'/vehicles'} ><IoArrowBackCircleSharp style={{fontSize:'40', hover:"fill-red-700"}} className="hover:fill-slate-500"/></Link>
-                      </TooltipComponent>
-                    
+                  <TooltipComponent content={"back"} position="BottomCenter">
+                    <Link to={"/vehicles"}>
+                      <IoArrowBackCircleSharp
+                        style={{ fontSize: "40", hover: "fill-red-700" }}
+                        className="hover:fill-slate-500"
+                      />
+                    </Link>
+                  </TooltipComponent>
                 </div>
                 <div className="mt-2 w-full lg:order-1 lg:w-32 lg:flex-shrink-0">
                   <div className="flex flex-row items-start lg:flex-col">
-                   
-                    <button
-                      type="button"
-                      className="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-gray-900 text-center"
-                    >
-                      <img
-                        className="h-full w-full object-cover"
-                        src={ singleVehicleDetail.image}
-                        alt=""
-                      />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-transparent text-center"
-                    >
-                      <img
-                        className="h-full w-full object-cover"
-                        src={ singleVehicleDetail.image}
-                        alt=""
-                      />
-                    </button>
-                    <button
-                      type="button"
-                      className="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-transparent text-center"
-                    >
-                      <img
-                        className="h-full w-full object-cover"
-                        src={ singleVehicleDetail.image}
-                        alt=""
-                      />
-                    </button>
+                    {singleVehicleDetail &&
+                      singleVehicleDetail.image.map((cur, idx) => (
+                        <button
+                          type="button"
+                          className="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 border-gray-900 text-center"
+                          key={idx}
+                        >
+                          <img
+                            className="h-full w-full object-cover"
+                            src={cur}
+                            alt=""
+                          />
+                        </button>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -90,52 +96,71 @@ const VehicleDetails = () => {
               </h1>
 
               <div className="mt-3 flex flex-col justify-center items-start select-none flex-wrap  gap-4 font-mono text-[14px]">
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
-                  
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   <span>
-                  <FaCarAlt/> </span>Model - {singleVehicleDetail.model}
+                    <FaCarAlt />{" "}
+                  </span>
+                  Model - {singleVehicleDetail.model}
                 </div>
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   <span>
                     <FaBuilding />
                   </span>
                   Company - {singleVehicleDetail.company}
                 </div>
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   <span>
                     <CiCalendarDate />
                   </span>
                   Year model : {singleVehicleDetail.year_made}
                 </div>
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   <span>
                     <GiGearStickPattern />
                   </span>
                   Transmission : {singleVehicleDetail.transmition}
                 </div>
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   <span>
                     <FaCarSide />
                   </span>
                   Car Type : {singleVehicleDetail.car_type}
                 </div>
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   <span>
                     <MdAirlineSeatReclineExtra />
                   </span>
                   Seats : {singleVehicleDetail.seats}
                 </div>
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   <span>
                     <BsFillFuelPumpFill />
                   </span>
                   Fuel type : {singleVehicleDetail.fuel_type}
                 </div>
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   Registeration Number :{" "}
                   {singleVehicleDetail.registeration_number}
                 </div>
-                <div className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}>
+                <div
+                  className={`${styles.iconFlex} capitalize border border-slate-200 p-2 rounded-md`}
+                >
                   Rating: {singleVehicleDetail.ratting}5{" "}
                   <span style={{ color: "gold" }}>
                     <FaStar />
@@ -148,7 +173,8 @@ const VehicleDetails = () => {
               <div className="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
                 <div className="flex items-end">
                   <h1 className="text-3xl font-bold flex items-center justify-center">
-                  <FaIndianRupeeSign style={{width:'20', height:"20"}} />{singleVehicleDetail.price}
+                    <FaIndianRupeeSign style={{ width: "20", height: "20" }} />
+                    {singleVehicleDetail.price}
                   </h1>
                   <span className="text-base">/Day</span>
                 </div>

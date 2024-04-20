@@ -2,7 +2,7 @@
 import {  vendorGoogle, vendorSignin, vendorSignout, vendorSignup } from "../controllers/vendorControllers/vendorController.js"
 import express from "express"
 import { multerMultipleUploads } from "../utils/multer.js"
-import { vendorAddVehicle } from "../controllers/vendorControllers/vendorAddVehilceController.js"
+import { showVendorVehicles, vendorAddVehicle } from "../controllers/vendorControllers/vendorCrudController.js"
 
 const router = express.Router()
 
@@ -11,6 +11,7 @@ router.post('/vendorsignin',vendorSignin)
 router.get('/vendorsignout',vendorSignout)
 router.post('/vendorgoogle',vendorGoogle)
 router.post('/vendorAddVehicle',multerMultipleUploads,vendorAddVehicle)
+router.post('/showVendorVehilces',showVendorVehicles)
 
 
 export default router
