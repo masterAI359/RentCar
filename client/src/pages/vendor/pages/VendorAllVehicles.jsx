@@ -19,27 +19,34 @@ const VendorAllVehicles = () => {
 
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
   const { vendorVehilces } = useSelector((state) => state.vendorDashboardSlice);
-
-
-  
-
-  //show vehicles
+  const {_id} = useSelector((state)=> state.user.currentUser)
+ 
   useEffect(() => {
-    const fetchVehicles = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch("/api/vendor/showVehicles", {
-          method: "GET",
+        const res = await fetch("/api/vendor/showVendorVehilces",{
+          method:'POST',
+          headers: {
+                          "Content-Type": "application/json",
+                        },
+          body: JSON.stringify({
+            _id,
+          }),
         });
-        if (res.ok) {
-          const data = await res.json();
-          dispatch(setVenodrVehilces((data)))
+        if (!res.ok) {
+          console.log("not success");
         }
+        const data = await res.json();
+        dispatch(setVenodrVehilces(data))
+        
       } catch (error) {
         console.log(error);
       }
     };
-    fetchVehicles();
-  }, [isAddVehicleClicked]);
+    fetchData();
+  }, [_id,dispatch,isAddVehicleClicked]);
+  
+
 
   //delete a vehicle
   const handleDelete = async (vehicle_id) => {
@@ -120,7 +127,7 @@ const VendorAllVehicles = () => {
       .filter((vehicle) => vehicle.isDeleted === "false")
       .map((vehicle) => ({
         id: vehicle._id,
-        image: vehicle.image,
+        image: vehicle.image[0],
         registeration_number: vehicle.registeration_number,
         company: vehicle.company,
         name: vehicle.name,

@@ -28,7 +28,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["user"],
+  whitelist: ["user","userListVehicles"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

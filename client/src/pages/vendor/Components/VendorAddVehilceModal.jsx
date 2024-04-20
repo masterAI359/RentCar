@@ -27,7 +27,10 @@ const VendorAddProductModal = () => {
   },[])
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
   const { modelData, companyData, locationData, districtData } = useSelector((state) => state.modelDataSlice);
+  const {_id} = useSelector((state)=> state.user.currentUser)
 
+
+  
 
 
   const onSubmit = async (data) => {
@@ -60,6 +63,8 @@ const VendorAddProductModal = () => {
       formData.append("car_type", data.car_type);
       formData.append('location',data.location);
       formData.append('district',data.districts);
+      formData.append('addedBy',_id)
+  
       
 
       let tostID;
@@ -71,14 +76,13 @@ const VendorAddProductModal = () => {
         method: "POST",
         body: formData,
       });
-      console.log(res)
 
       if (!res.ok) {
         toast.error("error");
         toast.dismiss(tostID);
       }
       if (res.ok) {
-        toast.success("added");
+        toast.success("request send to admin");
         toast.dismiss(tostID);
       }
 
@@ -86,8 +90,9 @@ const VendorAddProductModal = () => {
     } catch (error) {
       console.log(error);
     }
-    dispatch(addVehicleClicked(false));
     navigate("/vendorDashboard/vendorAddProduct");
+    dispatch(addVehicleClicked(false));
+    
     
   };
 

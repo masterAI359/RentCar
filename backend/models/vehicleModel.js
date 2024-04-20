@@ -64,7 +64,7 @@ const vehicleSchema = new mongoose.Schema({
     enum:["manual","automatic"]
   },
   image: {
-    type:String,
+    type:Array,
     required:false
   },
   description: {
@@ -140,6 +140,10 @@ const vehicleSchema = new mongoose.Schema({
   isAdminAdded:{
     type:Boolean,
     default:true
+  },
+  addedBy:{
+    type:String,
+    default:'admin'
   }
 
 });

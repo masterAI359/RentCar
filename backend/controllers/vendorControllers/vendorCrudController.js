@@ -4,6 +4,7 @@ import vehicle from "../../models/vehicleModel.js";
 import { uploader } from "../../utils/cloudinaryConfig.js";
 import { base64Converter } from "../../utils/multer.js";
 
+
 // vendor add vehicle
 export const vendorAddVehicle = async (req, res, next) => {
   try {
@@ -33,6 +34,7 @@ export const vendorAddVehicle = async (req, res, next) => {
       car_type,
       location,
       district,
+      addedBy,
     } = req.body;
 
     const uploadedImages = [];
@@ -43,23 +45,20 @@ export const vendorAddVehicle = async (req, res, next) => {
 
       try {
         //mapping over encoded files and uploading to cloudinary
-        encodedFiles.map(async (cur) => {
-          try {
-            const result = await uploader.upload(cur.data, {
-              public_id: cur.filename,
-            });
-
-            if (result) {
+        await Promise.all(
+          encodedFiles.map(async (cur) => {
+            try {
+              const result = await uploader.upload(cur.data, {
+                public_id: cur.filename,
+              });
               uploadedImages.push(result.secure_url);
+            } catch (error) {
+              console.log(error, {
+                message: "error while uploading to cloudinary",
+              });
             }
-            console.log(uploadedImages);
-          } catch (error) {
-            console.log(error, {
-              message: "error while uploading to cloudinary",
-            });
-          }
-        });
-
+          })
+        );
         try {
           if (uploadedImages.length > 0) {
             const addVehicle = new vehicle({
@@ -84,6 +83,7 @@ export const vendorAddVehicle = async (req, res, next) => {
               location,
               district,
               isAdminAdded: "false",
+              addedBy:addedBy,
             });
 
             await addVehicle.save();
@@ -107,3 +107,38 @@ export const vendorAddVehicle = async (req, res, next) => {
     next(errorHandler(400, "vehicle failed to add "), console.log(error));
   }
 };
+
+
+
+
+//show vendor vehicles
+
+export const showVendorVehicles = async (req,res,next) => {
+  try {
+    if (!req.body) {
+      throw errorHandler(400, "User not found");
+    }
+  
+    const { _id } = req.body;
+  
+    const vendorsVehicles = await vehicle.aggregate([
+      {
+        $match: {
+          isDeleted: "false",
+          isAdminAdded: false,
+          addedBy: _id,
+        },
+      },
+    ]);
+  
+    if (!vendorsVehicles || vendorsVehicles.length === 0) {
+      throw errorHandler(400, "No vehicles found");
+    }
+  
+    res.status(200).json(vendorsVehicles);
+  } catch (error) {
+    console.error(error);
+    next(errorHandler(500, "Error in showVendorVehicles"));
+  }
+  
+}
