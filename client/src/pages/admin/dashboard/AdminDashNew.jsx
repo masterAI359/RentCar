@@ -10,6 +10,7 @@ import {
   ColorPicker,
   Customers,
   Editor,
+  VenderVehicleRequests,
 } from "../pages";
 import { useSelector } from "react-redux";
 import AdminHomeMain from "../pages/AdminHomeMain.jsx";
@@ -61,6 +62,7 @@ function AdminDashNew() {
               <Route path="/colorPicker" element={<ColorPicker />} />
               <Route path="/customers" element={<Customers />} />
               <Route path="/editor" element={<Editor />} />
+              <Route path="/vendorVehicleRequests" element={<VenderVehicleRequests />} />
             </Routes>
           </div>
         </div>

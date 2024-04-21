@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { setEditData } from "../../../redux/adminSlices/actions";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
@@ -13,40 +13,44 @@ import Box from "@mui/material/Box";
 import { setVenodrVehilces } from "../../../redux/vendor/vendorDashboardSlice";
 import VendorAddProductModal from "../Components/VendorAddVehilceModal";
 
+import { GrStatusGood } from "react-icons/gr";
+import { MdOutlinePending } from "react-icons/md";
+
 const VendorAllVehicles = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
   const { vendorVehilces } = useSelector((state) => state.vendorDashboardSlice);
-  const {_id} = useSelector((state)=> state.user.currentUser)
- 
+  const { _id } = useSelector((state) => state.user.currentUser);
+  // const { vendorVehicleApproved } = useSelector(
+  //   (state) => state.vendorDashboardSlice
+  // );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/vendor/showVendorVehilces",{
-          method:'POST',
+        const res = await fetch("/api/vendor/showVendorVehilces", {
+          method: "POST",
           headers: {
-                          "Content-Type": "application/json",
-                        },
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             _id,
           }),
         });
         if (!res.ok) {
           console.log("not success");
+          return;
         }
         const data = await res.json();
-        dispatch(setVenodrVehilces(data))
-        
+        dispatch(setVenodrVehilces(data));
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  }, [_id,dispatch,isAddVehicleClicked]);
-  
-
+  }, [_id, dispatch, isAddVehicleClicked]);
 
   //delete a vehicle
   const handleDelete = async (vehicle_id) => {
@@ -78,7 +82,7 @@ const VendorAllVehicles = () => {
     {
       field: "image",
       headerName: "Image",
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <img
           src={params.value}
@@ -99,6 +103,23 @@ const VendorAllVehicles = () => {
     },
     { field: "company", headerName: "Company", width: 150 },
     { field: "name", headerName: "Name", width: 150 },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 150,
+      renderCell: (params) =>
+        !params.row.status ? (
+          <div className="text-yellow-500   bg-yellow-100 p-2 rounded-lg flex items-center justify-center gap-x-1">
+          <span className="text-[8px]">Pending</span>
+          <MdOutlinePending />
+        </div>
+        ) : (
+          <div className="text-green-500   bg-green-100 p-2 rounded-lg flex items-center justify-center gap-x-1">
+            <span className="text-[8px]">Approved</span>
+            <GrStatusGood />
+          </div>
+        ),
+    },
     {
       field: "edit",
       headerName: "Edit",
@@ -131,10 +152,11 @@ const VendorAllVehicles = () => {
         registeration_number: vehicle.registeration_number,
         company: vehicle.company,
         name: vehicle.name,
+        status: vehicle.isAdminApproved,
       }));
 
   return (
-    <div className="max-w-[1000px]  d-flex   justify-end text-start items-end p-10">
+    <div className="max-w-[1000px]  d-flex   justify-end text-start items-end p-10 bg-slate-100 rounded-md">
       <Header title="AllVehicles" />
 
       <Box sx={{ height: "100%", width: "100%" }}>

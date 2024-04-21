@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    vendorVehilces : []
+    vendorVehilces : [],
+    vendorVehicleApproved:[]
 }
 
 export const VendorDashboardSlice = createSlice({
@@ -10,10 +11,19 @@ export const VendorDashboardSlice = createSlice({
     reducers: {
       setVenodrVehilces: (state, action) => {
         state.vendorVehilces = action.payload;
+      },
+      setUniqueVal:(state,action)=> {
+        state.vendorVehicleApproved.push({_id:action.payload,status:false})
+      },
+      setApproveVendorVehilce:(state,action) => {
+        state.vendorVehicleApproved = action.payload
+      },
+      setRejectVendorVehicle:(state,action) => {
+        state.vendorVehicleApproved = action.payload
       }
     },
   });
   
-  export const { setVenodrVehilces } = VendorDashboardSlice.actions;
+  export const { setVenodrVehilces , setApproveVendor , setRejectVendor , setUniqueVal } = VendorDashboardSlice.actions;
   export default VendorDashboardSlice.reducer;
   

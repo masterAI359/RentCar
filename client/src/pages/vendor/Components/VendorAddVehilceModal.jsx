@@ -8,39 +8,32 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
-
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { fetchModelData } from "../../admin/components/AddProductModal";
 import { useEffect } from "react";
-
-
-
-
+import { setUniqueVal } from "../../../redux/vendor/vendorDashboardSlice";
 
 const VendorAddProductModal = () => {
- 
   const { register, handleSubmit, reset, control } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useEffect(()=> {
-    fetchModelData(dispatch)
-  },[])
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
-  const { modelData, companyData, locationData, districtData } = useSelector((state) => state.modelDataSlice);
-  const {_id} = useSelector((state)=> state.user.currentUser)
+  const { modelData, companyData, locationData, districtData } = useSelector(
+    (state) => state.modelDataSlice
+  );
+  const { _id } = useSelector((state) => state.user.currentUser);
 
 
-  
-
+  useEffect(() => {
+    fetchModelData(dispatch);
+  }, []);
 
   const onSubmit = async (data) => {
     try {
-      console.log(data.image)
-      const img = []
+      const img = [];
       for (let i = 0; i < data.image.length; i++) {
-        img.push(data.image[i])
-        }
-      console.log(img)
+        img.push(data.image[i]);
+      }
       const formData = new FormData();
       formData.append("registeration_number", data.registeration_number);
       formData.append("company", data.company);
@@ -61,11 +54,9 @@ const VendorAddProductModal = () => {
       formData.append("registeration_end_date", data.registeration_end_date);
       formData.append("polution_end_date", data.polution_end_date);
       formData.append("car_type", data.car_type);
-      formData.append('location',data.location);
-      formData.append('district',data.districts);
-      formData.append('addedBy',_id)
-  
-      
+      formData.append("location", data.location);
+      formData.append("district", data.districts);
+      formData.append("addedBy", _id);
 
       let tostID;
       if (formData) {
@@ -84,6 +75,7 @@ const VendorAddProductModal = () => {
       if (res.ok) {
         toast.success("request send to admin");
         toast.dismiss(tostID);
+        dispatch(setUniqueVal(data.registeration_number))
       }
 
       reset();
@@ -92,8 +84,6 @@ const VendorAddProductModal = () => {
     }
     navigate("/vendorDashboard/vendorAddProduct");
     dispatch(addVehicleClicked(false));
-    
-    
   };
 
   return (
