@@ -56,6 +56,7 @@ function SignIn() {
       } else {
         dispatch(signInFailure(data));
       }
+      dispatch(signInFailure("something went wrong"));
     } catch (error) {
       dispatch(signInFailure(error));
     }

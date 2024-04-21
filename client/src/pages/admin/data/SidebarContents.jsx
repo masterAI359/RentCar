@@ -23,6 +23,10 @@ export const links = [
           name: 'allProduct',
           icon: <FiShoppingBag />,
         },
+        {
+          name: 'vendorVehicleRequests',
+          icon: <FiShoppingBag />,
+        },
         
       ],
     },

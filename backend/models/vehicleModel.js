@@ -144,6 +144,10 @@ const vehicleSchema = new mongoose.Schema({
   addedBy:{
     type:String,
     default:'admin'
+  },
+  adminAproved:{
+    type:Boolean,
+    default:true
   }
 
 });

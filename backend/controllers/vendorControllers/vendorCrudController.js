@@ -84,6 +84,7 @@ export const vendorAddVehicle = async (req, res, next) => {
               district,
               isAdminAdded: "false",
               addedBy:addedBy,
+              adminAproved:false
             });
 
             await addVehicle.save();
@@ -126,7 +127,7 @@ export const showVendorVehicles = async (req,res,next) => {
         $match: {
           isDeleted: "false",
           isAdminAdded: false,
-          addedBy: _id,
+          addedBy: _id
         },
       },
     ]);
