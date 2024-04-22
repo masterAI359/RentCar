@@ -145,9 +145,13 @@ const vehicleSchema = new mongoose.Schema({
     type:String,
     default:'admin'
   },
-  adminAproved:{
+  isAdminApproved:{
     type:Boolean,
     default:true
+  },
+  isRejected:{
+    type:Boolean,
+    default:false
   }
 
 });
