@@ -11,7 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { fetchModelData } from "../../admin/components/AddProductModal";
 import { useEffect } from "react";
-import { setUniqueVal } from "../../../redux/vendor/vendorDashboardSlice";
+
 
 const VendorAddProductModal = () => {
   const { register, handleSubmit, reset, control } = useForm();
@@ -75,7 +75,7 @@ const VendorAddProductModal = () => {
       if (res.ok) {
         toast.success("request send to admin");
         toast.dismiss(tostID);
-        dispatch(setUniqueVal(data.registeration_number))
+        
       }
 
       reset();

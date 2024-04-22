@@ -23,9 +23,7 @@ const VendorAllVehicles = () => {
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
   const { vendorVehilces } = useSelector((state) => state.vendorDashboardSlice);
   const { _id } = useSelector((state) => state.user.currentUser);
-  // const { vendorVehicleApproved } = useSelector(
-  //   (state) => state.vendorDashboardSlice
-  // );
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,6 +106,10 @@ const VendorAllVehicles = () => {
       headerName: "Status",
       width: 150,
       renderCell: (params) =>
+        params.row.status === "rejected" ?  ( <div className="text-red-500   bg-red-100 p-2 rounded-lg flex items-center justify-center gap-x-1">
+        <span className="text-[8px]">rejected</span>
+        <MdOutlinePending />
+      </div>):
         !params.row.status ? (
           <div className="text-yellow-500   bg-yellow-100 p-2 rounded-lg flex items-center justify-center gap-x-1">
           <span className="text-[8px]">Pending</span>
@@ -143,8 +145,7 @@ const VendorAllVehicles = () => {
   ];
 
   const rows =
-    vendorVehilces &&
-    vendorVehilces
+    vendorVehilces &&  vendorVehilces
       .filter((vehicle) => vehicle.isDeleted === "false")
       .map((vehicle) => ({
         id: vehicle._id,
@@ -152,12 +153,17 @@ const VendorAllVehicles = () => {
         registeration_number: vehicle.registeration_number,
         company: vehicle.company,
         name: vehicle.name,
-        status: vehicle.isAdminApproved,
+        status: !vehicle.isRejected ? vehicle.isAdminApproved : "rejected",
       }));
 
+      console.log(rows)
+      const isVendorVehiclesEmpty = vendorVehilces && vendorVehilces.length === 0 
   return (
     <div className="max-w-[1000px]  d-flex   justify-end text-start items-end p-10 bg-slate-100 rounded-md">
       <Header title="AllVehicles" />
+      {isVendorVehiclesEmpty ? (
+      <p>No requests yet</p>
+    ):(
 
       <Box sx={{ height: "100%", width: "100%" }}>
         <DataGrid
@@ -183,6 +189,7 @@ const VendorAllVehicles = () => {
           }}
         />
       </Box>
+    )}
 
       {/* addProduct modal */}
       <VendorAddProductModal />

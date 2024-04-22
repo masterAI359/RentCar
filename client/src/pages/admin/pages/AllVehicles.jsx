@@ -130,7 +130,7 @@ function AllVehicles() {
     .filter((vehicle) => vehicle.isDeleted === "false")
     .map((vehicle) => ({
       id: vehicle._id,
-      image: vehicle.image,
+      image: vehicle.image[0],
       registeration_number: vehicle.registeration_number,
       company: vehicle.company,
       name: vehicle.name,

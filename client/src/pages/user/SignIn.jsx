@@ -1,6 +1,7 @@
 import styles from "../../index";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  loadingEnd,
   signInFailure,
   signInStart,
   signInSuccess,
@@ -44,21 +45,31 @@ function SignIn() {
       const data = await res.json();
 
       if (data.succes === false || !res.ok) {
+        dispatch(loadingEnd())
         dispatch(signInFailure(data));
+      
         return;
       }
       if (data.isAdmin) {
         dispatch(signInSuccess(data));
+        dispatch(loadingEnd())
         navigate("/adminDashboard");
       } else if (data.isUser) {
         dispatch(signInSuccess(data));
+        dispatch(loadingEnd())
         navigate("/");
       } else {
+        dispatch(loadingEnd())
         dispatch(signInFailure(data));
+       
       }
+      dispatch(loadingEnd())
       dispatch(signInFailure("something went wrong"));
+      
     } catch (error) {
+      dispatch(loadingEnd())
       dispatch(signInFailure(error));
+     
     }
   };
 
@@ -71,7 +82,7 @@ function SignIn() {
           className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}
         >
           <h1 className={`${styles.heading2}  text-normal `}>Sign In</h1>
-          <Link to={"/"}>
+          <Link to={"/"} onClick={()=> dispatch(loadingEnd())}>
             <div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">
               x
             </div>

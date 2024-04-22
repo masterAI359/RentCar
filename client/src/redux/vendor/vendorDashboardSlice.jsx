@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     vendorVehilces : [],
-    vendorVehicleApproved:[]
+    vendorVehicleApproved:[],
+    adminVenodrRequest:[],
 }
 
 export const VendorDashboardSlice = createSlice({
@@ -12,18 +13,16 @@ export const VendorDashboardSlice = createSlice({
       setVenodrVehilces: (state, action) => {
         state.vendorVehilces = action.payload;
       },
-      setUniqueVal:(state,action)=> {
-        state.vendorVehicleApproved.push({_id:action.payload,status:false})
+      setUpdateRequestTable:(state,action) =>  {
+        state.adminVenodrRequest = state.adminVenodrRequest.filter((cur)=> cur._id !== action.payload)
       },
-      setApproveVendorVehilce:(state,action) => {
-        state.vendorVehicleApproved = action.payload
-      },
-      setRejectVendorVehicle:(state,action) => {
-        state.vendorVehicleApproved = action.payload
+    
+      setadminVenodrRequest:(state,action) => {
+        state.adminVenodrRequest = action.payload
       }
     },
   });
   
-  export const { setVenodrVehilces , setApproveVendor , setRejectVendor , setUniqueVal } = VendorDashboardSlice.actions;
+  export const { setVenodrVehilces , setApproveVendor , setRejectVendor , setUniqueVal,setadminVenodrRequest,setUpdateRequestTable } = VendorDashboardSlice.actions;
   export default VendorDashboardSlice.reducer;
   

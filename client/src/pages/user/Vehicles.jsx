@@ -36,8 +36,12 @@ const Vehicles = () => {
         if (!res.ok) {
           console.log("not success");
         }
-        const data = await res.json();
-        dispatch(showVehicles(data));
+        if(res.ok){
+          const data = await res.json();
+          dispatch(showVehicles(data));
+        }
+       
+       
       } catch (error) {
         console.log(error);
       }
@@ -60,7 +64,7 @@ const Vehicles = () => {
       </div>
 
       <div className=" mx-auto flex sm:flex-row  w-full  lg:grid lg:max-w-[1000px]  lg:grid-cols-3 justify-center items-center gap-5 flex-wrap mt-10">
-        {userAllVehicles.map(
+        {userAllVehicles && userAllVehicles.length>0 && userAllVehicles.map(
           (cur, idx) =>
             cur.isDeleted === "false" && (
               <div
