@@ -23,6 +23,8 @@ import VehicleDetails from "./pages/user/VehicleDetails";
 import EditProductComponent from "./pages/admin/components/EditProductComponent";
 import Orders from "./pages/user/Orders";
 import AvailableVehicles from "./pages/user/AvailableVehiclesAfterSearch";
+import VendorEditProductComponent from "./pages/vendor/Components/VendorEditProductComponent";
+import VendorDeleteVehicleModal from "./pages/vendor/Components/VendorDeleteVehicleModal";
 
 function App() {
   return (
@@ -60,6 +62,11 @@ function App() {
           {/* vendor private routes */}
           <Route element={<VendorPrivateRoute />}>
             <Route path="/vendorDashboard/*" element={<VendorDashboard />} />
+            <Route
+                path="/vendorDashboard/vendorEditProductComponent"
+                element={<VendorEditProductComponent />}
+              />
+            <Route    path="/vendorDashboard/vendorDeleteVehicleModal" element={<VendorDeleteVehicleModal/>} />
           </Route>
 
           {/* admin private routes */}
