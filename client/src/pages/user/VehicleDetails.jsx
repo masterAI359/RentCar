@@ -43,6 +43,28 @@ const VehicleDetails = () => {
     fetchData();
   }, []);
 
+  const handleBook = async (vehicleId) => {
+    try{
+      const booked = await fetch('api/user/bookVehicle',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          vehicleId,
+          
+        })
+      })
+      if(!booked.ok){
+        console.log("not success")
+      }
+      const data = await booked.json();
+      console.log(data)
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
   return (
     <div>
       <section className="py-12 sm:py-8 bg-white">
@@ -182,6 +204,9 @@ const VehicleDetails = () => {
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 gap-2"
+                  onClick={() => {
+                    handleBook(singleVehicleDetail._id)
+                  }}
                 >
                   <span>
                     <GrSecure />
