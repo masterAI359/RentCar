@@ -11,6 +11,7 @@ import modelDataSlice from './adminSlices/adminDashboardSlice/CarModelDataSlice.
 import selectRideSlice from "./user/selectRideSlice.jsx";
 import statusSlice from "./adminSlices/adminDashboardSlice/StatusSlice.jsx";
 import vendorDashboardSlice from "./vendor/vendorDashboardSlice.jsx";
+import bookingDataSlice from './user/BookingDataSlice.jsx'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -22,13 +23,14 @@ const rootReducer = combineReducers({
   selectRideSlice : selectRideSlice,
   statusSlice:statusSlice,
   vendorDashboardSlice:vendorDashboardSlice,
+  bookingDataSlice:bookingDataSlice
 });
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["user","userListVehicles"],
+  whitelist: ["user","userListVehicles","bookingDataSlice"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

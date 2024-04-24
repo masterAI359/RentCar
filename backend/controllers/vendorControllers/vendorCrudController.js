@@ -105,7 +105,8 @@ export const vendorAddVehicle = async (req, res, next) => {
       }
     }
   } catch (error) {
-    next(errorHandler(400, "vehicle failed to add "), console.log(error));
+    console.log(error)
+    next(errorHandler(400, "vehicle failed to add "));
   }
 };
 

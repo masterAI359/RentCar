@@ -24,6 +24,7 @@ import {
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
+import { setSelectedData } from "../../redux/user/BookingDataSlice";
 
 const schema = z.object({
   dropoff_location: z.string().min(1, { message: "Dropoff location needed" }),
@@ -104,7 +105,10 @@ const CarSearch = () => {
     try {
       if (data) {
         navigate("/availableVehicles");
-        // resetting the form on form submission have to move this after fetch
+
+        //preserving the selected data for later use
+        dispatch(setSelectedData(data))
+       
 
         const res = await fetch("api/user/searchCar", {
           method: "POST",
