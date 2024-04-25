@@ -1,6 +1,7 @@
 import styles from "../../index";
 import Herocar from "../../Assets/homepage_car_copy.jpeg";
 import CarSearch from "./CarSearch";
+import { HeroParallax } from "../../components/ui/Paralax";
 
 function Home() {
 
@@ -48,6 +49,7 @@ function Home() {
       </div>
 
       <CarSearch/>
+      <HeroParallax/>
     </>
   );
 }

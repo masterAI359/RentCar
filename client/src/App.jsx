@@ -25,6 +25,8 @@ import Orders from "./pages/user/Orders";
 import AvailableVehicles from "./pages/user/AvailableVehiclesAfterSearch";
 import VendorEditProductComponent from "./pages/vendor/Components/VendorEditProductComponent";
 import VendorDeleteVehicleModal from "./pages/vendor/Components/VendorDeleteVehicleModal";
+import CheckoutPage from "./pages/user/CheckoutPage";
+
 
 function App() {
   return (
@@ -57,6 +59,8 @@ function App() {
             <Route path="/vehicleDetails" element={<VehicleDetails />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/availableVehicles" element={<AvailableVehicles/>}/>
+            <Route path="/checkoutPage" element={<CheckoutPage/>}/>
+
           </Route>
 
           {/* vendor private routes */}

@@ -14,7 +14,7 @@ import styles from "../..";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { useEffect } from "react";
 import { showVehicles } from "../../redux/user/listAllVehicleSlice";
@@ -26,6 +26,7 @@ const VehicleDetails = () => {
   );
 
   const dispatch  = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -206,6 +207,8 @@ const VehicleDetails = () => {
                   className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 gap-2"
                   onClick={() => {
                     handleBook(singleVehicleDetail._id)
+                    navigate('/checkoutPage')
+                    
                   }}
                 >
                   <span>
