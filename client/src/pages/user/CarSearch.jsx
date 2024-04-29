@@ -67,14 +67,17 @@ const schema = z.object({
 });
 
 const CarSearch = () => {
+
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
+
   const navigate = useNavigate();
   const { districtData } = useSelector((state) => state.modelDataSlice);
+  
   const uniqueDistrict = districtData.filter((cur, idx) => {
     return cur !== districtData[idx + 1];
   });

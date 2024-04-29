@@ -3,11 +3,36 @@ import { MdCurrencyRupee } from "react-icons/md";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoMdTime } from "react-icons/io";
 import { MdVerifiedUser } from "react-icons/md";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FaIndianRupeeSign } from "react-icons/fa6";
+
+import TextField from "@mui/material/TextField";
+import { useState } from "react";
+
+const schema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "email required" })
+    .refine((value) => /\S+@\S+\.\S+/.test(value), {
+      message: "Invalid email address",
+    }),
+  phoneNumber: z.string().min(8, { message: "phoneNumber required" }),
+  adress: z.string().min(4, { message: "adress required" })
+});
 
 const CheckoutPage = () => {
   const { singleVehicleDetail } = useSelector(
     (state) => state.userListVehicles
   );
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    register,watch
+  } = useForm({ resolver: zodResolver(schema) });
+
   const {
     pickup_district,
     pickup_location,
@@ -17,9 +42,62 @@ const CheckoutPage = () => {
     pickupDate,
     dropoffDate,
   } = useSelector((state) => state.bookingDataSlice);
+  const { email, phoneNumber, adress , user_id:_id } = useSelector(
+    (state) => state.user.currentUser
+  );
+
+  const { price , vehicle_id:_id } = useSelector(
+    (state) => state.userListVehicles.singleVehicleDetail
+  );
+
+
+
+  const start = new Date(pickupDate.humanReadable);
+  const end = new Date(dropoffDate.humanReadable);
+
+  const diffMilliseconds = end - start;
+  const Days = Math.round(diffMilliseconds / (1000 * 3600 * 24));
+
+  //settting and checking coupon
+
+  const [wrongCoupon , setWrongCoupon] = useState(false)
+  const [discount , setDiscount] = useState(0)
+  const couponValue = watch('coupon')
+  const handleCoupon = () => {
+    setWrongCoupon(false)
+    if(couponValue === 'WELCOME50'){
+      setDiscount(50)
+    }
+    else{
+      setDiscount(0)
+      setWrongCoupon(true)
+      
+    }
+  }
+
+
+  //calculateing total price after coupon
+  let totalPrice = (price * Days + 50) - discount
+
+  //handle place order data
+
+  const handlePlaceOrder = (data) => {
+    console.log(data);
+    try{
+      const orderData = {
+        user_id,
+        totalPrice,
+        
+      }
+    }
+    catch(error){
+      console.log(error)
+    }
+  };
+
   return (
     <>
-      <div className="grid absolute top-0  sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-[120px] xl:pl-[100px] gap-10 xl:mt-20 ">
+      <div className="grid w-full absolute top-0  sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-[120px] xl:pl-[100px] gap-10 xl:mt-20 ">
         <div className="px-4 pt-8 bg-gray w-full h-full drop-shadow-md">
           <p className="text-xl font-medium">Order Summary</p>
           <p className="text-gray-400">
@@ -67,7 +145,7 @@ const CheckoutPage = () => {
             </div>
             <div className=" cursor-pointer  rounded-lg drop-shadow-sm  border border-slate-50  p-4 mt-40 pt-10">
               <div className="flex justify-around">
-                <div className="ml-5 min-h-[300px] ">
+                <div className="md:ml-5 min-h-[300px] ">
                   <div className="mt-2 font-medium underline underline-offset-4 mb-5">
                     Pick up
                   </div>
@@ -144,172 +222,121 @@ const CheckoutPage = () => {
         </div>
 
         {/* details */}
-        <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0 drop-shadow-md">
+        <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0 drop-shadow-md ">
           <p className="text-xl font-medium">Payment Details</p>
           <p className="text-gray-400">
             Complete your order by providing your payment details.
           </p>
-          <div className="">
-            <label
-              htmlFor="email"
-              className="mt-4 mb-2 block text-sm font-medium"
-            >
-              Email
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                id="email"
-                name="email"
-                className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                placeholder="your.email@gmail.com"
-              />
-              <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                  />
-                </svg>
-              </div>
-            </div>
-            <label
-              htmlFor="card-holder"
-              className="mt-4 mb-2 block text-sm font-medium"
-            >
-              Card Holder
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                id="card-holder"
-                name="card-holder"
-                className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                placeholder="Your full name here"
-              />
-              <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-            <label
-              htmlFor="card-no"
-              className="mt-4 mb-2 block text-sm font-medium"
-            >
-              Card Details
-            </label>
-            <div className="flex">
-              <div className="relative w-7/12 flex-shrink-0">
-                <input
-                  type="text"
-                  id="card-no"
-                  name="card-no"
-                  className="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="xxxx-xxxx-xxxx-xxxx"
+
+          <form onSubmit={handleSubmit(handlePlaceOrder)}>
+            <div className="flex flex-col gap-y-8 my-4">
+              {/* email */}
+
+              <div>
+                <TextField
+                  id="email"
+                  label="Email"
+                  variant="outlined"
+                  className="w-full"
+                  defaultValue={email ? email : ""}
+                  {...register("email")}
                 />
-                <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                  <svg
-                    className="h-4 w-4 text-gray-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1z" />
-                    <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1z" />
-                  </svg>
-                </div>
+                {errors.email && (
+                  <p className="text-red-500 text-[10px]">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
-              <input
-                type="text"
-                name="credit-expiry"
-                className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                placeholder="MM/YY"
-              />
-              <input
-                type="text"
-                name="credit-cvc"
-                className="w-1/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                placeholder="CVC"
-              />
-            </div>
-            <label
-              htmlFor="billing-address"
-              className="mt-4 mb-2 block text-sm font-medium"
-            >
-              Billing Address
-            </label>
-            <div className="flex flex-col sm:flex-row">
-              <div className="relative flex-shrink-0 sm:w-7/12">
-                <input
-                  type="text"
-                  id="billing-address"
-                  name="billing-address"
-                  className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Street Address"
+
+              {/* phone */}
+              <div>
+                <TextField
+                  id="phoneNumber"
+                  label="Phone"
+                  type="number"
+                  variant="outlined"
+                  className="w-full"
+                  defaultValue={phoneNumber ? phoneNumber : ""}
+                  {...register("phoneNumber")}
                 />
-                <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                  <img
-                    className="h-4 w-4 object-contain"
-                    src="https://flagpack.xyz/_nuxt/4c829b6c0131de7162790d2f897a90fd.svg"
-                    alt=""
-                  />
-                </div>
+                {errors.phoneNumber && (
+                  <p className="text-red-500 text-[10px]">
+                    {errors.phoneNumber.message}
+                  </p>
+                )}
               </div>
-              <select
-                type="text"
-                name="billing-state"
-                className="w-full rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-              >
-                <option value="State">State</option>
-              </select>
-              <input
-                type="text"
-                name="billing-zip"
-                className="flex-shrink-0 rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-blue-500 focus:ring-blue-500"
-                placeholder="ZIP"
-              />
+
+              {/* adress */}
+              <div>
+                <TextField
+                  id="adress"
+                  label="Adress"
+                  multiline
+                  rows={4}
+                  defaultValue={adress ? adress : ""}
+                  {...register("adress")}
+                  className="w-full"
+                />
+                {errors.adress && (
+                  <p className="text-red-500 text-[10px]">
+                    {errors.adress.message}
+                  </p>
+                )}
+              </div>
+
+              {/* pincode */}
+              <div >
+                <div className="flex gap-6">
+                <TextField
+                  rows={4}
+                  id="coupon"
+                  // defaultValue={adress}
+                  label={"Coupon"}
+                  value={couponValue}
+                  {...register("coupon")}
+                  className="w-full border-none"
+                  placeholder="WELCOME50 Is a valid coupon"
+                />
+                <button onClick={(e)=> {e.preventDefault(),handleCoupon()}}><div className="bg-black text-white px-8 py-4 rounded-md">Apply</div></button>
+                </div>
+                {wrongCoupon && <p className="text-red text-[8px]">Wrong coupon entered</p>}
+              </div>
+
             </div>
+
             {/* Total */}
             <div className="mt-6 border-t border-b py-2">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-900">Subtotal</p>
-                <p className="font-semibold text-gray-900">$399.00</p>
+                <p className="text-sm font-medium text-gray-900">Rent</p>
+                <p className="font-semibold text-gray-900">{price}</p>
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-900">Days</p>
+                <p className="font-semibold text-gray-900">{Days}</p>
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">Shipping</p>
-                <p className="font-semibold text-gray-900">$8.00</p>
+                <p className="font-semibold text-gray-900">50.00</p>
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-900">Coupon</p>
+                <p className="font-semibold text-gray-900">{discount}.00</p>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between">
               <p className="text-sm font-medium text-gray-900">Total</p>
-              <p className="text-2xl font-semibold text-gray-900">$408.00</p>
+              <p className="text-2xl font-semibold text-gray-900 flex items-center justify-center">
+                <span>
+                  <FaIndianRupeeSign />{" "}
+                </span>
+                {totalPrice}
+              </p>
             </div>
-          </div>
-          <button className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">
-            Place Order
-          </button>
+
+            <button className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">
+              Place Order
+            </button>
+          </form>
         </div>
       </div>
     </>
