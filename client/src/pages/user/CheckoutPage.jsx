@@ -10,6 +10,8 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { displayRazorpay } from "./Razorpay";
 
 const schema = z.object({
   email: z
@@ -19,19 +21,17 @@ const schema = z.object({
       message: "Invalid email address",
     }),
   phoneNumber: z.string().min(8, { message: "phoneNumber required" }),
-  adress: z.string().min(4, { message: "adress required" })
+  adress: z.string().min(4, { message: "adress required" }),
 });
 
 const CheckoutPage = () => {
-  const { singleVehicleDetail } = useSelector(
-    (state) => state.userListVehicles
-  );
-
   const {
     handleSubmit,
     formState: { errors },
-    register,watch
+    register,
+    watch,
   } = useForm({ resolver: zodResolver(schema) });
+  const navigate = useNavigate();
 
   const {
     pickup_district,
@@ -42,15 +42,17 @@ const CheckoutPage = () => {
     pickupDate,
     dropoffDate,
   } = useSelector((state) => state.bookingDataSlice);
-  const { email, phoneNumber, adress , user_id:_id } = useSelector(
-    (state) => state.user.currentUser
-  );
 
-  const { price , vehicle_id:_id } = useSelector(
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const singleVehicleDetail = useSelector(
     (state) => state.userListVehicles.singleVehicleDetail
   );
 
+  const { email, phoneNumber, adress } = currentUser;
+  const { price } = singleVehicleDetail;
 
+  const user_id = currentUser._id;
+  const vehicle_id = singleVehicleDetail._id;
 
   const start = new Date(pickupDate.humanReadable);
   const end = new Date(dropoffDate.humanReadable);
@@ -60,39 +62,39 @@ const CheckoutPage = () => {
 
   //settting and checking coupon
 
-  const [wrongCoupon , setWrongCoupon] = useState(false)
-  const [discount , setDiscount] = useState(0)
-  const couponValue = watch('coupon')
+  const [wrongCoupon, setWrongCoupon] = useState(false);
+  const [discount, setDiscount] = useState(0);
+  const couponValue = watch("coupon");
   const handleCoupon = () => {
-    setWrongCoupon(false)
-    if(couponValue === 'WELCOME50'){
-      setDiscount(50)
+    setWrongCoupon(false);
+    if (couponValue === "WELCOME50") {
+      setDiscount(50);
+    } else {
+      setDiscount(0);
+      setWrongCoupon(true);
     }
-    else{
-      setDiscount(0)
-      setWrongCoupon(true)
-      
-    }
-  }
-
+  };
 
   //calculateing total price after coupon
-  let totalPrice = (price * Days + 50) - discount
+  let totalPrice = price * Days + 50 - discount;
 
   //handle place order data
 
-  const handlePlaceOrder = (data) => {
-    console.log(data);
-    try{
-      const orderData = {
-        user_id,
-        totalPrice,
-        
-      }
-    }
-    catch(error){
-      console.log(error)
-    }
+  const handlePlaceOrder = async () => {
+    const orderData = {
+      user_id,
+      vehicle_id,
+      totalPrice,
+      pickupDate: pickupDate.humanReadable,
+      dropoffDate: dropoffDate.humanReadable,
+      pickup_district,
+      pickup_location,
+      dropoff_location,
+    };
+
+    displayRazorpay(orderData,navigate);
+
+   
   };
 
   return (
@@ -159,8 +161,8 @@ const CheckoutPage = () => {
                         <span>
                           <CiCalendarDate style={{ fontSize: 15 }} />
                         </span>
-                        <span> {pickupDate.day} </span>
-                        <span> {pickupDate.month}</span>
+                        <span> {pickupDate.day} : </span>
+                        <span> {pickupDate.month} : </span>
                         <span> {pickupDate.year}</span>
                       </div>
                       <div className="flex justify-center items-center gap-2">
@@ -188,9 +190,9 @@ const CheckoutPage = () => {
                         <span>
                           <CiCalendarDate style={{ fontSize: 15 }} />
                         </span>
-                        <span> {dropoffDate.day} </span>
-                        <span> {dropoffDate.month}</span>
-                        <span> {dropoffDate.year}</span>
+                        <span> {dropoffDate.day} : </span>
+                        <span> {dropoffDate.month} : </span>
+                        <span> {dropoffDate.year} </span>
                       </div>
                       <div className="flex justify-center items-center gap-2">
                         <span>
@@ -285,23 +287,32 @@ const CheckoutPage = () => {
               </div>
 
               {/* pincode */}
-              <div >
+              <div>
                 <div className="flex gap-6">
-                <TextField
-                  rows={4}
-                  id="coupon"
-                  // defaultValue={adress}
-                  label={"Coupon"}
-                  value={couponValue}
-                  {...register("coupon")}
-                  className="w-full border-none"
-                  placeholder="WELCOME50 Is a valid coupon"
-                />
-                <button onClick={(e)=> {e.preventDefault(),handleCoupon()}}><div className="bg-black text-white px-8 py-4 rounded-md">Apply</div></button>
+                  <TextField
+                    rows={4}
+                    id="coupon"
+                    // defaultValue={adress}
+                    label={"Coupon"}
+                    value={couponValue}
+                    {...register("coupon")}
+                    className="w-full border-none"
+                    placeholder="WELCOME50 Is a valid coupon"
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault(), handleCoupon();
+                    }}
+                  >
+                    <div className="bg-black text-white px-8 py-4 rounded-md">
+                      Apply
+                    </div>
+                  </button>
                 </div>
-                {wrongCoupon && <p className="text-red text-[8px]">Wrong coupon entered</p>}
+                {wrongCoupon && (
+                  <p className="text-red-500 text-[8px]">Not a valid coupon</p>
+                )}
               </div>
-
             </div>
 
             {/* Total */}

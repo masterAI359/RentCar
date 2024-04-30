@@ -7,7 +7,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchModelData } from "../admin/components/AddProductModal";
 import { Controller, useForm } from "react-hook-form";
@@ -25,6 +25,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { setSelectedData } from "../../redux/user/BookingDataSlice";
+import dayjs from "dayjs";
 
 const schema = z.object({
   dropoff_location: z.string().min(1, { message: "Dropoff location needed" }),
@@ -91,6 +92,10 @@ const CarSearch = () => {
     fetchModelData(dispatch);
   }, []);
 
+  const [error , setError] = useState('')
+console.log(error)
+
+
   //for showing appropriate locations according to districts
   useEffect(() => {
     if (selectedDistrict !== null) {
@@ -107,7 +112,7 @@ const CarSearch = () => {
   const hanldeData = async (data) => {
     try {
       if (data) {
-        navigate("/availableVehicles");
+        
 
         //preserving the selected data for later use
         dispatch(setSelectedData(data))
@@ -121,10 +126,16 @@ const CarSearch = () => {
           body: JSON.stringify(data),
         });
 
+        if(!res.ok){
+          const data = await res.json(); 
+          setError(data.message);  
+          return;
+        }
+        
         if(res.ok){
           const result = await res.json();
           dispatch(setAvailableCars(result))
-          console.log("success", result);
+          navigate("/availableVehicles")
         }
         
 
@@ -158,6 +169,12 @@ const CarSearch = () => {
     }
   };
 
+
+  //this is to ensure there will be 1 day gap between pickup and dropoff date
+  const oneDayGap = dayjs().add(1, "day")
+
+
+ 
   return (
     <>
       <section
@@ -305,19 +322,24 @@ const CarSearch = () => {
                   <div className="box-form__car-time">
                     <label htmlFor="picktime" className="flex items-center">
                       <IconCalendarEvent className="input-icon" /> &nbsp;
-                      Pick-up <p className="text-red-500">*</p>
+                      Pick-up Date <p className="text-red-500">*</p>
                     </label>
                     <Controller
                       name={"pickuptime"}
                       control={control}
+
                       render={({ field }) => (
+                     
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DemoContainer components={["DateTimePicker"]}>
                             <DateTimePicker
                               label="Pickup time"
                               {...field}
                               value={field.value}
+                              minDate={dayjs()}
+                              
                             />
+                            
                           </DemoContainer>
                         </LocalizationProvider>
                       )}
@@ -332,7 +354,7 @@ const CarSearch = () => {
                   <div className="box-form__car-time">
                     <label htmlFor="droptime" className="flex items-center">
                       <IconCalendarEvent className="input-icon" /> &nbsp;
-                      Drop-of <p className="text-red-500">*</p>
+                      Drop-of Date <p className="text-red-500">*</p>
                     </label>
                     <Controller
                       name={"dropofftime"}
@@ -344,6 +366,7 @@ const CarSearch = () => {
                               label="Dropoff time"
                               {...field}
                               value={field.value}
+                              minDate={oneDayGap}
                             />
                           </DemoContainer>
                         </LocalizationProvider>
@@ -353,6 +376,9 @@ const CarSearch = () => {
                       <p className="text-red-500">
                         {errors.dropofftime.message}
                       </p>
+                    )}
+                    {error && (
+                      <p className="text-[8px] text-red-500">{error}</p>
                     )}
                   </div>
 

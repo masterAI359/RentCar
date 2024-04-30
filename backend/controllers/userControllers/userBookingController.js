@@ -1,51 +1,51 @@
 import mongoose from "mongoose";
 import Booking from "../../models/BookingModel.js";
 import { errorHandler } from "../../utils/error.js";
+import Razorpay from "razorpay";
 
 export const BookCar = async (req, res, next) => {
   try {
     if (!req.body) {
       next(errorHandler(401, "bad request on body"));
     }
+
     const {
-      vehicleId,
-      userId,
+      user_id,
+      vehicle_id,
+      totalPrice,
       pickupDate,
       dropoffDate,
-      pickUpLocation,
-      dropOffLocation,
-      pickUpDistrict,
+      pickup_location,
+      dropoff_location,
+      pickup_district,
+      razorpayPaymentId,
+      razorpayOrderId
     } = req.body;
 
-    const year = 2024;
-    const month = 3; // Note: Months are zero-based (0 for January, 1 for February, etc.)
-    const date = 23;
-    const hour = 12;
-    const minute = 30;
-    const second = 0;
-
-    const myDate = new Date(year, month, date, hour, minute, second);
     const book = new Booking({
-      pickupDate: myDate,
-      dropOffDate: myDate,
-      userId: userId,
-      pickUpLocation: pickUpLocation,
-      vehicleId,
-      dropOffLocation: dropOffLocation,
-      pickUpDistrict: pickUpDistrict,
+      pickupDate,
+      dropOffDate: dropoffDate,
+      userId: user_id,
+      pickUpLocation: pickup_location,
+      vehicleId: vehicle_id,
+      dropOffLocation: dropoff_location,
+      pickUpDistrict: pickup_district,
+      totalPrice,
+      razorpayPaymentId,
+      razorpayOrderId,
+      status: "booked",
     });
     if (!book) {
       console.log("not booked");
       return;
     }
-    if (book) {
+    
       const booked = await book.save();
-      console.log(booked);
-      return res.status(200).json({
+      res.status(200).json({
         message: "car booked successfully",
         booked,
       });
-    }
+   
   } catch (error) {
     console.log(error);
     next(errorHandler(500, "error while booking car"));
@@ -61,7 +61,6 @@ export const checkAvailability = async (req, res, next) => {
       next(errorHandler(401, "bad request no body"));
     }
     const { pickupDate, dropOffDate, vehicleId } = req.body;
-
 
     if (!pickupDate || !dropOffDate || !vehicleId) {
       console.log("pickup , dropffdate and vehicleId is required");
@@ -89,7 +88,7 @@ export const checkAvailability = async (req, res, next) => {
         }, // Booking includes the entire time range
         {
           pickupDate: { $gte: sixHoursLater },
-        }
+        },
       ],
     });
 
@@ -110,5 +109,32 @@ export const checkAvailability = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     next(errorHandler(500, "error in checkAvailability"));
+  }
+};
+
+// ---------------------
+
+//createing razorpay instance
+export const razorpayOrder = async (req, res, next) => {
+  try {
+    const instance = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_SECRET,
+    });
+
+    const { totalPrice } = req.body;
+
+    const options = {
+      amount: totalPrice * 100, // amount in smallest currency unit
+      currency: "INR",
+    };
+
+    const order = await instance.orders.create(options);
+
+    if (!order) return res.status(500).send("Some error occured");
+    res.status(200).json(order);
+  } catch (error) {
+    console.log(error);
+    next(errorHandler(500, "error occured in razorpayorder"));
   }
 };
