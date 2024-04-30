@@ -40,7 +40,6 @@ export const HeroParallax = () => {
   const firstRow = products.slice(0, 1);
   const secondRow = products.slice(1, 2);
   const thirdRow = products.slice(2, 3);
-//   const fourthRow = products.slice(0, 1);
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -95,8 +94,8 @@ export const HeroParallax = () => {
           className=""
         >
           <motion.div className="flex flex-row-reverse  mb-[200px] ">
-            {firstRow.map((product) => (
-              <div className="flex bg-gradient-to-br from-green-400 to-slate-900 max-w-[1300px] rounded-lg py-[100px] px-[100px] mx-auto  ">
+            {firstRow.map((product,index) => (
+              <div key={index} className="flex bg-gradient-to-br from-green-400 to-slate-900 max-w-[1300px] rounded-lg py-[100px] px-[100px] mx-auto  ">
                 <div>
                   <h1 className="w-[400px] text-4xl    p-4 text-center  from-white via-gray-50 to-black-700 bg-gradient-to-bl bg-clip-text text-transparent font-bold capitalize  ">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit.
@@ -116,9 +115,9 @@ export const HeroParallax = () => {
             ))}
           </motion.div>
           <motion.div className="flex flex-row-reverse  mb-[200px]  "  style={{ rotateZ: rotateZM }}>
-            {secondRow.map((product) => (
+            {secondRow.map((product,index) => (
                 
-              <div className="flex flex-row justify-center items-center p-[100px] bg-gradient-to-br from-green-400 to-slate-900 max-w-[1300px] rounded-lg py-[100px] px-[100px] mx-auto ">
+              <div key={index}  className="flex flex-row justify-center items-center p-[100px] bg-gradient-to-br from-green-400 to-slate-900 max-w-[1300px] rounded-lg py-[100px] px-[100px] mx-auto ">
                 <div>
                   <ProductCard
                     product={product}

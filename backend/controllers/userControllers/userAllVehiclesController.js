@@ -47,41 +47,49 @@ export const searchCar = async (req, res, next) => {
         pickuptime,
         dropofftime,
       } = req.body;
-      const search = await vehicle.aggregate([
-        {
-          $match:
-           
-            {
+
+      //checking if droOfftime is before or equals to pickupTime
+      const pickuptimeDate = new Date(pickuptime.$d);
+      const dropofftimeDate = new Date(dropofftime.$d);
+      // Calculate the difference in milliseconds between two dates
+      const dateDifferenceInMilliseconds =
+        dropofftimeDate.getTime() - pickuptimeDate.getTime();
+      // Convert milliseconds to days
+      const dateDifferenceInDays =
+        dateDifferenceInMilliseconds / (1000 * 60 * 60 * 24);
+
+      if (dropofftime.$d <= pickuptime.$d || dateDifferenceInDays < 1) {
+        return next(errorHandler(401, "dropoff date should be larger"));
+      } else {
+        const search = await vehicle.aggregate([
+          {
+            $match: {
               isDeleted: "false",
             },
-        },
-        {
-          $match:
-           
-            {
+          },
+          {
+            $match: {
               district: pickup_district,
               location: pickup_location,
               isBooked: "false",
             },
-        },
-        {
-          $group: {
-            _id: {
-              model: "$model",
-              location: "$location",
-              fuel_type: "$fuel_type",
-              transmition: "$transmition",
-              seats: "$seats",
-            },
-            vehicles: {
-              $push: "$$ROOT",
+          },
+          {
+            $group: {
+              _id: {
+                model: "$model",
+                location: "$location",
+                fuel_type: "$fuel_type",
+                transmition: "$transmition",
+                seats: "$seats",
+              },
+              vehicles: {
+                $push: "$$ROOT",
+              },
             },
           },
-        },
-        {
-          $project:
-           
-            {
+          {
+            $project: {
               _id: 1,
               vehicles: {
                 $cond: {
@@ -100,26 +108,23 @@ export const searchCar = async (req, res, next) => {
                 },
               },
             },
-        },
-        {
-          $unwind:
-            
-            {
+          },
+          {
+            $unwind: {
               path: "$vehicles",
             },
-        },
-        {
-          $replaceRoot:
-           
-            {
+          },
+          {
+            $replaceRoot: {
               newRoot: "$vehicles",
             },
-        },
-      ]);
-      if (search) {
-        res.status(200).json(search);
-      } else {
-        res.status(404).json({ message: "no car found" });
+          },
+        ]);
+        if (search) {
+          res.status(200).json(search);
+        } else {
+          res.status(404).json({ message: "no car found" });
+        }
       }
     } else {
       res.status(400).json({ message: "please provide all the details" });
