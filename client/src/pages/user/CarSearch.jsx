@@ -32,22 +32,13 @@ const schema = z.object({
   pickup_district: z.string().min(1, { message: "Pickup District needed" }),
   pickup_location: z.string().min(1, { message: "Pickup Location needed" }),
 
-  pickuptime: z.object(
-    {
-      $L: z.string(), // Language code
-      $d: z.date(), // Date object
-      $y: z.number(), // Year
-      $M: z.number(), // Month (0-indexed)
-      $D: z.number(), // Day of month
-      $W: z.number(), // Day of week (0-indexed, starting from Sunday)
-      $H: z.number(), // Hour
-      $m: z.number(), // Minute
-      $s: z.number(), // Second
-      $ms: z.number(), // Millisecond
-      $isDayjsObject: z.boolean(), // Indicator for Day.js object
-    },
-    { message: "pickup time is required" }
-  ),
+  pickuptime: z.object({
+    $d: z
+      .instanceof(Date)
+      .refine((date) => date !== null && date !== undefined, {
+        message: "Date is not selected",
+      }),
+  }),
 
   dropofftime: z.object(
     {
@@ -68,7 +59,6 @@ const schema = z.object({
 });
 
 const CarSearch = () => {
-
   const {
     handleSubmit,
     control,
@@ -78,23 +68,23 @@ const CarSearch = () => {
 
   const navigate = useNavigate();
   const { districtData } = useSelector((state) => state.modelDataSlice);
-  
+
   const uniqueDistrict = districtData.filter((cur, idx) => {
     return cur !== districtData[idx + 1];
   });
   const { selectedDistrict, wholeData, locationsOfDistrict } = useSelector(
     (state) => state.selectRideSlice
   );
+
+  const [pickup, setPickup] = useState(null);
+  const [error, setError] = useState(null);
+
   const dispatch = useDispatch();
 
   //useEffect to fetch data from backend for locations
   useEffect(() => {
     fetchModelData(dispatch);
   }, []);
-
-  const [error , setError] = useState('')
-console.log(error)
-
 
   //for showing appropriate locations according to districts
   useEffect(() => {
@@ -112,33 +102,37 @@ console.log(error)
   const hanldeData = async (data) => {
     try {
       if (data) {
-        
-
         //preserving the selected data for later use
-        dispatch(setSelectedData(data))
-       
+        dispatch(setSelectedData(data));
 
-        const res = await fetch("api/user/searchCar", {
+        const pickupDate = data.pickuptime.$d;
+        const dropOffDate = data.dropofftime.$d;
+        const datas = {
+          pickupDate,
+          dropOffDate,
+          pickUpDistrict: data.pickup_district,
+          pickUpLocation: data.pickup_location,
+        };
+
+        const res = await fetch("api/user/getVehiclesWithoutBooking", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(datas),
         });
 
-        if(!res.ok){
-          const data = await res.json(); 
-          setError(data.message);  
+        if (!res.ok) {
+          const data = await res.json();
+          setError(data.message);
           return;
         }
-        
-        if(res.ok){
-          const result = await res.json();
-          dispatch(setAvailableCars(result))
-          navigate("/availableVehicles")
-        }
-        
 
+        if (res.ok) {
+          const result = await res.json();
+          dispatch(setAvailableCars(result.data));
+          navigate("/availableVehicles");
+        }
 
         if (res.ok) {
           reset({
@@ -169,12 +163,14 @@ console.log(error)
     }
   };
 
-
   //this is to ensure there will be 1 day gap between pickup and dropoff date
-  const oneDayGap = dayjs().add(1, "day")
+  console.log(pickup)
+    const oneDayGap = pickup && pickup.add(1,'day')
+    console.log(oneDayGap)
+    
+  
 
 
- 
   return (
     <>
       <section
@@ -201,8 +197,8 @@ console.log(error)
                 <div className="box-form">
                   <div className="box-form__car-type">
                     <label htmlFor="pickup_district">
-                      <IconMapPinFilled className="input-icon" /> &nbsp; Pick-up{" "}
-                      <p className="text-red-500">*</p>
+                      <IconMapPinFilled className="input-icon" /> &nbsp; Pick-up
+                      District <p className="text-red-500">*</p>
                     </label>
                     <Controller
                       name="pickup_district"
@@ -238,8 +234,8 @@ console.log(error)
 
                   <div className="box-form__car-type ">
                     <label htmlFor="pickup_location">
-                      <IconMapPinFilled className="input-icon" /> &nbsp; Pick-up{" "}
-                      <p className="text-red-500">*</p>
+                      <IconMapPinFilled className="input-icon" /> &nbsp; Pick-up
+                      Location <p className="text-red-500">*</p>
                     </label>
                     <Controller
                       name="pickup_location"
@@ -279,8 +275,8 @@ console.log(error)
 
                   <div className="box-form__car-type">
                     <label>
-                      <IconMapPinFilled className="input-icon" /> &nbsp; Drop-of{" "}
-                      <p className="text-red-500">*</p>
+                      <IconMapPinFilled className="input-icon" /> &nbsp; Drop-of
+                      Location <p className="text-red-500">*</p>
                     </label>
 
                     <Controller
@@ -327,9 +323,7 @@ console.log(error)
                     <Controller
                       name={"pickuptime"}
                       control={control}
-
                       render={({ field }) => (
-                     
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DemoContainer components={["DateTimePicker"]}>
                             <DateTimePicker
@@ -337,9 +331,11 @@ console.log(error)
                               {...field}
                               value={field.value}
                               minDate={dayjs()}
-                              
+                              onChange={(newValue) => {
+                                field.onChange(newValue); // Update the form field value
+                                setPickup(newValue); // Update the pickup state
+                              }}
                             />
-                            
                           </DemoContainer>
                         </LocalizationProvider>
                       )}
@@ -366,7 +362,7 @@ console.log(error)
                               label="Dropoff time"
                               {...field}
                               value={field.value}
-                              minDate={oneDayGap}
+                              minDate={pickup ? oneDayGap : dayjs()}
                             />
                           </DemoContainer>
                         </LocalizationProvider>
