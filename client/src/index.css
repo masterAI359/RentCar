@@ -572,3 +572,9 @@ body {
  }
 }
 
+
+/* sort in user vehicles */
+.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
+  /* border-radius: 40px !important; */
+  height: 50px;
+}

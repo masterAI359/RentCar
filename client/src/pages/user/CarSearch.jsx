@@ -164,12 +164,9 @@ const CarSearch = () => {
   };
 
   //this is to ensure there will be 1 day gap between pickup and dropoff date
-  console.log(pickup)
-    const oneDayGap = pickup && pickup.add(1,'day')
-    console.log(oneDayGap)
-    
   
-
+    const oneDayGap = pickup && pickup.add(1,'day')
+   
 
   return (
     <>

@@ -12,10 +12,10 @@ import selectRideSlice from "./user/selectRideSlice.jsx";
 import statusSlice from "./adminSlices/adminDashboardSlice/StatusSlice.jsx";
 import vendorDashboardSlice from "./vendor/vendorDashboardSlice.jsx";
 import bookingDataSlice from './user/BookingDataSlice.jsx'
+import sortfilterSlice from "./user/sortfilterSlice.jsx";
 
 const rootReducer = combineReducers({
   user: userReducer,
-  // global: globalReducer,
   addVehicle: AddVehiclereducer,
   adminDashboardSlice: adminReducer,
   userListVehicles: userListVehiclesReducer,
@@ -23,7 +23,8 @@ const rootReducer = combineReducers({
   selectRideSlice : selectRideSlice,
   statusSlice:statusSlice,
   vendorDashboardSlice:vendorDashboardSlice,
-  bookingDataSlice:bookingDataSlice
+  bookingDataSlice:bookingDataSlice,
+  sortfilterSlice:sortfilterSlice
 });
 
 const persistConfig = {
