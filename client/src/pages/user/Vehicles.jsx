@@ -29,7 +29,7 @@ export const onVehicleDetail = async (id, dispatch) => {
 
 const Vehicles = () => {
   const { userAllVehicles } = useSelector((state) => state.userListVehicles);
-const {data} = useSelector((state)=> state.sortfilterSlice)
+const {data,filterdData} = useSelector((state)=> state.sortfilterSlice)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -60,8 +60,8 @@ const {data} = useSelector((state)=> state.sortfilterSlice)
           <Sort />
         </div>
         <div className=" flex  sm:flex-row  w-full  lg:grid lg:max-w-[1000px]  lg:grid-cols-3 justify-center items-center gap-5 flex-wrap mt-5">
-          {data ? 
-            data.map(
+          {filterdData && filterdData.length >0 ? 
+            filterdData.map(
               (cur, idx) =>
                 cur.isDeleted === "false" && (
                   <div
