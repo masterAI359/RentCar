@@ -3,6 +3,7 @@ import Booking from "../../models/BookingModel.js";
 import { errorHandler } from "../../utils/error.js";
 import Razorpay from "razorpay";
 import { availableAtDate } from "../../services/checkAvailableVehicle.js";
+import Vehicle from "../../models/vehicleModel.js";
 
 export const BookCar = async (req, res, next) => {
   try {
@@ -52,8 +53,6 @@ export const BookCar = async (req, res, next) => {
   }
 };
 
-
-
 //createing razorpay instance
 export const razorpayOrder = async (req, res, next) => {
   try {
@@ -91,9 +90,7 @@ export const getVehiclesWithoutBooking = async (req, res, next) => {
       return next(errorHandler(409, "pickup District and location needed"));
 
     if (!pickupDate || !dropOffDate)
-      return next(
-        errorHandler(409, "pickup , dropffdate  is required")
-      );
+      return next(errorHandler(409, "pickup , dropffdate  is required"));
 
     // Check if pickupDate is before dropOffDate
     if (pickupDate >= dropOffDate)
@@ -112,7 +109,10 @@ export const getVehiclesWithoutBooking = async (req, res, next) => {
     }
 
     const availableVehicles = vehiclesAvailableAtDate.filter(
-      (cur) => cur.district === pickUpDistrict && cur.location == pickUpLocation && cur.isDeleted === "false"
+      (cur) =>
+        cur.district === pickUpDistrict &&
+        cur.location == pickUpLocation &&
+        cur.isDeleted === "false"
     );
 
     if (!availableVehicles) {
@@ -135,6 +135,74 @@ export const getVehiclesWithoutBooking = async (req, res, next) => {
 };
 
 
+//  filtering vehicles 
+export const filterVehicles = async (req, res, next) => {
+  try {
+    if (!req.body) {
+      next(errorHandler(401, "bad request no body"));
+      return;
+    }
+    const transformedData = req.body;
+    if (!transformedData) {
+      next(errorHandler(401, "select filter option first"));
+    }
+    const generateMatchStage = (data) => {
+      const carTypes = [];
+      data.forEach((cur) => {
+        if (cur.type === "car_type") {
+          // Extract the first key of the object and push it into 'cartypes' array
+          const firstKey = Object.keys(cur).find((key) => key !== "type");
+          if (firstKey) {
+            carTypes.push(firstKey);
+          }
+        }
+      });
+ 
+      const transmitions = [];
+      data.forEach((cur) => {
+        // If the current element has type equal to 'transmition'
+        if (cur.type === "transmition") {
+          // Iterate through each key of the current element
+          Object.keys(cur).forEach((key) => {
+            // Exclude the 'type' key and push only keys with truthy values into 'transmitions' array
+            if (key !== "type" && cur[key]) {
+              transmitions.push(key);
+            }
+          });
+        }
+      });
+
+
+      return {
+        $match: {
+          $and: [
+            carTypes.length > 0 ? { car_type: { $in: carTypes } } : null,
+            transmitions.length > 0
+              ? { transmition: { $in: transmitions } }
+              : null,
+          ].filter((condition) => condition !== null), // Remove null conditions
+        },
+      };
+    };
+
+    const matchStage = generateMatchStage(transformedData);
+
+    const filteredVehicles = await Vehicle.aggregate([matchStage]);
+    if (!filteredVehicles) {
+      next(errorHandler(401, "no vehicles found"));
+      return;
+    }
+    res.status(200).json({
+      status: "success",
+      data: {
+        filteredVehicles,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    next(errorHandler(500, "internal server error in fiilterVehicles"));
+  }
+};
 
 // -----------------------------------
 

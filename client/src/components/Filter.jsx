@@ -1,350 +1,209 @@
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import { GoPlus } from "react-icons/go";
+
+import { Controller, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+// import { setFilter, setfilterData } from "../redux/user/sortfilterSlice";
+import { setFilteredData } from "../redux/user/sortfilterSlice";
+
 const Filter = () => {
+  const { control, handleSubmit } = useForm();
+  const { userAllVehicles } = useSelector((state) => state.userListVehicles);
+
+  const dispatch = useDispatch();
+  let transformedData = [];
+
+  const handleData = async (data) => {
+    const typeMapping = {
+      suv: "car_type",
+      sedan: "car_type",
+      hatchback: "car_type",
+      automatic: "transmition",
+      manual: "transmition",
+    };
+
+    // Transform the form data object into an array of objects with the desired structure
+    transformedData = Object.entries(data)
+      // eslint-disable-next-line no-unused-vars
+      .filter(([key, value]) => value == true)
+      .map(([key, value]) => ({ [key]: value, type: typeMapping[key] }));
+
+    if (transformedData && transformedData.length<=0 ) {
+      dispatch(setFilteredData(userAllVehicles));
+    } else if (transformedData && transformedData.length > 0) {
+      try {
+        const res = await fetch("api/user/filterVehicles", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(transformedData),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const filtData = data.data.filteredVehicles;
+          dispatch(setFilteredData(filtData));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
+    <div className="bg-white sticky top-5 scroll-m-9">
+      <div className="sticky top-0 left-0 right-0  ">
+        <div className=" flex h-full w-full lg:max-w-[350px]  flex-col  bg-white py-4 pb-12 shadow-xl">
+          <div className="flex items-center justify-between px-4">
+            <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+            <button
+              type="button"
+              className="-mr-2 md:hidden flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
+            >
+              <span className="sr-only">Close menu</span>
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
 
-      <div className="bg-white sticky top-5 scroll-m-9">
-   
-            <div className="sticky top-0 left-0 right-0  ">
-              <div className=" flex h-full w-full lg:max-w-[350px]  flex-col  bg-white py-4 pb-12 shadow-xl">
-                <div className="flex items-center justify-between px-4">
-                  <h2 className="text-lg font-medium text-gray-900">Filters</h2>
-                  <button
-                    type="button"
-                    className="-mr-2 md:hidden flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
-                  >
-                    <span className="sr-only">Close menu</span>
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
+          {/* <!-- Filters  form --> */}
+          <div className="mt-4 border-t border-gray-200">
+            <h3 className="sr-only">Categories</h3>
 
-                {/* <!-- Filters --> */}
-                <form className="mt-4 border-t border-gray-200">
-                  <h3 className="sr-only">Categories</h3>
-                  <ul
-                    role="list"
-                    className="px-2 py-3 font-medium text-gray-900"
-                  >
-                    <li>
-                      <a href="#" className="block px-2 py-3">
-                        Totes
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="block px-2 py-3">
-                        Backpacks
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="block px-2 py-3">
-                        Travel Bags
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="block px-2 py-3">
-                        Hip Bags
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="block px-2 py-3">
-                        Laptop Sleeves
-                      </a>
-                    </li>
-                  </ul>
-
-                  <div className="border-t border-gray-200 px-4 py-6">
-                    <h3 className="-mx-2 -my-3 flow-root">
-                      {/* <!-- Expand/collapse section button --> */}
-                      <button
-                        type="button"
-                        className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500"
-                        aria-controls="filter-section-mobile-0"
-                        aria-expanded="false"
-                      >
-                        <span className="font-medium text-gray-900">Color</span>
-                        <span className="ml-6 flex items-center">
-                          {/* <!-- Expand icon, show/hide based on section open state. --> */}
-                          <svg
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                          </svg>
-                          {/* <!-- Collapse icon, show/hide based on section open state. --> */}
-                          <svg
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10.75 3.25a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
-                              clipRule="evenodd"
+            <div className="border-t border-gray-200 px-4 py-6">
+              <div className="flex flex-col justify-center  items-start gap-y-4 w-full">
+                <form className="w-full" onSubmit={handleSubmit(handleData)}>
+                  <div className="w-full mb-7 ">
+                    <div className="mb-5 flex justify-between items-center">
+                      <div>Type</div>{" "}
+                      <div>
+                        <GoPlus color="gray" />
+                      </div>
+                    </div>
+                    <div>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Controller
+                              name="suv"
+                              control={control}
+                              render={({ field }) => (
+                                <Checkbox
+                                  {...field}
+                                  checked={field["value"] ?? false}
+                                />
+                              )}
                             />
-                          </svg>
-                        </span>
-                      </button>
-                    </h3>
-                    {/* <!-- Filter options, show/hide based on section open state. --> */}
-                    <div
-                      className="mt-6 grid grid-cols-2 gap-x-4"
-                      id="filter-section-mobile-0"
-                    >
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="color[]"
-                          value="red"
+                          }
+                          label="Suv"
                         />
-                        <span className="ml-2">Red</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="color[]"
-                          value="blue"
+                        <FormControlLabel
+                          control={
+                            <Controller
+                              name="sedan"
+                              control={control}
+                              render={({ field }) => (
+                                <Checkbox
+                                  {...field}
+                                  checked={field["value"] ?? false}
+                                />
+                              )}
+                            />
+                          }
+                          label="Sedan"
                         />
-                        <span className="ml-2">Blue</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="color[]"
-                          value="green"
+                        <FormControlLabel
+                          control={
+                            <Controller
+                              name="hatchback"
+                              control={control}
+                              render={({ field }) => (
+                                <Checkbox
+                                  {...field}
+                                  checked={field["value"] ?? false}
+                                />
+                              )}
+                            />
+                          }
+                          label="Hatchback"
                         />
-                        <span className="ml-2">Green</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="color[]"
-                          value="yellow"
-                        />
-                        <span className="ml-2">Yellow</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="color[]"
-                          value="purple"
-                        />
-                        <span className="ml-2">Purple</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="color[]"
-                          value="black"
-                        />
-                        <span className="ml-2">Black</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="color[]"
-                          value="white"
-                        />
-                        <span className="ml-2">White</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="color[]"
-                          value="gray"
-                        />
-                        <span className="ml-2">Gray</span>
-                      </label>
+                      </FormGroup>
                     </div>
                   </div>
 
-                  <div className="border-t border-gray-200 px-4 py-6">
-                    <h3 className="-mx-2 -my-3 flow-root">
-                      {/* <!-- Expand/collapse section button --> */}
-                      <button
-                        type="button"
-                        className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500"
-                        aria-controls="filter-section-mobile-1"
-                        aria-expanded="false"
-                      >
-                        <span className="font-medium text-gray-900">Size</span>
-                        <span className="ml-6 flex items-center">
-                          {/* <!-- Expand icon, show/hide based on section open state. --> */}
-                          <svg
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                          </svg>
-                          {/* <!-- Collapse icon, show/hide based on section open state. --> */}
-                          <svg
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10.75 3.25a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
-                              clipRule="evenodd"
+                  <div className="w-full border-t border-t-gray-300 pt-7">
+                    <div className="mb-5 flex justify-between items-center">
+                      <div>Transmission</div>
+                      <div>
+                        <GoPlus color="gray" />
+                      </div>
+                    </div>
+                    <div>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Controller
+                              name="automatic"
+                              control={control}
+                              render={({ field }) => (
+                                <Checkbox
+                                  {...field}
+                                  checked={field["value"] ?? false}
+                                />
+                              )}
                             />
-                          </svg>
-                        </span>
-                      </button>
-                    </h3>
-                    {/* <!-- Filter options, show/hide based on section open state. --> */}
-                    <div
-                      className="mt-6 grid grid-cols-2 gap-x-4"
-                      id="filter-section-mobile-1"
-                    >
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="size[]"
-                          value="small"
+                          }
+                          label="Automatic"
                         />
-                        <span className="ml-2">Small</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="size[]"
-                          value="medium"
+                        <FormControlLabel
+                          control={
+                            <Controller
+                              name="manual"
+                              control={control}
+                              render={({ field }) => (
+                                <Checkbox
+                                  {...field}
+                                  checked={field["value"] ?? false}
+                                />
+                              )}
+                            />
+                          }
+                          label="Manual"
                         />
-                        <span className="ml-2">Medium</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox"
-                          name="size[]"
-                          value="large"
-                        />
-                        <span className="ml-2">Large</span>
-                      </label>
+                      </FormGroup>
                     </div>
                   </div>
 
-                  <div className="border-t border-gray-200 px-4 py-6">
-                    <h3 className="-mx-2 -my-3 flow-root">
-                      {/* <!-- Expand/collapse section button --> */}
-                      <button
-                        type="button"
-                        className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500"
-                        aria-controls="filter-section-mobile-2"
-                        aria-expanded="false"
-                      >
-                        <span className="font-medium text-gray-900">Price</span>
-                        <span className="ml-6 flex items-center">
-                          {/* <!-- Expand icon, show/hide based on section open state. --> */}
-                          <svg
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                          </svg>
-                          {/* <!-- Collapse icon, show/hide based on section open state. --> */}
-                          <svg
-                            className="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10.75 3.25a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </h3>
-                    {/* <!-- Filter options, show/hide based on section open state. --> */}
-                    <div
-                      className="mt-6 grid grid-cols-2 gap-x-4"
-                      id="filter-section-mobile-2"
+                  <div className="mt-7 pt-7 border-t border-t-gray-300">
+                    <button
+                      type="submit"
+                      className="px-6 py-2 bg-black text-white rounded-md"
                     >
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="radio"
-                          className="form-radio"
-                          name="price"
-                          value="0-25"
-                        />
-                        <span className="ml-2">$0 - $25</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="radio"
-                          className="form-radio"
-                          name="price"
-                          value="25-50"
-                        />
-                        <span className="ml-2">$25 - $50</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="radio"
-                          className="form-radio"
-                          name="price"
-                          value="50-100"
-                        />
-                        <span className="ml-2">$50 - $100</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="radio"
-                          className="form-radio"
-                          name="price"
-                          value="100-200"
-                        />
-                        <span className="ml-2">$100 - $200</span>
-                      </label>
-                      <label className="flex items-center text-sm font-medium text-gray-900">
-                        <input
-                          type="radio"
-                          className="form-radio"
-                          name="price"
-                          value="200-plus"
-                        />
-                        <span className="ml-2">$200+</span>
-                      </label>
-                    </div>
+                      Apply
+                    </button>
                   </div>
                 </form>
               </div>
             </div>
-      
+          </div>
         </div>
- 
-
+      </div>
+    </div>
   );
 };
 
