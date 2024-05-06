@@ -62,7 +62,6 @@ export async function displayRazorpay(values, navigate) {
         body: JSON.stringify(dbData),
       });
       const successStatus = await result.json();
-      alert(successStatus.data.msg);
       console.log(successStatus);
       if (successStatus) {
         navigate("/");

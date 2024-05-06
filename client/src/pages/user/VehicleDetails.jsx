@@ -34,6 +34,7 @@ const VehicleDetails = () => {
         const res = await fetch("/api/user/listAllVehicles");
         if (!res.ok) {
           console.log("not success");
+          return 
         }
         const data = await res.json();
         dispatch(showVehicles(data));
@@ -57,7 +58,8 @@ const VehicleDetails = () => {
         })
       })
       if(!booked.ok){
-        console.log("not success")
+        console.log("not success")  
+        return 
       }
       const data = await booked.json();
       console.log(data)

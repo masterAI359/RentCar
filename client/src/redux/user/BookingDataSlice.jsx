@@ -16,6 +16,7 @@ const bookingDataSlice = createSlice({
   initialState,
   reducers: {
     setSelectedData: (state, action) => {
+      console.log(action.payload)
       const {
         pickup_district,
         pickup_location,

@@ -16,6 +16,7 @@ const Filter = () => {
   let transformedData = [];
 
   const handleData = async (data) => {
+    console.log(data)
     const typeMapping = {
       suv: "car_type",
       sedan: "car_type",
@@ -107,7 +108,9 @@ const Filter = () => {
                                   {...field}
                                   checked={field["value"] ?? false}
                                 />
+                                
                               )}
+                             
                             />
                           }
                           label="Suv"

@@ -37,7 +37,6 @@ const CheckoutPage = () => {
     pickup_district,
     pickup_location,
     dropoff_location,
-    pickuptime,
     dropofftime,
     pickupDate,
     dropoffDate,
@@ -47,6 +46,8 @@ const CheckoutPage = () => {
   const singleVehicleDetail = useSelector(
     (state) => state.userListVehicles.singleVehicleDetail
   );
+
+
 
   const { email, phoneNumber, adress } = currentUser;
   const { price } = singleVehicleDetail;
@@ -75,11 +76,12 @@ const CheckoutPage = () => {
     }
   };
 
+
+
   //calculateing total price after coupon
   let totalPrice = price * Days + 50 - discount;
 
   //handle place order data
-
   const handlePlaceOrder = async () => {
     const orderData = {
       user_id,
@@ -92,7 +94,9 @@ const CheckoutPage = () => {
       dropoff_location,
     };
 
+  
     displayRazorpay(orderData,navigate);
+   
 
    
   };
@@ -161,16 +165,22 @@ const CheckoutPage = () => {
                         <span>
                           <CiCalendarDate style={{ fontSize: 15 }} />
                         </span>
-                        <span> {pickupDate.day} : </span>
-                        <span> {pickupDate.month} : </span>
-                        <span> {pickupDate.year}</span>
+                        {pickupDate && <>
+                        {console.log()}
+                           <span> {new Date(pickupDate.humanReadable).getDate()} : </span>
+                           <span> {new Date(pickupDate.humanReadable).getMonth()+1} : </span>
+                           <span> {new Date(pickupDate.humanReadable).getFullYear()}</span>
+                           </>
+                        }
+                     
                       </div>
                       <div className="flex justify-center items-center gap-2">
                         <span>
                           <IoMdTime style={{ fontSize: 16 }} />
                         </span>
-                        <span> {pickuptime.hour}</span>:
-                        <span> {pickuptime.minute}</span>
+                        <span>{pickupDate && new Date(pickupDate.humanReadable).getHours()}</span>:
+                        <span>{pickupDate && new Date(pickupDate.humanReadable).getMinutes()}</span>
+                       
                       </div>
                     </div>
                   </div>
@@ -191,7 +201,7 @@ const CheckoutPage = () => {
                           <CiCalendarDate style={{ fontSize: 15 }} />
                         </span>
                         <span> {dropoffDate.day} : </span>
-                        <span> {dropoffDate.month} : </span>
+                        <span> {dropoffDate && new Date(dropoffDate.humanReadable).getMonth()+1} : </span>
                         <span> {dropoffDate.year} </span>
                       </div>
                       <div className="flex justify-center items-center gap-2">

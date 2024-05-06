@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { MenuItem } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useEffect } from "react";
-import { setData, setPriceHightoLow, setPriceLowtoHigh, setYearAscending, setYearDecending } from "../redux/user/sortfilterSlice";
+import { setData, setFilteredData, setPriceHightoLow, setPriceLowtoHigh, setYearAscending, setYearDecending } from "../redux/user/sortfilterSlice";
 
 const Sort = () => {
   const {userAllVehicles} = useSelector(state => state.userListVehicles)
@@ -37,7 +37,7 @@ const Sort = () => {
   };
 
   useEffect(()=> {
-    dispatch(setData(userAllVehicles))
+    dispatch(setFilteredData(userAllVehicles))
   },[])
 
   return (
