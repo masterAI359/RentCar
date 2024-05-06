@@ -25,7 +25,6 @@ const sortfilterSlice = createSlice({
     },
     setYearDecending:(state) => {
         state.filterdData = state.filterdData.sort((a,b)=> b.year_made - a.year_made)
-        console.log(state.data.year_made)
     },
     setFilteredData : (state,action) => {
       state.filterdData = action.payload

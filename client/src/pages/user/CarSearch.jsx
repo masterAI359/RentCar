@@ -106,6 +106,7 @@ const CarSearch = () => {
         dispatch(setSelectedData(data));
 
         const pickupDate = data.pickuptime.$d;
+        console.log(pickup)
         const dropOffDate = data.dropofftime.$d;
         const datas = {
           pickupDate,
