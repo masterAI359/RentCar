@@ -84,6 +84,7 @@ export const razorpayOrder = async (req, res, next) => {
 
 // getting vehicles without booking for selected Date and location
 export const getVehiclesWithoutBooking = async (req, res, next) => {
+  
   try {
     const { pickUpDistrict, pickUpLocation, pickupDate, dropOffDate } =
       req.body;
@@ -124,10 +125,23 @@ export const getVehiclesWithoutBooking = async (req, res, next) => {
       });
     }
 
-    return res.status(200).json({
-      success: true,
-      data: availableVehicles,
-    });
+   
+      // If there is no next middleware after this one, send the response
+      if (!req.route || !req.route.stack || req.route.stack.length === 1) {
+      console.log("hello")      
+      console.log({"success":"true","data":availableVehicles})
+      return res.status(200).json({
+        success: true,
+        data: availableVehicles,
+      });
+    }
+   
+    
+    // If there is a next middleware, pass control to it
+    res.locals.actionResult = availableVehicles;
+    next(); 
+   
+   
   } catch (error) {
     console.log(error);
     return next(
@@ -135,6 +149,42 @@ export const getVehiclesWithoutBooking = async (req, res, next) => {
     );
   }
 };
+
+
+//show i if more vehcles with same model available
+export const showOneofkind = async (req,res,next) => {
+  try{
+    const actionResult = res.locals.actionResult;
+
+    
+    const modelsMap  = {}
+    const singleVehicleofModel = []
+
+
+    actionResult.forEach((cur)=> {
+      if(!modelsMap[cur.model]){
+        modelsMap[cur.model] = true
+        singleVehicleofModel.push(cur)
+      }
+    })
+
+    if(!singleVehicleofModel){
+      next(errorHandler(404,"no vehicles available"))
+      return
+    }
+    
+    console.log(singleVehicleofModel)
+    res.status(200).json(singleVehicleofModel)
+    
+
+  }
+  catch(error){
+    console.log(error)
+    next(errorHandler(500,"error in showOneofkind"))
+  }
+}
+
+
 
 
 //  filtering vehicles 
@@ -206,66 +256,3 @@ export const filterVehicles = async (req, res, next) => {
   }
 };
 
-// -----------------------------------
-
-//check vehicle availabilitty
-// export const checkAvailability = async (req, res, next) => {
-//   try {
-//     if (!req.body) {
-//       next(errorHandler(401, "bad request no body"));
-//     }
-//     const { pickupDate, dropOffDate, vehicleId } = req.body;
-
-//     if (!pickupDate || !dropOffDate || !vehicleId) {
-//       console.log("pickup , dropffdate and vehicleId is required");
-//       next(errorHandler(409, "pickup , dropffdate and vehicleId is required"));
-//     }
-
-//     // Check if pickupDate is before dropOffDate
-//     if (pickupDate >= dropOffDate) {
-//       return next(errorHandler(409, "Invalid date range"));
-//     }
-
-//     const sixHoursLater = new Date(dropOffDate);
-//     sixHoursLater.setTime(sixHoursLater.getTime() + 6 * 60 * 60 * 1000);
-//     console.log(sixHoursLater);
-//     console.log(pickupDate > sixHoursLater);
-
-//     //checking data base  find overlapping pickup and dropoffDates
-//     const existingBookings = await Booking.find({
-//       vehicleId,
-//       $or: [
-//         { pickupDate: { $lt: dropOffDate }, dropOffDate: { $gt: pickupDate } }, // Overlap condition
-//         { pickupDate: { $gte: pickupDate, $lt: dropOffDate } }, // Start within range
-//         { dropOffDate: { $gt: pickupDate, $lte: dropOffDate } }, // End within range
-//         {
-//           pickupDate: { $lte: pickupDate },
-//           dropOffDate: { $gte: dropOffDate },
-//         }, // Booking includes the entire time range
-//         {
-//           dropOffDate: { $gte: sixHoursLater },
-//         },
-//       ],
-//     });
-
-//     // If there are overlapping bookings, return an error
-//     if (existingBookings.length > 0) {
-//       return next(
-//         errorHandler(
-//           400,
-//           "Vehicle is not available for the specified time period"
-//         )
-//       );
-//     }
-
-//     // If no overlapping bookings, vehicle is available
-//     return res
-//       .status(200)
-//       .json({ message: "Vehicle is available for booking" });
-//   } catch (error) {
-//     console.log(error);
-//     next(errorHandler(500, "error in checkAvailability"));
-//   }
-// };
-
-// ---------------------
