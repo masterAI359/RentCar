@@ -106,7 +106,6 @@ const CarSearch = () => {
         dispatch(setSelectedData(data));
 
         const pickupDate = data.pickuptime.$d;
-        console.log(pickup)
         const dropOffDate = data.dropofftime.$d;
         const datas = {
           pickupDate,
@@ -115,7 +114,7 @@ const CarSearch = () => {
           pickUpLocation: data.pickup_location,
         };
 
-        const res = await fetch("api/user/getVehiclesWithoutBooking", {
+        const res = await fetch("api/user/showSingleofSameModel", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -131,7 +130,7 @@ const CarSearch = () => {
 
         if (res.ok) {
           const result = await res.json();
-          dispatch(setAvailableCars(result.data));
+          dispatch(setAvailableCars(result));
           navigate("/availableVehicles");
         }
 

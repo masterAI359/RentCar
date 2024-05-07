@@ -28,12 +28,6 @@ const Sort = () => {
     else if(e === "yearDecending"){
         dispatch(setYearDecending())
     }
-
-    
-
-
-
-
   };
 
   useEffect(()=> {
