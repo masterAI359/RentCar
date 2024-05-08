@@ -8,7 +8,6 @@ import {
   Button,
 } from "@mui/material";
 import { Header } from "../components";
-import AddProductModal from "../components/AddProductModal";
 import toast, { Toaster} from "react-hot-toast";
 import { DataGrid } from "@mui/x-data-grid";
 
@@ -182,9 +181,6 @@ function AllVehicles() {
             }}
           />
         </Box>
-
-        {/* addProduct modal */}
-        <AddProductModal />
       </div>
     </>
   );

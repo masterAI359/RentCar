@@ -24,8 +24,6 @@ export const BookCar = async (req, res, next) => {
       razorpayOrderId,
     } = req.body;
 
- 
-
     const book = new Booking({
       pickupDate,
       dropOffDate: dropoffDate,
@@ -84,9 +82,8 @@ export const razorpayOrder = async (req, res, next) => {
 
 // getting vehicles without booking for selected Date and location
 export const getVehiclesWithoutBooking = async (req, res, next) => {
-  
   try {
-    const { pickUpDistrict, pickUpLocation, pickupDate, dropOffDate } =
+    const { pickUpDistrict, pickUpLocation, pickupDate, dropOffDate, model } =
       req.body;
 
     if (!pickUpDistrict || !pickUpLocation)
@@ -125,23 +122,19 @@ export const getVehiclesWithoutBooking = async (req, res, next) => {
       });
     }
 
-   
-      // If there is no next middleware after this one, send the response
-      if (!req.route || !req.route.stack || req.route.stack.length === 1) {
-      console.log("hello")      
-      console.log({"success":"true","data":availableVehicles})
+    // If there is no next middleware after this one, send the response
+    if (!req.route || !req.route.stack || req.route.stack.length === 1) {
+      console.log("hello");
+      console.log({ success: "true", data: availableVehicles });
       return res.status(200).json({
         success: true,
         data: availableVehicles,
       });
     }
-   
-    
+
     // If there is a next middleware, pass control to it
-    res.locals.actionResult = availableVehicles;
-    next(); 
-   
-   
+    res.locals.actionResult = [availableVehicles, model];
+    next();
   } catch (error) {
     console.log(error);
     return next(
@@ -150,44 +143,59 @@ export const getVehiclesWithoutBooking = async (req, res, next) => {
   }
 };
 
+//getting all variants of a model which are not booked
+export const showAllVariants = async (req, res, next) => {
+  try {
+    const actionResult = res.locals.actionResult;
+    const model = actionResult[1];
+
+    if (!actionResult[0]) {
+      next(errorHandler(404, "no actionResult"));
+    }
+    const allVariants = actionResult[0].filter((cur) => {
+      return cur.model === model;
+    });
+
+    res.status(200).json(allVariants);
+  } catch (error) {
+    next(errorHandler(500, "internal error in showAllVariants"));
+  }
+};
 
 //show i if more vehcles with same model available
-export const showOneofkind = async (req,res,next) => {
-  try{
+export const showOneofkind = async (req, res, next) => {
+  try {
     const actionResult = res.locals.actionResult;
 
-    
-    const modelsMap  = {}
-    const singleVehicleofModel = []
+    const modelsMap = {};
+    const singleVehicleofModel = [];
 
-
-    actionResult.forEach((cur)=> {
-      if(!modelsMap[cur.model]){
-        modelsMap[cur.model] = true
-        singleVehicleofModel.push(cur)
-      }
-    })
-
-    if(!singleVehicleofModel){
-      next(errorHandler(404,"no vehicles available"))
-      return
+    if(!actionResult){
+      next(errorHandler(404, "no actionResult"));
+      return 
     }
-    
-    console.log(singleVehicleofModel)
-    res.status(200).json(singleVehicleofModel)
-    
+  
+    actionResult[0].forEach((cur) => {
+      if (!modelsMap[cur.model]) {
+        modelsMap[cur.model] = true;
+        singleVehicleofModel.push(cur);
+      }
+    });
 
+    if (!singleVehicleofModel) {
+      next(errorHandler(404, "no vehicles available"));
+      return;
+    }
+
+   
+    res.status(200).json(singleVehicleofModel);
+  } catch (error) {
+    console.log(error);
+    next(errorHandler(500, "error in showOneofkind"));
   }
-  catch(error){
-    console.log(error)
-    next(errorHandler(500,"error in showOneofkind"))
-  }
-}
+};
 
-
-
-
-//  filtering vehicles 
+//  filtering vehicles
 export const filterVehicles = async (req, res, next) => {
   try {
     if (!req.body) {
@@ -209,7 +217,7 @@ export const filterVehicles = async (req, res, next) => {
           }
         }
       });
- 
+
       const transmitions = [];
       data.forEach((cur) => {
         // If the current element has type equal to 'transmition'
@@ -223,7 +231,6 @@ export const filterVehicles = async (req, res, next) => {
           });
         }
       });
-
 
       return {
         $match: {
@@ -255,4 +262,3 @@ export const filterVehicles = async (req, res, next) => {
     next(errorHandler(500, "internal server error in fiilterVehicles"));
   }
 };
-

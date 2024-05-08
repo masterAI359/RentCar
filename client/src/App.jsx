@@ -27,6 +27,8 @@ import VendorEditProductComponent from "./pages/vendor/Components/VendorEditProd
 import VendorDeleteVehicleModal from "./pages/vendor/Components/VendorDeleteVehicleModal";
 import CheckoutPage from "./pages/user/CheckoutPage";
 import Razorpay from "./pages/user/Razorpay";
+import AllVehiclesofSameModel from "./pages/user/AllVehiclesofSameModel";
+import AddProductModal from "./pages/admin/components/AddProductModal";
 
 
 function App() {
@@ -57,6 +59,7 @@ function App() {
           {/* user private routes */}
           <Route element={<PrivateRoute />}>
             <Route path="/profile/*" element={<Profile />} />
+            <Route path="/allVariants" element={<AllVehiclesofSameModel />} />
             <Route path="/vehicleDetails" element={<VehicleDetails />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/availableVehicles" element={<AvailableVehicles/>}/>
@@ -84,6 +87,10 @@ function App() {
               <Route
                 path="/adminDashboard/editProducts"
                 element={<EditProductComponent />}
+              />
+              <Route
+                path="/adminDashboard/addProducts"
+                element={<AddProductModal />}
               />
             </Route>
           </Route>
