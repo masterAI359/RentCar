@@ -2,9 +2,10 @@ import styles from "../../index";
 import Herocar from "../../Assets/homepage_car_copy.jpeg";
 import CarSearch from "./CarSearch";
 import { HeroParallax } from "../../components/ui/Paralax";
+import { useRef } from "react";
 
 function Home() {
-
+  const ref = useRef(null);
   return (
     <>
       {/* This is div is the container for the dot background */}
@@ -27,13 +28,29 @@ function Home() {
               flexible pick-up options and much more.
             </p>
             <div className=" mt-10  lg:mt-[40px] flex gap-3">
-              <button className="bg-green-500  text-black text-[12px] md:text-[16px] py-3 px-3 rounded-sm font-semibold  lg:py-3 lg:px-5">
+              <button
+                onClick={() => {
+                  ref.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+                }}
+                className="bg-green-500  text-black text-[12px] md:text-[16px] py-3 px-3 rounded-sm font-semibold  lg:py-3 lg:px-5"
+              >
                 Book Ride{" "}
                 <span className="ml-2">
                   <i className="bi bi-check-circle-fill"></i>
                 </span>
               </button>
-              <button className="bg-black text-white rounded-sm text-[12px] md:text-[16px]  px-3 py-2 lg:py-3 lg:px-5">
+              <button
+                onClick={() => {
+                  ref.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+                }}
+                className="bg-black text-white rounded-sm text-[12px] md:text-[16px]  px-3 py-2 lg:py-3 lg:px-5"
+              >
                 Learn More{" "}
                 <span>
                   <i className="bi bi-chevron-right"></i>
@@ -48,8 +65,11 @@ function Home() {
         <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
       </div>
 
-      <CarSearch/>
-      <HeroParallax/>
+      <div ref={ref}>
+        <CarSearch />
+      </div>
+
+      <HeroParallax />
     </>
   );
 }

@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import Filter from "../../components/Filter";
 import Sort from "../../components/Sort";
 
-export const onVehicleDetail = async (id, dispatch) => {
+export const onVehicleDetail = async (id, dispatch,navigate) => {
   try {
     const res = await fetch("/api/user/showVehicleDetails", {
       method: "POST",
@@ -22,6 +22,7 @@ export const onVehicleDetail = async (id, dispatch) => {
     });
     const data = await res.json();
     dispatch(setVehicleDetail(data));
+    navigate('/vehicleDetails')
   } catch (error) {
     console.log(error);
   }
