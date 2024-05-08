@@ -7,7 +7,7 @@ import {
 import { FaCarSide } from "react-icons/fa";
 import { BsFillFuelPumpFill } from "react-icons/bs";
 import { MdAirlineSeatReclineNormal } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Filter from "../../components/Filter";
 import Sort from "../../components/Sort";
 
@@ -32,6 +32,7 @@ const Vehicles = () => {
   const { userAllVehicles } = useSelector((state) => state.userListVehicles);
 const {data,filterdData} = useSelector((state)=> state.sortfilterSlice)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,7 +126,7 @@ const {data,filterdData} = useSelector((state)=> state.sortfilterSlice)
                           <Link to={"/vehicleDetails"}>
                             <button
                               className="bg-green-500 px-4 py-2 w-[100px] rounded-sm"
-                              onClick={() => onVehicleDetail(cur._id, dispatch)}
+                              onClick={() => onVehicleDetail(cur._id, dispatch,navigate)}
                             >
                               <div className="text-[12px] ">Book Ride</div>
                             </button>
@@ -134,7 +135,7 @@ const {data,filterdData} = useSelector((state)=> state.sortfilterSlice)
                           <Link to={"/vehicleDetails"}>
                             <button
                               className="bg-black px-4 py-2 w-[100px] rounded-sm"
-                              onClick={() => onVehicleDetail(cur._id, dispatch)}
+                              onClick={() => onVehicleDetail(cur._id, dispatch,navigate)}
                             >
                               <div className="text-[12px] text-white">
                                 Details

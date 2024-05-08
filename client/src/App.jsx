@@ -28,6 +28,7 @@ import VendorDeleteVehicleModal from "./pages/vendor/Components/VendorDeleteVehi
 import CheckoutPage from "./pages/user/CheckoutPage";
 import Razorpay from "./pages/user/Razorpay";
 import AllVehiclesofSameModel from "./pages/user/AllVehiclesofSameModel";
+import AddProductModal from "./pages/admin/components/AddProductModal";
 
 
 function App() {
@@ -86,6 +87,10 @@ function App() {
               <Route
                 path="/adminDashboard/editProducts"
                 element={<EditProductComponent />}
+              />
+              <Route
+                path="/adminDashboard/addProducts"
+                element={<AddProductModal />}
               />
             </Route>
           </Route>

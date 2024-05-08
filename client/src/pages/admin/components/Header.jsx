@@ -1,15 +1,18 @@
 import PropTypes from 'prop-types';
 import { addVehicleClicked } from '../../../redux/adminSlices/actions';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const Header = ({category,title}) => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   //add vehicle admin
   const handleAddVehicle = () => {
     dispatch(addVehicleClicked(true));
+    navigate('/adminDashboard/addProducts')
   };
 
   return (
