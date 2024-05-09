@@ -6,6 +6,7 @@ import CarNotFound from "./CarNotFound";
 import { useNavigate } from "react-router-dom";
 
 import { setVariants } from "../../redux/user/listAllVehicleSlice";
+import { setFilteredData } from "../../redux/user/sortfilterSlice";
 
 const AvailableVehiclesAfterSearch = () => {
   const { availableCars } = useSelector((state) => state.selectRideSlice);
@@ -36,6 +37,7 @@ const AvailableVehiclesAfterSearch = () => {
       if (res.ok) {
         const data = await res.json();
         dispatch(setVariants(data));
+        dispatch(setFilteredData(data));
         navigate("/allVariants");
       }
     } catch (error) {
