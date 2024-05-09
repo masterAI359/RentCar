@@ -17,7 +17,7 @@ export const links = [
           icon:<IoHomeOutline />,
         },
         {
-          name: 'vendorAddProduct',
+          name: 'vendorAllVeihcles',
           icon: <FiShoppingBag />,
         },
         

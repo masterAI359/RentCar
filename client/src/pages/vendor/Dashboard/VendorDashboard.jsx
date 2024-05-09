@@ -49,7 +49,7 @@ function VendorDashboard() {
             <Routes>
               <Route path="/" element={<AdminHomeMain />} />
               <Route path="/adminHome" element={<AdminHomeMain />} />
-              <Route path="/vendorAddProduct" element={<VendorAllVehicles />} />
+              <Route path="/vendorAllVeihcles" element={<VendorAllVehicles />} />
             </Routes>
           </div>
         </div>

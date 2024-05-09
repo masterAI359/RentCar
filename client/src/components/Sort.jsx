@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { setData, setFilteredData, setPriceHightoLow, setPriceLowtoHigh, setYearAscending, setYearDecending } from "../redux/user/sortfilterSlice";
 
 const Sort = () => {
-  const {userAllVehicles} = useSelector(state => state.userListVehicles)
+  const {userAllVehicles,allVariants} = useSelector(state => state.userListVehicles)
   const dispatch = useDispatch();
   const { handleSubmit, control  } = useForm();
 
@@ -31,7 +31,9 @@ const Sort = () => {
   };
 
   useEffect(()=> {
-    dispatch(setFilteredData(userAllVehicles))
+    if(!allVariants){
+      dispatch(setFilteredData(userAllVehicles))
+    }
   },[])
 
   return (

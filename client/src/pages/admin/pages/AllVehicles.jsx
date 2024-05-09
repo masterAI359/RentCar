@@ -4,19 +4,16 @@ import { useEffect, useState } from "react";
 import { setEditData } from "../../../redux/adminSlices/actions";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-import {
-  Button,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import { Header } from "../components";
-import toast, { Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { DataGrid } from "@mui/x-data-grid";
 
 import Box from "@mui/material/Box";
 import { showVehicles } from "../../../redux/user/listAllVehicleSlice";
-import { setadminEditVehicleSuccess } from "../../../redux/adminSlices/adminDashboardSlice/StatusSlice";
-
-
-
+import {
+  clearAdminVehicleToast,
+} from "../../../redux/adminSlices/adminDashboardSlice/StatusSlice";
 
 function AllVehicles() {
   const navigate = useNavigate();
@@ -25,8 +22,8 @@ function AllVehicles() {
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
 
   const [allVehicles, setVehicles] = useState([]);
- const {adminEditVehicleSuccess} = useSelector(state => state.statusSlice)
-  
+  const { adminEditVehicleSuccess, adminAddVehicleSuccess, adminCrudError } =
+    useSelector((state) => state.statusSlice);
 
   //show vehicles
   useEffect(() => {
@@ -38,7 +35,7 @@ function AllVehicles() {
         if (res.ok) {
           const data = await res.json();
           setVehicles(data);
-          dispatch(showVehicles(data))
+          dispatch(showVehicles(data));
         }
       } catch (error) {
         console.log(error);
@@ -90,7 +87,6 @@ function AllVehicles() {
             objectFit: "cover",
           }}
           alt="vehicle"
-          
         />
       ),
     },
@@ -106,7 +102,6 @@ function AllVehicles() {
       headerName: "Edit",
       width: 100,
       renderCell: (params) => (
-       
         <Button onClick={() => handleEditVehicle(params.row.id)}>
           <ModeEditOutlineIcon />
         </Button>
@@ -122,11 +117,12 @@ function AllVehicles() {
         </Button>
       ),
     },
-    
   ];
 
   const rows = allVehicles
-    .filter((vehicle) => vehicle.isDeleted === "false")
+    .filter(
+      (vehicle) => vehicle.isDeleted === "false" && vehicle.isAdminApproved
+    )
     .map((vehicle) => ({
       id: vehicle._id,
       image: vehicle.image[0],
@@ -135,24 +131,37 @@ function AllVehicles() {
       name: vehicle.name,
     }));
 
-//edit success
-    useEffect(()=> {
-      if(adminEditVehicleSuccess){
-        toast.success('success')
-        dispatch(setadminEditVehicleSuccess(false))
-      }
-    },[adminEditVehicleSuccess])
+  //edit success
+  useEffect(() => {
+    if (adminEditVehicleSuccess) {
+      toast.success("success");
+    }
+    else if (adminAddVehicleSuccess) {
+      toast.success("success");
+    }
+    else if(adminCrudError){
+     toast.error("error")
+    }
+  }, [adminEditVehicleSuccess, adminAddVehicleSuccess,adminCrudError,dispatch]);
 
- 
+  useEffect(() => {
+    const clearNotificationsTimeout = setTimeout(() => {
+      dispatch(clearAdminVehicleToast());
+    }, 3000);
+  
+    return () => clearTimeout(clearNotificationsTimeout);
+  }, [adminEditVehicleSuccess, adminAddVehicleSuccess, adminCrudError, dispatch]);
+
   return (
     <>
-    
+
+      {adminEditVehicleSuccess ? <Toaster /> : ''} 
+        {adminAddVehicleSuccess ? <Toaster /> : ''}
+        {adminCrudError ? <Toaster/> : ""}     
+        
+        
       <div className="max-w-[1000px]  d-flex   justify-end text-start items-end p-10">
         <Header title="AllVehicles" />
-        <Toaster/>
-        {adminEditVehicleSuccess ? <Toaster /> : ''}
-       
-
         <Box sx={{ height: "100%", width: "100%" }}>
           <DataGrid
             rows={rows}
@@ -167,16 +176,12 @@ function AllVehicles() {
             pageSizeOptions={[5]}
             checkboxSelection
             disableRowSelectionOnClick
-            
             sx={{
-              '.MuiDataGrid-columnSeparator': {
-                display: 'none',
-                
+              ".MuiDataGrid-columnSeparator": {
+                display: "none",
               },
-              '&.MuiDataGrid-root': {
-                border: 'none',
-               
-
+              "&.MuiDataGrid-root": {
+                border: "none",
               },
             }}
           />

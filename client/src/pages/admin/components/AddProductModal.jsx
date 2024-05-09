@@ -20,6 +20,7 @@ import { IoMdClose } from "react-icons/io";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import {  setLoading, setadminAddVehicleSuccess, setadminCrudError } from "../../../redux/adminSlices/adminDashboardSlice/StatusSlice";
 
 export const fetchModelData = async (dispatch) => {
   try {
@@ -74,13 +75,14 @@ export const fetchModelData = async (dispatch) => {
 };
 
 const AddProductModal = () => {
-  const { register, handleSubmit, control } = useForm();
+  const { register, handleSubmit, control , reset } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAddVehicleClicked } = useSelector((state) => state.addVehicle);
   const { modelData, companyData, locationData, districtData } = useSelector(
     (state) => state.modelDataSlice
   );
+  const {loading} = useSelector(state => state.statusSlice)
 
   useEffect(() => {
     fetchModelData(dispatch);
@@ -88,7 +90,7 @@ const AddProductModal = () => {
   }, []);
 
   const onSubmit = async (addData) => {
-    console.log(addData.Registeration_end_date.$d)
+   
     try {
       const img = [];
       for (let i = 0; i < addData.image.length; i++) {
@@ -117,16 +119,12 @@ const AddProductModal = () => {
       formData.append("location", addData.vehicleLocation);
       formData.append("district", addData.vehicleDistrict
       );
-    
-
-
-
-    
-    console.log(formData)
+   
 
       let tostID;
       if (formData) {
         tostID = toast.loading("saving...", { position: "bottom-center" });
+        dispatch(setLoading(true))
       }
       const res = await fetch("/api/admin/addProduct", {
         method: "POST",
@@ -136,14 +134,17 @@ const AddProductModal = () => {
       if (!res.ok) {
         toast.error("error");
         toast.dismiss(tostID);
+        dispatch(setLoading(false))
       }
       if (res.ok) {
-        toast.success("added");
-        toast.dismiss(tostID);
+        dispatch(setadminAddVehicleSuccess(true));
+        toast.dismiss(tostID)
+        dispatch(setLoading(false))
       }
 
-      // reset();
+      reset();
     } catch (error) {
+      dispatch(setadminCrudError(true))
       console.log(error);
     }
     dispatch(addVehicleClicked(false));
@@ -156,7 +157,7 @@ const AddProductModal = () => {
 
   return (
     <>
-      <Toaster />
+    {loading  ? <Toaster/> : null }
       {isAddVehicleClicked && (
         <div>
           <button onClick={handleClose} className="relative left-10 top-5">

@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { Button } from "@mui/material";
-import { Header } from "../../admin/components";
 import { DataGrid } from "@mui/x-data-grid";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -16,10 +15,10 @@ import {
   setVendorError,
   setVenodrVehilces,
 } from "../../../redux/vendor/vendorDashboardSlice";
-import VendorAddProductModal from "../Components/VendorAddVehilceModal";
 
 import { GrStatusGood } from "react-icons/gr";
 import { MdOutlinePending } from "react-icons/md";
+import VendorHeader from "../Components/VendorHeader";
 
 
 const VendorAllVehicles = () => {
@@ -180,7 +179,7 @@ const VendorAllVehicles = () => {
       {vendorEditSuccess && <Toaster />}
       {vendorDeleteSuccess && <Toaster/>}
 
-      <Header title="AllVehicles" />
+      <VendorHeader title="AllVehicles" />
       {isVendorVehiclesEmpty ? (
         <p>No requests yet</p>
       ) : (
@@ -210,8 +209,6 @@ const VendorAllVehicles = () => {
         </Box>
       )}
 
-      {/* addProduct modal */}
-      <VendorAddProductModal />
     </div>
   );
 };

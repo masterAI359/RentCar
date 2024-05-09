@@ -5,18 +5,19 @@ import { GoPlus } from "react-icons/go";
 
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-// import { setFilter, setfilterData } from "../redux/user/sortfilterSlice";
 import { setFilteredData } from "../redux/user/sortfilterSlice";
 
 const Filter = () => {
   const { control, handleSubmit } = useForm();
-  const { userAllVehicles } = useSelector((state) => state.userListVehicles);
+  const { userAllVehicles, allVariants } = useSelector(
+    (state) => state.userListVehicles
+  );
+  const { variantMode } = useSelector((state) => state.sortfilterSlice);
 
   const dispatch = useDispatch();
   let transformedData = [];
 
   const handleData = async (data) => {
-    console.log(data)
     const typeMapping = {
       suv: "car_type",
       sedan: "car_type",
@@ -31,7 +32,7 @@ const Filter = () => {
       .filter(([key, value]) => value == true)
       .map(([key, value]) => ({ [key]: value, type: typeMapping[key] }));
 
-    if (transformedData && transformedData.length<=0 ) {
+    if (transformedData && transformedData.length <= 0 && !variantMode) {
       dispatch(setFilteredData(userAllVehicles));
     } else if (transformedData && transformedData.length > 0) {
       try {
@@ -46,6 +47,19 @@ const Filter = () => {
         if (res.ok) {
           const data = await res.json();
           const filtData = data.data.filteredVehicles;
+
+          //from filtData filtering vehicles that are available allVariants currently
+          //this is done when we have allVariants which means we are searching for available vehicles in Homepage and is redirected
+          if (allVariants) {
+            const filteredData = filtData.filter((data) =>
+              allVariants.some((variant) => variant._id === data._id)
+            );
+            dispatch(setFilteredData(filteredData));
+            return;
+          }
+
+          //this is in the other case when we are filtering from AllVehicles
+          //when we use filter from  Vehicles in Navbar
           dispatch(setFilteredData(filtData));
         }
       } catch (error) {
@@ -108,9 +122,7 @@ const Filter = () => {
                                   {...field}
                                   checked={field["value"] ?? false}
                                 />
-                                
                               )}
-                             
                             />
                           }
                           label="Suv"
