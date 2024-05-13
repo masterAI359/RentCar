@@ -1,3 +1,8 @@
+import { setIsSweetAlert, setPageLoading } from "../../redux/user/userSlice";
+
+
+
+
 export function loadScript(src) {
   return new Promise((resolve) => {
     const script = document.createElement("script");
@@ -12,7 +17,7 @@ export function loadScript(src) {
   });
 }
 
-export async function displayRazorpay(values, navigate) {
+export async function displayRazorpay(values, navigate , dispatch) {
   const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
   if (!res) {
@@ -64,7 +69,9 @@ export async function displayRazorpay(values, navigate) {
       const successStatus = await result.json();
       console.log(successStatus);
       if (successStatus) {
+        dispatch(setIsSweetAlert(true))
         navigate("/");
+        dispatch(setPageLoading(false))
       }
     },
     prefill: {
@@ -79,6 +86,7 @@ export async function displayRazorpay(values, navigate) {
 
   const paymentObject = new window.Razorpay(options);
   paymentObject.open();
+  dispatch(setPageLoading(false))
 }
 
 const Razorpay = () => {

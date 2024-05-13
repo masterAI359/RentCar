@@ -14,6 +14,8 @@ import vendorDashboardSlice from "./vendor/vendorDashboardSlice.jsx";
 import bookingDataSlice from './user/BookingDataSlice.jsx'
 import sortfilterSlice from "./user/sortfilterSlice.jsx";
 
+
+
 const rootReducer = combineReducers({
   user: userReducer,
   addVehicle: AddVehiclereducer,
@@ -25,7 +27,7 @@ const rootReducer = combineReducers({
   vendorDashboardSlice:vendorDashboardSlice,
   bookingDataSlice:bookingDataSlice,
   sortfilterSlice:sortfilterSlice
-});
+}); 
 
 const persistConfig = {
   key: "root",
@@ -38,6 +40,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
+  
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

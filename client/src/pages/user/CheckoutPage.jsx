@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdCurrencyRupee } from "react-icons/md";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoMdTime } from "react-icons/io";
@@ -12,6 +12,10 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { displayRazorpay } from "./Razorpay";
+import { setPageLoading } from "../../redux/user/userSlice";
+
+
+
 
 const schema = z.object({
   email: z
@@ -46,6 +50,10 @@ const CheckoutPage = () => {
   const singleVehicleDetail = useSelector(
     (state) => state.userListVehicles.singleVehicleDetail
   );
+  const {isPageLoading} = useSelector(state => state.user)
+  const dispatch  = useDispatch()
+ 
+
 
 
 
@@ -65,6 +73,8 @@ const CheckoutPage = () => {
 
   const [wrongCoupon, setWrongCoupon] = useState(false);
   const [discount, setDiscount] = useState(0);
+  
+
   const couponValue = watch("coupon");
   const handleCoupon = () => {
     setWrongCoupon(false);
@@ -94,8 +104,8 @@ const CheckoutPage = () => {
       dropoff_location,
     };
 
-  
-    displayRazorpay(orderData,navigate);
+    dispatch(setPageLoading(true))
+    displayRazorpay(orderData,navigate,dispatch);
    
 
    
@@ -354,9 +364,16 @@ const CheckoutPage = () => {
               </p>
             </div>
 
-            <button className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">
-              Place Order
+            {
+              isPageLoading ?   <button  className={`mt-4 mb-8 w-full rounded-md bg-gray-400 px-6 py-3 font-medium text-black`} disabled>
+             Processing ...
             </button>
+            :
+            <button  className={`mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white`}>
+            { "Place Order"}
+          </button>
+            }
+          
           </form>
         </div>
       </div>

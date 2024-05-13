@@ -16,15 +16,13 @@ const bookingDataSlice = createSlice({
   initialState,
   reducers: {
     setSelectedData: (state, action) => {
-      console.log(action.payload)
       const {
         pickup_district,
         pickup_location,
         dropoff_location,
         dropofftime,
-        pickuptime
+        pickuptime,
       } = action.payload;
-      
 
       // Set pickup details
       state.pickup_district = pickup_district;
@@ -32,38 +30,35 @@ const bookingDataSlice = createSlice({
 
       // Set dropoff details
       state.dropoff_location = dropoff_location;
-      
 
       // Set pickupDate and dropoffDate
-      state.pickupDate = {
-        day:pickuptime.$D,
-        month:pickuptime.$M,
-        year:pickuptime.$y,
-        humanReadable:pickuptime.$d
-      },
-        
-      
-      state.dropoffDate = {
-        day:dropofftime.$D,
-        month:dropofftime.$M,
-        year:dropofftime.$y,
-        humanReadable:dropofftime.$d
-      }
+      (state.pickupDate = {
+        day: pickuptime.$D,
+        month: pickuptime.$M,
+        year: pickuptime.$y,
+        humanReadable: pickuptime.$d,
+      }),
+        (state.dropoffDate = {
+          day: dropofftime.$D,
+          month: dropofftime.$M,
+          year: dropofftime.$y,
+          humanReadable: dropofftime.$d,
+        });
 
       // Set pickuptime and dropofftime
       state.pickuptime = {
-        hour:pickuptime.$H,
-        minute:pickuptime.$m,
-        seconds:pickuptime.$s,
-        year:pickuptime.$y,
-      }
+        hour: pickuptime.$H,
+        minute: pickuptime.$m,
+        seconds: pickuptime.$s,
+        year: pickuptime.$y,
+      };
 
       state.dropofftime = {
-        hour:dropofftime.$H,
-        minute:dropofftime.$m,
-        seconds:dropofftime.$s,
-        year:dropofftime.$y,
-    }
+        hour: dropofftime.$H,
+        minute: dropofftime.$m,
+        seconds: dropofftime.$s,
+        year: dropofftime.$y,
+      };
     },
   },
 });
