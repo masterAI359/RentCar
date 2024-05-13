@@ -4,10 +4,44 @@ import CarSearch from "./CarSearch";
 import { HeroParallax } from "../../components/ui/Paralax";
 import { useRef } from "react";
 
+import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setIsSweetAlert } from "../../redux/user/userSlice";
+
 function Home() {
   const ref = useRef(null);
+  const { isSweetAlert } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  const sweetalert = () => {
+    Swal.fire({
+      
+      show: true,
+      title: "",
+      text: "Vehicle Booked Successfully",
+      icon: "success",
+      showDenyButton: true,
+      confirmButtonText: "Go to Home",
+      confirmButtonColor:"#22c55e",
+      denyButtonColor:'black',
+      denyButtonText: `See Orders`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate('/')
+      }
+      else if(result.isDenied){
+        navigate('/vehicles')
+      }
+    })
+    dispatch(setIsSweetAlert(false))
+  };
+
   return (
     <>
+      {isSweetAlert && sweetalert()}
+
       {/* This is div is the container for the dot background */}
       <div className="relative h-full w-full mx-auto sm:max-w-[900px] lg:max-w-[1500px] bg-white min-h-[72vh] md:min-h-[60vh] lg:min-h-[73vh]">
         <div
