@@ -2,7 +2,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import UserProfileSidebar from "../../components/UserProfileSidebar";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-import { FiSettings } from "react-icons/fi";
 import { Link, Route, Routes } from "react-router-dom";
 import Orders from "./Orders";
 import UserProfileContent from "../../components/UserProfileContent";
@@ -32,17 +31,7 @@ function Profile() {
 
       <div>
         <div className="flex  relative dark:bg-main-dark-bg">
-          <div className="fixed right-4 bottom-4" style={{ zIndex: "1000" }}>
-            <TooltipComponent content="Settings" position="Top">
-              <button
-                type="button"
-                className="text-3xl p-3 hover:drop-shadow-xl hover:bg-gray-200 hover:radius text-white"
-                style={{ background: "blue", borderRadius: "50%" }}
-              >
-                <FiSettings />
-              </button>
-            </TooltipComponent>
-          </div>
+         
 
           {activeMenu ? (
             <div className="w-72 bg-white  fixed sidebar dark:bg-secondary-dark-bg">
@@ -73,13 +62,13 @@ function Profile() {
           )}
 
           <div
-            className={`bg-white  min-h-screen w-full  mt-[100px] max-w-[800px] mx-auto ${
+            className={`bg-white  min-h-screen w-full  mt-[10px] max-w-[800px] mx-auto ${
               activeMenu ? "sm:ml-72 " : " max-w-[900px]"
             } `}
           >
             <div className={`fixed md:static bg-white  w-full   `}></div>
 
-            <div className="main_section mx-8 ">
+            <div className="main_section mx-8 lg:min-w-[900px] ">
               <Routes>
                 <Route path="/" element={<UserProfileContent />} />
                 <Route path="/profiles" element={<UserProfileContent />} />
