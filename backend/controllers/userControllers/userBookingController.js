@@ -170,11 +170,11 @@ export const showOneofkind = async (req, res, next) => {
     const modelsMap = {};
     const singleVehicleofModel = [];
 
-    if(!actionResult){
+    if (!actionResult) {
       next(errorHandler(404, "no actionResult"));
-      return 
+      return;
     }
-  
+
     actionResult[0].forEach((cur) => {
       if (!modelsMap[cur.model]) {
         modelsMap[cur.model] = true;
@@ -187,7 +187,6 @@ export const showOneofkind = async (req, res, next) => {
       return;
     }
 
-   
     res.status(200).json(singleVehicleofModel);
   } catch (error) {
     console.log(error);
@@ -260,5 +259,53 @@ export const filterVehicles = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     next(errorHandler(500, "internal server error in fiilterVehicles"));
+  }
+};
+
+export const findBookingsOfUser = async (req, res, next) => {
+  try {
+    if (!req.body) {
+      next(errorHandler(409, "_id of user is required"));
+      return;
+    }
+    const { userId } = req.body;
+    const convertedUserId =new mongoose.Types.ObjectId(userId);
+
+    const bookings = await Booking.aggregate([
+      {
+        $match:
+          
+          {
+            userId:convertedUserId
+          }
+      },
+      {
+        $lookup:
+         
+          {
+            from: "vehicles",
+            localField: "vehicleId",
+            foreignField: "_id",
+            as: "result"
+          }
+      },
+      {
+        $project:
+
+          {
+            _id: 0,
+            bookingDetails: "$$ROOT",
+            vehicleDetails: {
+              $arrayElemAt: ["$result", 0]
+            }
+          }
+      }
+    ])
+    
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    console.log(error);
+    next(errorHandler(500, "internal error in findBookingOfUser"));
   }
 };

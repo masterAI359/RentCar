@@ -7,6 +7,8 @@ const initialState = {
   isError: false,
   isSweetAlert:false,
   isPageLoading:false,
+  isOrderModalOpen:false,
+  singleOrderDetails:null
 };
 
 const userSlice = createSlice({
@@ -60,6 +62,12 @@ const userSlice = createSlice({
     },
     setPageLoading:(state,action) => {
       state.isPageLoading = action.payload
+    },
+    setIsOrderModalOpen: (state,action) => {
+      state.isOrderModalOpen = action.payload
+    },
+    setSingleOrderDetails:(state,action) => {
+      state.singleOrderDetails = action.payload
     }
   },
 });
@@ -76,7 +84,9 @@ export const {
   setUpdated,
   loadingEnd,
   setIsSweetAlert,
-  setPageLoading
+  setPageLoading,
+  setIsOrderModalOpen,
+  setSingleOrderDetails
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import {
   motion,
   useScroll,
@@ -8,7 +8,7 @@ import {
   MotionValue,
 } from "framer-motion";
 
-import { Link } from "react-router-dom";
+
 
 export const products = [
   {
@@ -39,8 +39,8 @@ export const products = [
 export const HeroParallax = () => {
   const firstRow = products.slice(0, 1);
   const secondRow = products.slice(1, 2);
-  const thirdRow = products.slice(2, 3);
-  const ref = React.useRef(null);
+
+  const ref = useRef(null)
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],

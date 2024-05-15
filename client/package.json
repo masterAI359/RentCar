@@ -14,7 +14,6 @@
     "@emotion/styled": "^11.11.5",
     "@firebase/auth": "^1.6.0",
     "@hookform/resolvers": "^3.3.4",
-    "@material-tailwind/react": "^2.1.9",
     "@mui/icons-material": "^5.15.12",
     "@mui/x-data-grid": "^6.19.6",
     "@mui/x-date-pickers": "^7.0.0",
@@ -34,8 +33,10 @@
     "@syncfusion/ej2-react-richtexteditor": "^19.4.50",
     "@syncfusion/ej2-react-schedule": "^19.4.50",
     "@tabler/icons-react": "^3.2.0",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.10",
     "flowbite-react": "^0.7.3",
+    "framer-motion": "^11.2.0",
     "react-datepicker": "^6.2.0",
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",
@@ -47,6 +48,7 @@
     "react-scripts": "5.0.0",
     "react-sweetalert2": "^0.6.0",
     "redux-persist": "^6.0.0",
+    "tailwind-merge": "^2.3.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
