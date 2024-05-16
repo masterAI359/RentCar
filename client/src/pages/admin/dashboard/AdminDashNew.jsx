@@ -1,5 +1,3 @@
-import { FiSettings } from "react-icons/fi";
-import { TooltipComponent } from "@syncfusion/ej2-react-popups";
 import { Routes, Route } from "react-router-dom";
 import { Navbar, SideBar } from "../components/index.jsx";
 import {
@@ -14,6 +12,7 @@ import {
 } from "../pages";
 import { useSelector } from "react-redux";
 import AdminHomeMain from "../pages/AdminHomeMain.jsx";
+import Bookings from "../components/Bookings.jsx";
 
 function AdminDashNew() {
   const { activeMenu } = useSelector((state) => state.adminDashboardSlice);
@@ -21,17 +20,7 @@ function AdminDashNew() {
   return (
     <div>
       <div className="flex relative dark:bg-main-dark-bg">
-        <div className="fixed right-4 bottom-4" style={{ zIndex: "1000" }}>
-          <TooltipComponent content="Settings" position="Top">
-            <button
-              type="button"
-              className="text-3xl p-3 hover:drop-shadow-xl hover:bg-gray-200 hover:radius text-white"
-              style={{ background: "blue", borderRadius: "50%" }}
-            >
-              <FiSettings />
-            </button>
-          </TooltipComponent>
-        </div>
+      
         {activeMenu ? (
           <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg">
             <SideBar />
@@ -63,6 +52,8 @@ function AdminDashNew() {
               <Route path="/customers" element={<Customers />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/vendorVehicleRequests" element={<VenderVehicleRequests />} />
+              <Route path="/orders" element={<Bookings />} />
+
             </Routes>
           </div>
         </div>
