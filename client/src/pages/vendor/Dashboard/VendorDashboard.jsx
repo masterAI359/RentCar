@@ -8,6 +8,7 @@ import { Navbar } from "../../admin/components";
 import AdminHomeMain from "../../admin/pages/AdminHomeMain";
 import VendorAllVehicles from "../pages/VendorAllVehicles";
 import VendorSidebar from "../Components/VendorSidebar";
+import VendorBookings from "../Components/VendorBookings";
 
 function VendorDashboard() {
   const { activeMenu } = useSelector((state) => state.adminDashboardSlice);
@@ -50,6 +51,8 @@ function VendorDashboard() {
               <Route path="/" element={<AdminHomeMain />} />
               <Route path="/adminHome" element={<AdminHomeMain />} />
               <Route path="/vendorAllVeihcles" element={<VendorAllVehicles />} />
+              <Route path="/bookings" element={<VendorBookings />} />
+
             </Routes>
           </div>
         </div>

@@ -104,7 +104,6 @@ const BookingsTable = () => {
       headerName: "Change_Status",
       width: 150,
       renderCell: (params) => {
-        console.log(params.value)
         return (
           <select
           className="px-4 py-2"
