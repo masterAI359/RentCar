@@ -6,10 +6,8 @@ import { CiLocationOn } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import VendorBookingDetailModal from "./VendorBookingModal";
 import { IoIosArrowDown } from "react-icons/io";
-import {
-  setIsOrderModalOpen,
-  setSingleOrderDetails,
-} from "../../../redux/user/userSlice";
+import { setVendorOrderModalOpen, setVendorSingleOrderDetails } from "../../../redux/vendor/vendorBookingSlice";
+
 
 const VendorBookingsTable = () => {
   const [bookings, setBookings] = useState("");
@@ -132,8 +130,9 @@ const VendorBookingsTable = () => {
   }, [vendorVehicles, bookings]);
 
   const handleDetailsModal = (cur) => {
-    dispatch(setIsOrderModalOpen(true));
-    dispatch(setSingleOrderDetails(cur));
+    
+    dispatch(setVendorOrderModalOpen(true));
+    dispatch(setVendorSingleOrderDetails(cur));
   };
 
   return (

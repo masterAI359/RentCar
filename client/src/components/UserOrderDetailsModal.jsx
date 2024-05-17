@@ -6,10 +6,16 @@ const UserOrderDetailsModal = () => {
     (state) => state.user
   );
 
+
+
+
+
   const dispatch = useDispatch();
 
-  const pickupDate = new Date(cur.bookingDetails.pickupDate);
-  const dropOffDate = new Date(cur.bookingDetails.dropOffDate);
+  const pickupDate = new Date(cur && cur.bookingDetails.pickupDate);
+  const dropOffDate = new Date(cur && cur.bookingDetails.dropOffDate);
+
+  
 
   const closeModal = () => {
     dispatch(setIsOrderModalOpen(false));

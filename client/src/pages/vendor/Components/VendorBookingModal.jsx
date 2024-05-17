@@ -1,22 +1,30 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setIsOrderModalOpen } from '../../../redux/user/userSlice';
+import { setVendorOrderModalOpen } from "../../../redux/vendor/vendorBookingSlice";
+
 
 const VendorBookingDetailModal = () => {
-  const { isOrderModalOpen, singleOrderDetails: cur } = useSelector(
-    (state) => state.user
+  const { isVendorOderModalOpen, vendorSingleOrderDetails: cur } = useSelector(
+    (state) => state.vendorBookingSlice
   );
 
   const dispatch = useDispatch();
 
-  const pickupDate = new Date(cur.pickupDate);
-  const dropOffDate = new Date(cur.dropOffDate);
+  
+ 
+  let pickupDate 
+  let dropOffDate 
+
+  if(cur){
+    pickupDate = new Date(cur && cur.pickupDate);
+    dropOffDate = new Date(cur && cur.dropOffDate);
+  }
 
   const closeModal = () => {
-    dispatch(setIsOrderModalOpen(false));
+    dispatch(setVendorOrderModalOpen(false));
   };
   return (
     <>
-      {isOrderModalOpen ? (
+      {isVendorOderModalOpen&&cur ? (
         <div
           className={` fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-100 backdrop-blur-sm transition duration-300  ease-in-out overflow-scroll`}
           onClick={closeModal}
