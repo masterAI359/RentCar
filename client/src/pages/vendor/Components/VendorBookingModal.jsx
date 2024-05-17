@@ -1,28 +1,30 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setIsOrderModalOpen } from "../redux/user/userSlice";
+import { setVendorOrderModalOpen } from "../../../redux/vendor/vendorBookingSlice";
 
-const UserOrderDetailsModal = () => {
-  const { isOrderModalOpen, singleOrderDetails: cur } = useSelector(
-    (state) => state.user
+
+const VendorBookingDetailModal = () => {
+  const { isVendorOderModalOpen, vendorSingleOrderDetails: cur } = useSelector(
+    (state) => state.vendorBookingSlice
   );
-
-
-
-
 
   const dispatch = useDispatch();
 
-  const pickupDate = new Date(cur && cur.bookingDetails.pickupDate);
-  const dropOffDate = new Date(cur && cur.bookingDetails.dropOffDate);
-
   
+ 
+  let pickupDate 
+  let dropOffDate 
+
+  if(cur){
+    pickupDate = new Date(cur && cur.pickupDate);
+    dropOffDate = new Date(cur && cur.dropOffDate);
+  }
 
   const closeModal = () => {
-    dispatch(setIsOrderModalOpen(false));
+    dispatch(setVendorOrderModalOpen(false));
   };
   return (
     <>
-      {isOrderModalOpen ? (
+      {isVendorOderModalOpen&&cur ? (
         <div
           className={` fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-100 backdrop-blur-sm transition duration-300  ease-in-out overflow-scroll`}
           onClick={closeModal}
@@ -35,15 +37,15 @@ const UserOrderDetailsModal = () => {
                 <div className="mb-4 mt-2">
                   <div className="flex items-center  justify-between">
                     <div>Booking Id</div>
-                    <div>{cur.bookingDetails._id}</div>
+                    <div>{cur._id}</div>
                   </div>
                   <div className="flex items-center justify-between">
                     <div>Total Amount</div>
-                    <div>{cur.bookingDetails.totalPrice}</div>
+                    <div>{cur.totalPrice}</div>
                   </div>
                   <div className="flex items-center justify-between mt-2 ">
                     <div>Pickup Location</div>
-                    <div>{cur.bookingDetails.pickUpLocation}</div>
+                    <div>{cur.pickUpLocation}</div>
                   </div>
                   <div className="flex items-center justify-between">
                     <div>Pickup Date</div>
@@ -56,7 +58,7 @@ const UserOrderDetailsModal = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>Dropoff Location</div>
-                  <div>{cur.bookingDetails.dropOffLocation}</div>
+                  <div>{cur.dropOffLocation}</div>
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -123,4 +125,4 @@ const UserOrderDetailsModal = () => {
   );
 };
 
-export default UserOrderDetailsModal;
+export default VendorBookingDetailModal;

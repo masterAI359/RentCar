@@ -8,6 +8,7 @@ import { multerUploads } from "../utils/multer.js"
 import { insertDummyData } from "../controllers/adminControllers/masterCollectionController.js"
 import { getCarModelData } from "../controllers/adminControllers/masterCollectionController.js"
 import { approveVendorVehicleRequest, fetchVendorVehilceRequests, rejectVendorVehicleRequest } from "../controllers/adminControllers/vendorVehilceRequests.js"
+import { allBookings, changeStatus } from "../controllers/adminControllers/bookingsController.js"
 
 
 
@@ -27,6 +28,7 @@ router.get('/getVehicleModels',getCarModelData)
 router.get('/fetchVendorVehilceRequests',fetchVendorVehilceRequests)
 router.post('/approveVendorVehicleRequest',approveVendorVehicleRequest)
 router.post('/rejectVendorVehicleRequest',rejectVendorVehicleRequest)
-
+router.get('/allBookings',allBookings)
+router.post('/changeStatus',changeStatus)
 
 export default router

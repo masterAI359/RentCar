@@ -269,39 +269,32 @@ export const findBookingsOfUser = async (req, res, next) => {
       return;
     }
     const { userId } = req.body;
-    const convertedUserId =new mongoose.Types.ObjectId(userId);
+    const convertedUserId = new mongoose.Types.ObjectId(userId);
 
     const bookings = await Booking.aggregate([
       {
-        $match:
-          
-          {
-            userId:convertedUserId
-          }
+        $match: {
+          userId: convertedUserId,
+        },
       },
       {
-        $lookup:
-         
-          {
-            from: "vehicles",
-            localField: "vehicleId",
-            foreignField: "_id",
-            as: "result"
-          }
+        $lookup: {
+          from: "vehicles",
+          localField: "vehicleId",
+          foreignField: "_id",
+          as: "result",
+        },
       },
       {
-        $project:
-
-          {
-            _id: 0,
-            bookingDetails: "$$ROOT",
-            vehicleDetails: {
-              $arrayElemAt: ["$result", 0]
-            }
-          }
-      }
-    ])
-    
+        $project: {
+          _id: 0,
+          bookingDetails: "$$ROOT",
+          vehicleDetails: {
+            $arrayElemAt: ["$result", 0],
+          },
+        },
+      },
+    ]);
 
     res.status(200).json(bookings);
   } catch (error) {
