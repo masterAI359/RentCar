@@ -32,7 +32,7 @@ function Home() {
         navigate('/')
       }
       else if(result.isDenied){
-        navigate('/vehicles')
+        navigate('/profile/orders')
       }
     })
     dispatch(setIsSweetAlert(false))
