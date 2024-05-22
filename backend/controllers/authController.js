@@ -38,7 +38,7 @@ export const signIn = async (req, res, next) => {
    
 
     res
-      .cookie("access_token", token, { httpOnly: true, maxAge: 36000000 }) //10 hours
+      .cookie("access_token", token, { httpOnly: true, maxAge: 3600000 }) //10 hours
       .status(200)
       .json(responsePayload);
   } catch (error) {

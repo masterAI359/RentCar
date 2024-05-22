@@ -9,6 +9,7 @@ import { insertDummyData } from "../controllers/adminControllers/masterCollectio
 import { getCarModelData } from "../controllers/adminControllers/masterCollectionController.js"
 import { approveVendorVehicleRequest, fetchVendorVehilceRequests, rejectVendorVehicleRequest } from "../controllers/adminControllers/vendorVehilceRequests.js"
 import { allBookings, changeStatus } from "../controllers/adminControllers/bookingsController.js"
+import { verifyToken } from "../utils/verifyUser.js"
 
 
 
@@ -17,18 +18,18 @@ import { allBookings, changeStatus } from "../controllers/adminControllers/booki
 const router = express.Router()
 
 router.post('/dashboard',signIn,adminAuth)
-router.post('/profile',adminProfiile)
-router.get('/signout',signOut)
-router.post('/addProduct',multerUploads,addProduct)
-router.get('/showVehicles',showVehicles)
-router.delete('/deleteVehicle/:id',deleteVehicle)
-router.put('/editVehicle/:id',editVehicle)
-router.get('/dummyData',insertDummyData)
+router.post('/profile',verifyToken,adminProfiile)
+router.get('/signout',verifyToken,signOut)
+router.post('/addProduct',verifyToken,multerUploads,addProduct)
+router.get('/showVehicles',verifyToken,showVehicles)
+router.delete('/deleteVehicle/:id',verifyToken,deleteVehicle)
+router.put('/editVehicle/:id',verifyToken,editVehicle)
+router.get('/dummyData',verifyToken,insertDummyData)
 router.get('/getVehicleModels',getCarModelData)
-router.get('/fetchVendorVehilceRequests',fetchVendorVehilceRequests)
-router.post('/approveVendorVehicleRequest',approveVendorVehicleRequest)
-router.post('/rejectVendorVehicleRequest',rejectVendorVehicleRequest)
-router.get('/allBookings',allBookings)
-router.post('/changeStatus',changeStatus)
+router.get('/fetchVendorVehilceRequests',verifyToken,fetchVendorVehilceRequests)
+router.post('/approveVendorVehicleRequest',verifyToken,approveVendorVehicleRequest)
+router.post('/rejectVendorVehicleRequest',verifyToken,rejectVendorVehicleRequest)
+router.get('/allBookings',verifyToken,allBookings)
+router.post('/changeStatus',verifyToken,changeStatus)
 
 export default router

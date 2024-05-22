@@ -2,11 +2,6 @@ import User from "../../models/userModel.js";
 import { errorHandler } from "../../utils/error.js";
 import bcryptjs from "bcryptjs";
 
-export const test = (req, res) => {
-  res.json({
-    message: "Api successfull",
-  });
-};
 
 //update user
 
