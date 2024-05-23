@@ -22,6 +22,35 @@ const schema = z.object({
   password: z.string().min(1, { message: "password required" }),
 });
 
+// export const refreshToken = async (dispatch,getState) => {
+//   const { authSlice } = getState();
+
+//   if (!authSlice.refreshToken) {
+//     // No refresh token available, handle the situation (e.g., log out the user)
+//     dispatch(logout());
+//     return;
+//   }
+
+//   try {
+//     const res = await fetch('/api/auth/refresh', {
+//       method: 'POST',
+//       credentials: 'include', // Include cookies in the request
+//     });
+
+//     const data = await res.json();
+
+//     if (!res.ok) {
+//       dispatch(refreshTokenFailure(data));
+//       return;
+//     }
+
+//     // The server should set the new access token and refresh token in the response cookies
+//     dispatch(refreshTokenSuccess(data));
+//   } catch (err) {
+//     dispatch(signInFailure(err));
+//   }
+// }
+
 function SignIn() {
   const {
     register,
@@ -43,33 +72,32 @@ function SignIn() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+   
 
       if (data.succes === false || !res.ok) {
-        dispatch(loadingEnd())
+        dispatch(loadingEnd());
         dispatch(signInFailure(data));
-      
+
+
         return;
       }
       if (data.isAdmin) {
         dispatch(signInSuccess(data));
-        dispatch(loadingEnd())
+        dispatch(loadingEnd());
         navigate("/adminDashboard");
       } else if (data.isUser) {
         dispatch(signInSuccess(data));
-        dispatch(loadingEnd())
+        dispatch(loadingEnd());
         navigate("/");
       } else {
-        dispatch(loadingEnd())
+        dispatch(loadingEnd());
         dispatch(signInFailure(data));
-       
       }
-      dispatch(loadingEnd())
+      dispatch(loadingEnd());
       dispatch(signInFailure("something went wrong"));
-      
     } catch (error) {
-      dispatch(loadingEnd())
+      dispatch(loadingEnd());
       dispatch(signInFailure(error));
-     
     }
   };
 
@@ -82,7 +110,7 @@ function SignIn() {
           className={` green px-6 py-2   rounded-t-lg flex justify-between items-center`}
         >
           <h1 className={`${styles.heading2}  text-normal `}>Sign In</h1>
-          <Link to={"/"} onClick={()=> dispatch(loadingEnd())}>
+          <Link to={"/"} onClick={() => dispatch(loadingEnd())}>
             <div className=" px-3  font-bold  hover:bg-green-300 rounded-md  shadow-inner">
               x
             </div>
