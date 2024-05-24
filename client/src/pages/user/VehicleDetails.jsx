@@ -18,6 +18,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { useEffect } from "react";
 import { showVehicles } from "../../redux/user/listAllVehicleSlice";
+import { signOut } from "../../redux/user/userSlice";
+
 
 
 const VehicleDetails = () => {
@@ -45,9 +47,9 @@ const VehicleDetails = () => {
     fetchData();
   }, []);
 
-  const handleBook = async (vehicleId) => {
+  const handleBook = async (vehicleId,navigate,dispatch) => {
     try{
-      const booked = await fetch('api/user/bookVehicle',{
+      const booked = await fetch('/api/auth/refreshToken',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -57,17 +59,26 @@ const VehicleDetails = () => {
           
         })
       })
+
+
       if(!booked.ok){
-        console.log("not success")  
+        dispatch(signOut())
+        navigate('/signup')
         return 
       }
       const data = await booked.json();
-      console.log(data)
+      if(data){
+        navigate('/checkoutPage')
+      }
+      
+
     }
     catch(error){
       console.log(error)
     }
   }
+
+  
   return (
     <div>
       <section className="py-12 sm:py-8 bg-white">
@@ -79,7 +90,7 @@ const VehicleDetails = () => {
                   <div className="max-w-xl overflow-hidden rounded-lg relative">
                     <img
                       className="h-full w-full max-w-full object-cover"
-                      src={singleVehicleDetail && singleVehicleDetail.image[0]}
+                      src={singleVehicleDetail &&  singleVehicleDetail.image[0] }
                       alt={singleVehicleDetail.model}
                     />
                   </div>
@@ -96,7 +107,7 @@ const VehicleDetails = () => {
                 </div>
                 <div className="mt-2 w-full lg:order-1 lg:w-32 lg:flex-shrink-0">
                   <div className="flex flex-row items-start lg:flex-col">
-                    {singleVehicleDetail &&
+                    {singleVehicleDetail && singleVehicleDetail.succes!=false && 
                       singleVehicleDetail.image.map((cur, idx) => (
                         <button
                           type="button"
@@ -208,8 +219,8 @@ const VehicleDetails = () => {
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 gap-2"
                   onClick={() => {
-                    handleBook(singleVehicleDetail._id)
-                    navigate('/checkoutPage')
+                    handleBook(singleVehicleDetail._id,navigate,dispatch)
+                   
                     
                   }}
                 >

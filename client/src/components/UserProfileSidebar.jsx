@@ -13,6 +13,7 @@ import { links } from "./UserSidebarContent";
 import { showSidebarOrNot } from "../redux/adminSlices/adminDashboardSlice/DashboardSlice";
 import { CiLogout } from "react-icons/ci";
 
+
 const UserProfileSidebar = () => {
   const { activeMenu, screenSize } = useSelector(
     (state) => state.adminDashboardSlice
@@ -35,6 +36,7 @@ const UserProfileSidebar = () => {
   const handleSignout = async () => {
     const res = await fetch("/api/admin/signout", {
       method: "GET",
+      credentials:'include'
     });
     const data = await res.json();
     if (data) {
