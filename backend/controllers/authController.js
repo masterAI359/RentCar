@@ -12,11 +12,51 @@ export const signUp = async (req, res, next) => {
 
   try {
     const hashedPassword = bcryptjs.hashSync(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword ,isUser:true });
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      isUser: true,
+    });
     await newUser.save();
     res.status(200).json({ message: "newUser added successfully" });
   } catch (error) {
     next(error);
+  }
+};
+
+//refreshTokens
+export const refreshToken = async (req, res, next) => {
+  const refreshToken = req.cookies.refresh_token;
+  if (!refreshToken){
+    res.clearCookie('access_token','refresh_token')
+    return next(errorHandler(401, "You are not authenticated"));
+  } 
+
+  try {
+    const decoded = Jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+    const user = await User.findById(decoded.id);
+
+    if (!user) return next(errorHandler(403, "Invalid refresh token"));
+    if (user.refreshToken !== refreshToken){
+      res.clearCookie('access_token',"refresh_token")
+      return next(errorHandler(403, "Invalid refresh token"));
+
+    } 
+
+    const newAccessToken = Jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN, { expiresIn: '15m' });
+    const newRefreshToken = Jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN, { expiresIn: '7d' });
+
+    // Update the refresh token in the database for the user
+    await User.updateOne({ _id: user._id }, { refreshToken: newRefreshToken });
+
+    res
+      .cookie("access_token", newAccessToken, { httpOnly: true, maxAge: 900000 }) // 15 minutes
+      .cookie("refresh_token", newRefreshToken, { httpOnly: true, maxAge: 604800000 }) // 7 days
+      .status(200)
+      .json({ accessToken: newAccessToken });
+  } catch (error) {
+    next(errorHandler(500,'error in refreshToken controller in server'));
   }
 };
 
@@ -27,18 +67,36 @@ export const signIn = async (req, res, next) => {
     if (!validUser) return next(errorHandler(404, "user not found"));
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(401, "wrong credentials"));
-    const token = Jwt.sign({ id: validUser._id }, process.env.SECRET_KEY);
-    const { password: hashedPassword, isAdmin, ...rest } = validUser._doc;
-    // const expiryDate = new Date(Date.now()  +  3600000) //1 hour
-    const responsePayload = { isAdmin,password:hashedPassword, ...rest };
+    const accessToken = Jwt.sign(
+      { id: validUser._id },
+      process.env.ACCESS_TOKEN,
+      { expiresIn: "15m" }
+    ); //accessToken expires in 15 minutes
+    const refreshToken = Jwt.sign(
+      { id: validUser._id },
+      process.env.REFRESH_TOKEN,
+      { expiresIn: "7d" }
+    ); //refreshToken expires in 7 days
 
-    req.user = { ...rest, isAdmin: validUser.isAdmin ,isUser:validUser.isUser };
+    await User.updateOne({ _id: validUser._id }, { refreshToken }); //store the refresh token in db
+
+    const { password: hashedPassword, isAdmin, ...rest } = validUser._doc;
+
+    const responsePayload = { isAdmin, password: hashedPassword, ...rest };
+
+    req.user = {
+      ...rest,
+      isAdmin: validUser.isAdmin,
+      isUser: validUser.isUser,
+    };
     next();
 
-   
-
     res
-      .cookie("access_token", token, { httpOnly: true, maxAge: 3600000 }) //10 hours
+      .cookie("access_token", accessToken, { httpOnly: true, maxAge: 900000 }) // 15 minutes
+      .cookie("refresh_token", refreshToken, {
+        httpOnly: true,
+        maxAge: 604800000,
+      }) // 7 days
       .status(200)
       .json(responsePayload);
   } catch (error) {
@@ -49,12 +107,12 @@ export const signIn = async (req, res, next) => {
 export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).lean();
-    if(user && !user.isUser){
-      return next(errorHandler(409,'email already in use as a vendor'))
+    if (user && !user.isUser) {
+      return next(errorHandler(409, "email already in use as a vendor"));
     }
     if (user) {
       const { password: hashedPassword, ...rest } = user;
-      const token = Jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+      const token = Jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN);
 
       res
         .cookie("access_token", token, {
@@ -76,14 +134,14 @@ export const google = async (req, res, next) => {
           Math.random().toString(36).slice(-8) +
           Math.random().toString(36).slice(-8),
         email: req.body.email,
-        isUser:true,
+        isUser: true,
         //we cannot set username to req.body.name because other user may also have same name so we generate a random value and concat it to name
         //36 in toString(36) means random value from 0-9 and a-z
       });
-     const savedUser=  await newUser.save();
-     const userObject = savedUser.toObject();
-     
-      const token = Jwt.sign({ id: newUser._id }, process.env.SECRET_KEY);
+      const savedUser = await newUser.save();
+      const userObject = savedUser.toObject();
+
+      const token = Jwt.sign({ id: newUser._id }, process.env.ACCESS_TOKEN);
       const { password: hashedPassword2, ...rest } = userObject;
       res
         .cookie("access_token", token, {
@@ -97,5 +155,3 @@ export const google = async (req, res, next) => {
     next(error);
   }
 };
-
-

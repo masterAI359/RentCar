@@ -11,6 +11,7 @@ import { MdAirlineSeatReclineNormal } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import Filter from "../../components/Filter";
 import Sort from "../../components/Sort";
+import { signOut } from "../../redux/user/userSlice";
 
 export const onVehicleDetail = async (id, dispatch, navigate) => {
   try {
@@ -22,8 +23,18 @@ export const onVehicleDetail = async (id, dispatch, navigate) => {
       body: JSON.stringify({ id }),
     });
     const data = await res.json();
-    dispatch(setVehicleDetail(data));
-    navigate("/vehicleDetails");
+
+    if(data.statusCode == 401 || data.statusCode == 403){
+      dispatch(signOut())
+    }
+   
+      dispatch(setVehicleDetail(data));
+      navigate("/vehicleDetails");
+    
+  
+   
+   
+   
   } catch (error) {
     console.log(error);
   }

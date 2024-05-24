@@ -56,11 +56,11 @@ export const deleteUser = async (req, res, next) => {
 
 export const signOut = async(req,res,next)=> {
   try{
-    res.clearCookie('access_token')
+    res.clearCookie('access_token','refresh_token')
     res.status(200).json({message:"signedOut successfully"})
   }
   catch(error){
-    next(error)
+   next(errorHandler(500,'error in signout controller'))
   }
 
 }
