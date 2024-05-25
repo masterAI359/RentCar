@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { MdMenuOpen } from "react-icons/md";
 import { useState } from "react";
+import { Drawer } from "antd";
+import { set } from "mongoose";
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -75,11 +77,78 @@ function Header() {
           )}
         </div>
 
+
         {/*  Mobile Menu */}
         <div className="relative lg:hidden flex justify-center items-center">
           <button onClick={() => setNav(!nav)}>
             <div>{nav ? <MdMenuOpen /> : <RxHamburgerMenu />}</div>
           </button>
+          <Drawer
+            destroyOnClose={true}
+            onClose={() => setNav(false)}
+            open={nav}
+          >
+            <div className="flex flex-col items-start justify-between gap-y-10">
+              {navLinks.map((navlink, index) => (
+                <>
+                  <Link
+                    key={index}
+                    to={navlink.path}
+                    className="text-[26px]"
+                    onClick={() => setNav(false)}
+                  >
+                    {navlink.title}
+                  </Link>
+                </>
+              ))}
+
+              {currentUser && !currentUser.isAdmin && !currentUser.isVendor && (
+                <div>
+                  <Link to={"/profile"}>
+                    <div id="signup" className={` rounded-md font-semibold text-[24px]`}>
+                      Profile
+                    </div>
+                  </Link>
+                </div>
+              )}
+
+              <div>
+                <Link to={"/signIn"}>
+                  {currentUser &&
+                  !currentUser.isAdmin &&
+                  !currentUser.isVendor ? (
+                    ""
+                  ) : (
+                    <button
+                      id="signin"
+                      className={` rounded-md  text-[24px] font-semibold  `}
+                    >
+                      Sign In
+                    </button>
+                  )}
+                </Link>
+              </div>
+
+              <div>
+                {currentUser &&
+                !currentUser.isAdmin &&
+                !currentUser.isVendor ? (
+                  ""
+                ) : (
+                  <div>
+                    <Link to={"/signup"}>
+                      <button
+                        id="signup"
+                        className=" rounded-md  text-[24px] font-semibold "
+                      >
+                        Sign Up
+                      </button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Drawer>
           {nav && (
             <div>
               <div className="absolute top-6 z-10 right-0  ">
@@ -98,40 +167,19 @@ function Header() {
                   )}
                 </Link>
               </div>
-              <ul className="flex flex-col  gap-y-1   items-center justify-start  absolute top-[52px] right-0  overflow-hidden z-20 md:z-10  list-none max-w-20  ">
-                {navLinks.map((navlink, index) => (
-                  <li key={index} className="rounded-lg px-10">
-                    {index != 3 && (
-                      <Link
-                        to={navlink.path}
-                        className={`text-white bg-black text-[8px]   rounded-lg px-10 py-2  font-poppins cursor-pointer font-semibold  text-center `}
-                        onClick={() => setNav(false)}
-                      >
-                        {navlink.title}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
 
               <div>
                 {currentUser &&
-                !currentUser.isAdmin &&
-                !currentUser.isVendor ? (
-                  <Link to={"/profile"}>
-                    <div className="text-white z-20  absolute top-[110px] right-0 text-[9px] hover:text-red-200 px-[26px] py-[5px] rounded-sm bg-black">
-                      Profile
+                  !currentUser.isAdmin &&
+                  !currentUser.isVendor && (
+                    <div className="hidden lg:inline-flex">
+                      <Link to={"/signup"}>
+                        <button id="signup" className={`${styles.button} `}>
+                          Sign Up
+                        </button>
+                      </Link>
                     </div>
-                  </Link>
-                ) : (
-                  <div className="hidden lg:inline-flex">
-                    <Link to={"/signup"}>
-                      <button id="signup" className={`${styles.button} `}>
-                        Sign Up
-                      </button>
-                    </Link>
-                  </div>
-                )}
+                  )}
               </div>
             </div>
           )}
