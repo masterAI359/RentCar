@@ -34,7 +34,11 @@ const CheckoutPage = () => {
     formState: { errors },
     register,
     watch,
-  } = useForm({ resolver: zodResolver(schema) });
+  } = useForm({ resolver: zodResolver(schema),
+    defaultValues:{
+      coupon:''
+    }
+   });
   const navigate = useNavigate();
 
   const {

@@ -64,7 +64,15 @@ const CarSearch = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schema) });
+  } = useForm({ resolver: zodResolver(schema),
+    defaultValues: {
+      pickup_district: "",
+      pickup_location: "",
+      dropoff_location: "",
+      pickuptime: null,
+      dropofftime: null,
+    },
+   });
 
   const navigate = useNavigate();
   const { districtData } = useSelector((state) => state.modelDataSlice);

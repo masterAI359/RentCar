@@ -47,9 +47,10 @@ const Vehicles = () => {
   const navigate = useNavigate();
 
   //allVariants are set to null when we enter AllVehicles from navbar
-  dispatch(setVariants(null));
+  
 
   useEffect(() => {
+    dispatch(setVariants(null));
     const fetchData = async () => {
       try {
         const res = await fetch("/api/user/listAllVehicles");

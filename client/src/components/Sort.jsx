@@ -9,7 +9,13 @@ import { setData, setFilteredData, setPriceHightoLow, setPriceLowtoHigh, setYear
 const Sort = () => {
   const {userAllVehicles,allVariants} = useSelector(state => state.userListVehicles)
   const dispatch = useDispatch();
-  const { handleSubmit, control  } = useForm();
+  const { handleSubmit, control  } = useForm({
+    defaultValues:{
+      price:'',
+      year:''
+      
+    }
+  });
 
   const handleInputChange = (e) => {
 
@@ -50,7 +56,7 @@ const Sort = () => {
                   id="price"
                   select
                   label="Price"
-                  error={Boolean(field.value == "")}
+                  // error={Boolean(field.value == "")}
                   sx={{ m: 1, width: 150 ,borderRadius:"400px"}}
                   
                   onChange={(event) => {
@@ -75,7 +81,7 @@ const Sort = () => {
                   id="year"
                   select
                   label="Year"
-                  error={Boolean(field.value == "")}
+                  // error={Boolean(field.value == "")}
                   sx={{ m: 1, width: 150 }}
                   onChange={(event) => {
                     field.onChange(event); // Trigger react-hook-form's onChange function
