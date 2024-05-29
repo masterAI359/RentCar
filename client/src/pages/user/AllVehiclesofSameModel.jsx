@@ -9,6 +9,7 @@ import Filter from "../../components/Filter";
 import Sort from "../../components/Sort";
 import Header from "../../components/Header";
 import { setVariantModeOrNot } from "../../redux/user/sortfilterSlice";
+import { useEffect } from "react";
 
 const AllVehiclesofSameModel = () => {
   const { allVariants } = useSelector((state) => state.userListVehicles);
@@ -16,8 +17,16 @@ const AllVehiclesofSameModel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    // Set variant mode to true when all variants are available
+    if (allVariants) {
+      dispatch(setVariantModeOrNot(true));
+    }
+  }, [allVariants, dispatch]);
+
   //i made this allVariant state to show is filter currently used by search from home page or by AllListed Vehicles in Navbar
-  if (allVariants) dispatch(setVariantModeOrNot(true));
+  // if (allVariants) dispatch(setVariantModeOrNot(true));
 
   return (
     <>

@@ -30,7 +30,7 @@ import Razorpay from "./pages/user/Razorpay";
 import AllVehiclesofSameModel from "./pages/user/AllVehiclesofSameModel";
 import AddProductModal from "./pages/admin/components/AddProductModal";
 import VendorAddProductModal from "./pages/vendor/Components/VendorAddVehilceModal";
-
+import CarNotFound from "./pages/user/CarNotFound";
 
 function App() {
   return (
@@ -38,6 +38,8 @@ function App() {
       <BrowserRouter>
         {/* <ThemeProvider theme={theme}> */}
         <Routes>
+          {/* if user enter wrong url show this page */}
+          <Route path="*" element={<CarNotFound />} />
           {/* components with Navbar */}
           <Route element={<With_nav />}>
             <Route path="/" element={<Home />} />
@@ -63,21 +65,26 @@ function App() {
             <Route path="/allVariants" element={<AllVehiclesofSameModel />} />
             <Route path="/vehicleDetails" element={<VehicleDetails />} />
             <Route path="/orders" element={<Orders />} />
-            <Route path="/availableVehicles" element={<AvailableVehicles/>}/>
-            <Route path="/checkoutPage" element={<CheckoutPage/>}/>
-            <Route path="/razorpay" element={<Razorpay/>}/>
-
+            <Route path="/availableVehicles" element={<AvailableVehicles />} />
+            <Route path="/checkoutPage" element={<CheckoutPage />} />
+            <Route path="/razorpay" element={<Razorpay />} />
           </Route>
 
           {/* vendor private routes */}
           <Route element={<VendorPrivateRoute />}>
             <Route path="/vendorDashboard/*" element={<VendorDashboard />} />
             <Route
-                path="/vendorDashboard/vendorEditProductComponent"
-                element={<VendorEditProductComponent />}
-              />
-            <Route    path="/vendorDashboard/vendorDeleteVehicleModal" element={<VendorDeleteVehicleModal/>} />
-            <Route path="vendorDashboard/vendorAddProduct" element={<VendorAddProductModal />} />
+              path="/vendorDashboard/vendorEditProductComponent"
+              element={<VendorEditProductComponent />}
+            />
+            <Route
+              path="/vendorDashboard/vendorDeleteVehicleModal"
+              element={<VendorDeleteVehicleModal />}
+            />
+            <Route
+              path="vendorDashboard/vendorAddProduct"
+              element={<VendorAddProductModal />}
+            />
           </Route>
 
           {/* admin private routes */}

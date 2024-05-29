@@ -6,7 +6,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { MdMenuOpen } from "react-icons/md";
 import { useState } from "react";
 import { Drawer } from "antd";
-import { set } from "mongoose";
+
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -90,7 +90,7 @@ function Header() {
           >
             <div className="flex flex-col items-start justify-between gap-y-10">
               {navLinks.map((navlink, index) => (
-                <>
+            
                   <Link
                     key={index}
                     to={navlink.path}
@@ -99,7 +99,7 @@ function Header() {
                   >
                     {navlink.title}
                   </Link>
-                </>
+              
               ))}
 
               {currentUser && !currentUser.isAdmin && !currentUser.isVendor && (
