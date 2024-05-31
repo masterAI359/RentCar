@@ -140,7 +140,7 @@ const VendorBookingsTable = () => {
       <div className="max-w-4xl mx-auto pb-20">
         <VendorBookingDetailModal />
 
-        <p className="text-sm text-gray-600 mb-8">
+        <div className="text-sm text-gray-600 mb-8">
           {filtered && filtered.length > 0 ? (
             "Check out all of your Bookings"
           ) : (
@@ -148,7 +148,7 @@ const VendorBookingsTable = () => {
               No Bookings Yet
             </div>
           )}
-        </p>
+        </div>
         <div className="mb-8">
           {filtered &&
             filtered.length > 0 &&

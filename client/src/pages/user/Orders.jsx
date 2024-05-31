@@ -51,9 +51,9 @@ export default function Orders() {
     <div className="max-w-4xl mx-auto py-20">
       <UserOrderDetailsModal />
       <h1 className="text-4xl font-semibold mb-2">Your Bookings</h1>
-      <p className="text-sm text-gray-600 mb-8">
+      <div className="text-sm text-gray-600 mb-8">
         {bookings && bookings.length > 0 ? "Check out all of your Bookings" :  <div className="font-extrabold text-black flex justify-center items-center min-h-[500px]">No Bookings Yet</div>}
-      </p>
+      </div>
       <div className="mb-8">
         {bookings && bookings.length > 0
           && bookings.map((cur, idx) => {
