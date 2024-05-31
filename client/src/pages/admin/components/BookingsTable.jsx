@@ -3,7 +3,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 
 const BookingsTable = () => {
-  const [bookings, setBookings] = useState("");
+  const [bookings, setBookings] = useState([]);
 
   const fetchBookings = async () => {
     try {
@@ -126,8 +126,6 @@ const BookingsTable = () => {
 
   //rows
   const rows =
-    bookings &&
-    bookings.length > 0 &&
     bookings.map((cur) => ({
       id: cur._id,
       bookingId: cur._id,

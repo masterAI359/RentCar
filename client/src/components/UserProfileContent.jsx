@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProfileEdit from "../pages/user/ProfileEdit";
 import toast, { Toaster } from "react-hot-toast";
 import { setUpdated } from "../redux/user/userSlice";
+import { useEffect } from "react";
 
 const UserProfileContent = () => {
   const { email, username, profilePicture, phoneNumber, adress } = useSelector(
@@ -9,10 +10,13 @@ const UserProfileContent = () => {
   );
   const dispatch = useDispatch();
   const isUpdated = useSelector((state) => state.user.isUpdated);
-  if (isUpdated) {
-    toast.success("successfully updated");
-    dispatch(setUpdated(false));
-  }
+  
+  useEffect(() => {
+    if (isUpdated) {
+      toast.success("Successfully updated");
+      dispatch(setUpdated(false));
+    }
+  }, [isUpdated, dispatch]);
 
   return (
     <div className="px-4 mx-auto mt-12  bg-white w-full sm:px-6 lg:px-8">
@@ -27,9 +31,9 @@ const UserProfileContent = () => {
               className="w-full h-full rounded-full object-center object-cover"
             />
             <div className="absolute bottom-0 left-[60px] z-10 ">
-              <button type="button" className=" p-3">
+              <div type="button" className=" p-3">
                 <ProfileEdit />
-              </button>
+              </div>
             </div>
           </div>
           <div className="">
