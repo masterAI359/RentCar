@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setIsSweetAlert } from "../../redux/user/userSlice";
+import Footers from "../../components/Footer";
+
 
 function Home() {
   const ref = useRef(null);
@@ -104,6 +106,7 @@ function Home() {
       </div>
 
       <HeroParallax />
+      <Footers/>
     </>
   );
 }
