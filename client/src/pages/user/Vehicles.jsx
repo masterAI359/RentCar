@@ -12,6 +12,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Filter from "../../components/Filter";
 import Sort from "../../components/Sort";
 import { signOut } from "../../redux/user/userSlice";
+import Footers from "../../components/Footer";
+
 
 export const onVehicleDetail = async (id, dispatch, navigate) => {
   try {
@@ -69,6 +71,8 @@ const Vehicles = () => {
   }, [dispatch, data]);
 
   return (
+    <>
+   
     <div className=" lg:grid lg:grid-cols-12 gap-x-10 mx-28 justify-between">
       <div className=" mt-10 col-span-3   relative box-shadow-xl drop-shadow-xl ">
         <Filter />
@@ -263,6 +267,8 @@ const Vehicles = () => {
         </div>
       </div>
     </div>
+    <Footers/>
+    </>
   );
 };
 
