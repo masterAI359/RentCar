@@ -7,6 +7,7 @@ import {
   useSpring,
   MotionValue,
 } from "framer-motion";
+import { useMediaQuery } from 'react-responsive';
 
 
 
@@ -48,14 +49,27 @@ export const HeroParallax = () => {
 
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
 
+  const isMobile = useMediaQuery({ maxWidth: 500 });
+  const isTablet = useMediaQuery({ minWidth: 510, maxWidth: 900 });
+  const isDesktop = useMediaQuery({ minWidth: 901, maxWidth:1400 });
+
+  const translateXReverseMobile = useTransform(scrollYProgress, [0, .3], [1000, 70]);
+  const translateXTablet = useTransform(scrollYProgress, [0, .4], [1000, 300]);
+  const translateXReverseDesktop = useTransform(scrollYProgress, [0, .4], [1000,90])
+
   const translateX = useSpring(
-    useTransform(scrollYProgress, [0, .4], [1000, 200]),
+    isMobile
+    ? translateXReverseMobile
+    : isTablet
+    ? translateXTablet
+    : translateXReverseDesktop,
     springConfig
   );
   const translateXReverse = useSpring(
     useTransform(scrollYProgress, [0.7, 1], [250, -1000]),
     springConfig
   );
+ 
   const rotateX = useSpring(
     useTransform(scrollYProgress, [0, 0.150], [15, 0]),
     springConfig
@@ -73,7 +87,7 @@ export const HeroParallax = () => {
     springConfig
   );
   const translateY = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [-700, 500]),
+    useTransform(scrollYProgress, [0, 0.2], [-800, 600]),
     springConfig
   );
 
@@ -93,22 +107,21 @@ export const HeroParallax = () => {
           }}
           className=""
         >
-          <motion.div className="flex flex-row-reverse  mb-[200px] ">
+          <motion.div className="flex flex-row-reverse   mb-[200px] ">
             {firstRow.map((product,index) => (
-              <div key={index} className="flex bg-gradient-to-br from-green-400 to-slate-900 max-w-[1300px] rounded-lg py-[100px] px-[100px] mx-auto  ">
+              <div key={index} className="flex flex-col items-center lg:flex-row bg-gradient-to-br from-slate-900 to-green-500 max-w-full md:max-w-[800px] lg:max-w-[1300px] md:min-h-800px lg:min-h-[800px] gap-5 rounded-lg py-[50px] px-[50px] md:py-[100px] md:px-[100px] mx-auto  ">
                 <div>
-                  <h1 className="w-[400px] text-4xl    p-4 text-center  from-white via-gray-50 to-black-700 bg-gradient-to-bl bg-clip-text text-transparent font-bold capitalize  ">
+                  <h1 className="max-w-[250px] md:max-w-[600px] lg:max-w-[700px] lg:min-w-[500px] text-lg md:text-[34px]   p-1 md:p-4 text-justify lg:text-left  from-white via-gray-50 to-black-700 bg-gradient-to-bl bg-clip-text text-transparent font-bold capitalize  parallax1H1 my-[40px] leading-[2rem] md:leading-[4rem] ">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                     Adipisci odit accusantium saepe iure eligendi, nihil
                     perferendis reprehenderit dolore distinctio quaerat
                   </h1>
                 </div>
 
-                <div>
+                <div className="mt-10 lg:mt-[-10px] ">
                   <ProductCard
                     product={product}
                     translate={translateX}
-                
                   />
                 </div>
               </div>
@@ -183,15 +196,14 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-96  w-[100vh] relative flex-shrink-0"
+      className="group/product h-48 w-[50vh] md:h-96 md:w-[100vh] relative flex-shrink-0"
     >
       
-        <div className="m-10">
+        <div className="md:m-10">
           <img
             src={product.thumbnail}
-            height="600"
-            width="600"
-            className="object-contain object-left-top absolute h-full w-full inset-0"
+           
+            className="object-contain object-left-top absolute h-full w-full inset-0 max-w-[600px] max-h-[600px]"
             alt={product.title}
           />
         </div>

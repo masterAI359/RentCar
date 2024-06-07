@@ -578,3 +578,91 @@ body {
   /* border-radius: 40px !important; */
   height: 50px;
 }
+
+/* filter */
+
+ .transition-opacity {
+  transition: opacity 1.5s ease-in-out;
+}
+
+.opacity-0 {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.opacity-100 {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fade-in {
+  animation: fadeIn 1.5s forwards;
+}
+
+.fade-out {
+  animation: fadeOut 1.5s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+} 
+
+ .dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+  }
+
+  .dropdown-content.open {
+    max-height: 500px; /* Adjust based on your content's height */
+    opacity: 1;
+  }
+
+
+  /* filter plusicon transitions */
+
+  .plusicon{
+    transition: transform 1s ease-in-out;
+    
+    color: black;
+    font-size: 30px;
+  }
+  .plusiconOpen{
+    transform: rotate(-225deg);
+    background-color: white;
+    transition: 1.4s ease;
+    border-radius: 10px;
+  }
+
+  .iconClose{
+   background-color: rgb(189, 185, 185);
+   transition:  1s ease;
+    border-radius: 5px;
+  }
+
+
+  /* filter component width */
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .filterComponent {
+      max-width: 660px;
+      
+    }
+  }
+  
+

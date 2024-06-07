@@ -45,8 +45,8 @@ const Sort = () => {
   return (
     <div className=" drop-shadow-lg">
       <form onSubmit={handleSubmit}>
-        <div className="flex items-center">
-          <div>
+        <div className="flex items-center justify-center gap-1 md:gap-3 md:justify-start mx-auto md:mx-[80px] lg:mx-0">
+  
             <Controller
               control={control}
               name="price"
@@ -95,7 +95,7 @@ const Sort = () => {
                 </TextField>
               )}
             ></Controller>
-          </div>
+    
         </div>
       </form>
     </div>
