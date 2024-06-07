@@ -12,6 +12,7 @@ import {
  
   
   const Footers  = () =>  {
+    
     return (
       <div  className="bg-black text-white lg:pt-[100px] pb-[100px] p-10 rounded-none mt-[100px] lg:mt-[200px]" >
         <div className="w-full">

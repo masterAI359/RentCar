@@ -73,8 +73,8 @@ const Vehicles = () => {
   return (
     <>
    
-    <div className=" lg:grid lg:grid-cols-12 gap-x-10 mx-28 justify-between">
-      <div className=" mt-10 col-span-3   relative box-shadow-xl drop-shadow-xl ">
+    <div className=" lg:grid lg:grid-cols-12 gap-x-10 lg:mx-28 justify-between">
+      <div className=" mt-10 col-span-3   lg:relative box-shadow-xl lg:drop-shadow-xl">
         <Filter />
       </div>
       <div className="col-span-9">

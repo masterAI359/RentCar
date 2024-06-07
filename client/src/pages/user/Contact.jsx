@@ -1,9 +1,14 @@
+import Footers from "../../components/Footer"
 
 
 function Contact() {
   return (
+    <>
     <div>Contact
     </div>
+    <Footers/>
+    </>
+    
   )
 }
 
