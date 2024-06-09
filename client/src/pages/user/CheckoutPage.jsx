@@ -9,13 +9,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { displayRazorpay } from "./Razorpay";
 import { setPageLoading } from "../../redux/user/userSlice";
+import { setisPaymentDone } from "../../redux/user/LatestBookingsSlice";
 
 
 
+export async function sendBookingDetailsEmail (toEmail,bookingDetails,dispatch) {
+  try{
+    const sendEamil = await fetch('/api/user/sendBookingDetailsEamil',{
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({toEmail,data:bookingDetails})
+    })
+    const response = await sendEamil.json()
+
+    if(!response.ok){
+      dispatch(setisPaymentDone(false))
+      console.log("something went wrong while sending email")
+      return 
+    }
+    
+    return "good"
+  }
+  catch(error){
+    console.log(error);
+  }
+}
 
 const schema = z.object({
   email: z
@@ -50,16 +74,15 @@ const CheckoutPage = () => {
     dropoffDate,
   } = useSelector((state) => state.bookingDataSlice);
 
+  //latest bookings data taken from redux
+  const {data,paymentDone} =useSelector(state => state.latestBookingsSlice)
+
   const currentUser = useSelector((state) => state.user.currentUser);
   const singleVehicleDetail = useSelector(
     (state) => state.userListVehicles.singleVehicleDetail
   );
   const {isPageLoading} = useSelector(state => state.user)
   const dispatch  = useDispatch()
- 
-
-
-
 
   const { email, phoneNumber, adress } = currentUser;
   const { price } = singleVehicleDetail;
@@ -74,11 +97,9 @@ const CheckoutPage = () => {
   const Days = Math.round(diffMilliseconds / (1000 * 3600 * 24));
 
   //settting and checking coupon
-
   const [wrongCoupon, setWrongCoupon] = useState(false);
   const [discount, setDiscount] = useState(0);
   
-
   const couponValue = watch("coupon");
   const handleCoupon = () => {
     setWrongCoupon(false);
@@ -89,8 +110,6 @@ const CheckoutPage = () => {
       setWrongCoupon(true);
     }
   };
-
-
 
   //calculateing total price after coupon
   let totalPrice = price * Days + 50 - discount;
@@ -109,11 +128,22 @@ const CheckoutPage = () => {
     };
 
     dispatch(setPageLoading(true))
-    displayRazorpay(orderData,navigate,dispatch);
-   
-
-   
+    await displayRazorpay(orderData,navigate,dispatch);
   };
+
+  //after payment is done in displayRazorpay function we update the paymentDone from false to true our useEffect is triggered whenever state of paymentDone or data changes
+  // 5.call our sendBookingDetails function to call my sendEmailapi with recivers email and his last bookingsData
+  useEffect(() => {
+    if (paymentDone && data) {
+      const sendEmail = async () => {
+        await sendBookingDetailsEmail(email, data,dispatch);
+        dispatch(setisPaymentDone(false));
+      };
+
+      sendEmail();
+    }
+  }, [paymentDone, data, email, dispatch]);
+
 
   return (
     <>

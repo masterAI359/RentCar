@@ -1,3 +1,4 @@
+import { setLatestBooking, setisPaymentDone } from "../../redux/user/LatestBookingsSlice";
 import { setIsSweetAlert, setPageLoading } from "../../redux/user/userSlice";
 
 
@@ -17,6 +18,34 @@ export function loadScript(src) {
   });
 }
 
+
+//function to fetch latest bookings from db and update it to redux
+export const fetchLatestBooking = async (user_id,dispatch) => {
+  try {
+    const response = await fetch("/api/user/latestbookings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body:JSON.stringify({user_id})
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch latest booking");
+    }
+
+    const data = await response.json();
+    dispatch(setLatestBooking(data));
+    dispatch(setisPaymentDone(true))
+    return data;
+  } catch (error) {
+    console.error("Error fetching latest booking:", error);
+    return null;
+  }
+}; 
+
+
+//function related to razorpay payment
 export async function displayRazorpay(values, navigate , dispatch) {
   const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
@@ -59,7 +88,7 @@ export async function displayRazorpay(values, navigate , dispatch) {
 
       // final data to store in database
       const dbData = { ...values, ...data };
-      const result = await fetch("api/user/bookCar", {
+      const result = await fetch("/api/user/bookCar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,6 +98,12 @@ export async function displayRazorpay(values, navigate , dispatch) {
       const successStatus = await result.json();
       if (successStatus) {
         dispatch(setIsSweetAlert(true))
+
+        //1. when payment is successfull fetch latest bookigns 
+        //2. update the paymentdone to true from false (this is done inside fetchlatestBooking function)
+        //3. this display razorpay function was called initially from checkoutPage go to there
+        await fetchLatestBooking(values.user_id,dispatch)
+
         navigate("/");
         dispatch(setPageLoading(false))
       }
