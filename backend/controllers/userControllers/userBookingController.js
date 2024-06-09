@@ -4,6 +4,8 @@ import { errorHandler } from "../../utils/error.js";
 import Razorpay from "razorpay";
 import { availableAtDate } from "../../services/checkAvailableVehicle.js";
 import Vehicle from "../../models/vehicleModel.js";
+import nodemailer from 'nodemailer'
+
 
 export const BookCar = async (req, res, next) => {
   try {
@@ -302,3 +304,136 @@ export const findBookingsOfUser = async (req, res, next) => {
     next(errorHandler(500, "internal error in findBookingOfUser"));
   }
 };
+
+
+//api to ge the latestbookings details
+export const latestbookings =async (req,res,next)=> {
+  try{
+    const {user_id} = req.body;
+    console.log(user_id)
+    const convertedUserId = new mongoose.Types.ObjectId(user_id);
+
+    const bookings = await Booking.aggregate([
+      {
+        $match: {
+          userId: convertedUserId,
+        },
+      },
+      {
+        $lookup: {
+          from: "vehicles",
+          localField: "vehicleId",
+          foreignField: "_id",
+          as: "result",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          bookingDetails: "$$ROOT",
+          vehicleDetails: {
+            $arrayElemAt: ["$result", 0],
+          },
+        },
+      },
+      {
+        $sort:
+          /**
+           * Provide any number of field/order pairs.
+           */
+          {
+            "bookingDetails.createdAt": -1
+          }
+      },
+      {
+        $limit:
+          /**
+           * Provide the number of documents to limit.
+           */
+          1
+      }
+    ]);
+
+    if(!bookings){
+      res.status(404,"error no such booking")
+    }
+
+    res.status(200).json(bookings);
+
+  }
+  catch(error){
+    console.log(error)
+    next(errorHandler(500,'internal server error in latestbookings'))
+  }
+}
+
+
+//send booking details to user email
+export const sendBookingDetailsEamil = (req,res,next)=> {
+  try{
+    console.log("hello")
+    const {toEmail,data} = req.body
+    console.log("hi")
+    console.log(req.body)
+   
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_HOST,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+
+    const generateEmailHtml = (bookingDetails, vehicleDetails) => {
+      const pickupDate = new Date(bookingDetails.pickupDate);
+      const dropOffDate = new Date(bookingDetails.dropOffDate);
+  
+      return `
+          <div style="font-family: Arial, sans-serif; padding: 10px;">
+              <h2>Booking Details</h2>
+              <hr>
+              <p><strong>Booking Id:</strong> ${bookingDetails._id}</p>
+              <p><strong>Total Amount:</strong> ${bookingDetails.totalPrice}</p>
+              <p><strong>Pickup Location:</strong> ${bookingDetails.pickUpLocation}</p>
+              <p><strong>Pickup Date:</strong> ${pickupDate.getDate()}/${pickupDate.getMonth() + 1}/${pickupDate.getFullYear()} ${pickupDate.getHours()}:${pickupDate.getMinutes()}</p>
+              <p><strong>Dropoff Location:</strong> ${bookingDetails.dropOffLocation}</p>
+              <p><strong>Dropoff Date:</strong> ${dropOffDate.getDate()}/${dropOffDate.getMonth() + 1}/${dropOffDate.getFullYear()} ${dropOffDate.getHours()}:${dropOffDate.getMinutes()}</p>
+              <h2>Vehicle Details</h2>
+              <hr>
+              <p><strong>Vehicle Number:</strong> ${vehicleDetails.registeration_number}</p>
+              <p><strong>Model:</strong> ${vehicleDetails.model}</p>
+              <p><strong>Company:</strong> ${vehicleDetails.company}</p>
+              <p><strong>Vehicle Type:</strong> ${vehicleDetails.car_type}</p>
+              <p><strong>Seats:</strong> ${vehicleDetails.seats}</p>
+              <p><strong>Fuel Type:</strong> ${vehicleDetails.fuel_type}</p>
+              <p><strong>Transmission:</strong> ${vehicleDetails.transmition}</p>
+              <p><strong>Manufacturing Year:</strong> ${vehicleDetails.year_made}</p>
+          </div>
+      `;
+  };
+    
+    var mailOptions = {
+      from: process.env.EMAIL_HOST,
+      to: toEmail,
+      subject: 'rentaride.shop booking details',
+      html: generateEmailHtml(data[0].bookingDetails,data[0].vehicleDetails)
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(200).json("Email sent successfully")
+      }
+    });
+
+
+
+  }
+  catch(error){
+    console.log(error)
+    next(errorHandler(500,'internal server error in sendBookingDetailsEmail'))
+  }
+}

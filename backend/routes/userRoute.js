@@ -4,7 +4,7 @@ import { verifyToken } from "../utils/verifyUser.js";
 import { updateUser ,deleteUser , signOut } from "../controllers/userControllers/userController.js";
 import { checkAvailability, listAllVehicles, searchCar, showVehicleDetails } from "../controllers/userControllers/userAllVehiclesController.js";
 import { editUserProfile } from "../controllers/userControllers/userProfileController.js";
-import { BookCar, razorpayOrder, getVehiclesWithoutBooking, filterVehicles, showOneofkind, showAllVariants, findBookingsOfUser } from "../controllers/userControllers/userBookingController.js";
+import { BookCar, razorpayOrder, getVehiclesWithoutBooking, filterVehicles, showOneofkind, showAllVariants, findBookingsOfUser, sendBookingDetailsEamil, latestbookings } from "../controllers/userControllers/userBookingController.js";
 
 
 const router = express.Router()
@@ -24,6 +24,9 @@ router.post('/filterVehicles',verifyToken,filterVehicles)
 router.post('/getVehiclesWithoutBooking',verifyToken,getVehiclesWithoutBooking,showAllVariants)
 router.post('/showSingleofSameModel',getVehiclesWithoutBooking,showOneofkind)
 router.post('/findBookingsOfUser',verifyToken,findBookingsOfUser)
+router.post('/latestbookings',latestbookings)
+router.post('/sendBookingDetailsEamil',sendBookingDetailsEamil)
+
 
 
 
