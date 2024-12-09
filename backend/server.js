@@ -32,7 +32,7 @@ App.listen(port, () => {
 });
 
 App.use(cors({
-  origin:'https://rent-a-ride-two.vercel.app'
+  origin:'https://rent-a-ride-two.vercel.app/'
 }));
 
 App.use('*', cloudinaryConfig);
