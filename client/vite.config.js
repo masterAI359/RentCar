@@ -9,7 +9,7 @@ export default defineConfig({
     proxy:{
       "/api":
       {
-        target:import.meta.env.BACKEND_URL,
+        target:"https://rent-a-ride-1.onrender.com",
         secure:true
       }
     }
