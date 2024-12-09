@@ -8,7 +8,7 @@ export default defineConfig({
     proxy:{
       "/api":
       {
-        target:"http://rent-a-ride-1.onrender.com",
+        target:"https://rent-a-ride-1.onrender.com",
         secure:true
       }
     }
