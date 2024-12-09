@@ -1,7 +1,7 @@
-import { addDynamicIconSelectors } from '@iconify/tailwind';
+// import { addDynamicIconSelectors } from '@iconify/tailwind';
 import defaultTheme from "tailwindcss/defaultTheme";
 
-import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
+// import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColorPalette";
 
 const tailwindConfig = {
   content: [
