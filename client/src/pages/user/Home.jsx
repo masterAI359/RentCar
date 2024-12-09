@@ -1,7 +1,7 @@
 import styles from "../../index";
 import Herocar from "../../Assets/homepage_car_copy.jpeg";
 import CarSearch from "./CarSearch";
-import { HeroParallax } from "../../components/ui/Paralax";
+// import { HeroParallax } from "../../components/ui/Paralax";
 import { useRef } from "react";
 
 import Swal from "sweetalert2";
@@ -45,7 +45,7 @@ function Home() {
       {isSweetAlert && sweetalert()}
 
       {/* This is div is the container for the dot background */}
-      <div className="relative h-full w-full mx-auto sm:max-w-[900px] lg:max-w-[1500px] bg-white min-h-[72vh] md:min-h-[60vh] lg:min-h-[73vh]">
+      <div className="relative h-[100vh] w-full mx-auto sm:max-w-[900px] lg:max-w-[1500px] bg-white min-h-[72vh] md:min-h-[60vh] lg:min-h-[73vh]">
         <div
           className={`px-12 lg:px-28 absolute top-0   z-10 w-full   justify-between items-center flex flex-col  sm:flex-row mt-[50px] md:mt-[170px] gap-10`}
         >
@@ -105,7 +105,7 @@ function Home() {
         <CarSearch />
       </div>
 
-      <HeroParallax />
+      {/* <HeroParallax /> */}
       <Footers/>
     </>
   );

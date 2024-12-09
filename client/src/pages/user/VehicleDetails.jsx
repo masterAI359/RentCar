@@ -81,9 +81,9 @@ const VehicleDetails = () => {
   
   return (
     <div>
-      <section className="py-12 sm:py-8 bg-white">
+      <section className="py-12 sm:py-8 lg:py-0 bg-white">
         <div className="container mx-auto px-4">
-          <div className="lg:col-gap-12 xl:col-gap-16 mt-10 grid grid-cols-1 gap-12 lg:mt- lg:grid-cols-5 lg:gap-16">
+          <div className="lg:col-gap-12 xl:col-gap-16  grid grid-cols-1 gap-12  lg:grid-cols-5 lg:gap-16">
             <div className="lg:col-span-3 lg:row-end-1">
               <div className="lg:flex lg:items-start mt-[100px]">
                 <div className="lg:order-2 lg:ml-5">
@@ -126,7 +126,7 @@ const VehicleDetails = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-2 lg:row-span-2 lg:row-end-2 bg-slate-50 px-10 pb-5 pt-1">
+            <div className="lg:col-span-2 lg:row-span-2 lg:row-end-2 bg-slate-50 px-10 min-h-screen  pb-5 pt-10 ">
               <h1 className="sm: text-2xl font-bold text-gray-900 sm:text-3xl capitalize">
                 {singleVehicleDetail.name}
               </h1>
