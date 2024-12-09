@@ -10,7 +10,8 @@ export default defineConfig({
       "/api":
       {
         target:"https://rent-a-ride-1.onrender.com",
-        secure:true
+        changeOrigin: true,
+        secure: false,
       }
     }
   }
