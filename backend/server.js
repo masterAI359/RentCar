@@ -31,7 +31,9 @@ App.listen(port, () => {
   console.log("server listening !");
 });
 
-App.use(cors());
+App.use(cors({
+  origin:'https://rent-a-ride-bg2xgxks8-jeevan-ajs-projects.vercel.app'
+}));
 
 App.use('*', cloudinaryConfig);
 
