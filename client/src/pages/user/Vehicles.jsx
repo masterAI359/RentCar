@@ -22,6 +22,7 @@ export const onVehicleDetail = async (id, dispatch, navigate) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials:'include',
       body: JSON.stringify({ id }),
     });
     const data = await res.json();
@@ -56,7 +57,9 @@ const Vehicles = () => {
     const fetchData = async () => {
       console.log(BASE_URL)
       try {
-        const res = await fetch(`${BASE_URL}/api/user/listAllVehicles`);
+        const res = await fetch(`${BASE_URL}/api/user/listAllVehicles`,{
+          credentials:'include'
+        });
         if (!res.ok) {
           console.log("not success");
         }
