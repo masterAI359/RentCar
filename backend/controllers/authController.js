@@ -63,12 +63,14 @@ export const refreshToken = async (req, res, next) => {
         maxAge: 900000,
         sameSite: "None",
         secure: true,
+        domain: "rent-a-ride-two.vercel.app"
       }) // 15 minutes
       .cookie("refresh_token", newRefreshToken, {
         httpOnly: true,
         maxAge: 604800000,
         sameSite: "None",
         secure: true,
+        domain: "rent-a-ride-two.vercel.app"
       }) // 7 days
       .status(200)
       .json({ accessToken: newAccessToken });
@@ -111,14 +113,16 @@ export const signIn = async (req, res, next) => {
       .cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: 900000,
-        SameSite: "None",
-        Secure: true,
+        sameSite: "None",
+        secure: true,
+        domain: "rent-a-ride-two.vercel.app"
       }) // 15 minutes
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
         maxAge: 604800000,
         sameSite: "None",
         secure: true,
+        domain: "rent-a-ride-two.vercel.app"
       }) // 7 days
       .status(200)
       .json(responsePayload);
