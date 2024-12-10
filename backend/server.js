@@ -35,7 +35,7 @@ const corsOrigins = process.env.CORS
   ? process.env.CORS.split(',').map(origin => origin.trim())
   : ['https://rent-a-ride-two.vercel.app', 'http://localhost:5173'];
 
-app.use(cors({
+App.use(cors({
   origin: function (origin, callback) {
     console.log('Incoming Request Origin:', origin);
 
