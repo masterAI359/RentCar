@@ -16,9 +16,8 @@ import Footers from "../../components/Footer";
 
 
 export const onVehicleDetail = async (id, dispatch, navigate) => {
-  console.log(import.meta.env.VITE_PRODUCTION_BACKEND_URL)
   try {
-    const res = await fetch(import.meta.env.VITE_PRODUCTION_BACKEND_URL + "/api/user/showVehicleDetails", {
+    const res = await fetch("/api/user/showVehicleDetails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,15 +48,17 @@ const Vehicles = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.MODE === 'production' 
+  ? import.meta.env.VITE_PRODUCTION_BACKEND_URL 
+  : '';
   //allVariants are set to null when we enter AllVehicles from navbar
-  
 
   useEffect(() => {
     dispatch(setVariants(null));
     const fetchData = async () => {
-      console.log(import.meta.env.VITE_PRODUCTION_BACKEND_URL)
+      console.log(BASE_URL)
       try {
-        const res = await fetch(import.meta.env.VITE_PRODUCTION_BACKEND_URL + "/api/user/listAllVehicles");
+        const res = await fetch(`${BASE_URL}/api/user/listAllVehicles`);
         if (!res.ok) {
           console.log("not success");
         }
@@ -66,7 +67,7 @@ const Vehicles = () => {
           dispatch(showVehicles(data));
         }
       } catch (error) {
-        console.log(error);
+        console.log(error);           
       }
     };
     fetchData();
