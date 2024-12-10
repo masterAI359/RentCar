@@ -31,9 +31,27 @@ App.listen(port, () => {
   console.log("server listening !");
 });
 
-App.use(cors({
-  origin:process.env.CORS
+const corsOrigins = process.env.CORS 
+  ? process.env.CORS.split(',').map(origin => origin.trim())
+  : ['https://rent-a-ride-two.vercel.app', 'http://localhost:5173'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    console.log('Incoming Request Origin:', origin);
+
+    // Allow requests with no origin (mobile apps, cURL)
+    if (!origin) return callback(null, true);
+
+    // Check if the origin is allowed
+    if (corsOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.error('CORS Error: Origin not allowed:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
 }));
+
 
 App.use('*', cloudinaryConfig);
 
