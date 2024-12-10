@@ -4,6 +4,8 @@ import User from "../models/userModel.js";
 import { refreshToken } from "../controllers/authController.js";
 
 export const verifyToken = async (req, res, next) => {
+
+  console.log(req)
   const accessToken = req.cookies.access_token;
   const refreshToken = req.cookies.refresh_token;
 
