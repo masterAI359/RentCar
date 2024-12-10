@@ -2,12 +2,15 @@ import jwt from "jsonwebtoken";
 import { errorHandler } from "./error.js";
 import User from "../models/userModel.js";
 import { refreshToken } from "../controllers/authController.js";
+import {access} from "fs";
 
 export const verifyToken = async (req, res, next) => {
 
-  console.log(req)
+  
   const accessToken = req.cookies.access_token;
   const refreshToken = req.cookies.refresh_token;
+
+  console.log(accessToken,refreshToken)
 
   if (!accessToken) {
     if (!refreshToken){
