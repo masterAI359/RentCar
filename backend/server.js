@@ -33,7 +33,7 @@ App.listen(port, () => {
 
 const allowedOrigins = ['https://rent-a-ride-two.vercel.app', 'http://localhost:5173']; // Add allowed origins here
 
-app.use(
+App.use(
   cors({
     origin: (origin, callback) => {
       // Allow all origins or restrict based on logic
