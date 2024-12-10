@@ -16,9 +16,9 @@ import Footers from "../../components/Footer";
 
 
 export const onVehicleDetail = async (id, dispatch, navigate) => {
-  console.log(import.meta.env.PRODUCTION_BACKEND_URL)
+  console.log(import.meta.env.VITE_PRODUCTION_BACKEND_URL)
   try {
-    const res = await fetch(import.meta.env.PRODUCTION_BACKEND_URL + "/api/user/showVehicleDetails", {
+    const res = await fetch(import.meta.env.VITE_PRODUCTION_BACKEND_URL + "/api/user/showVehicleDetails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,9 +55,9 @@ const Vehicles = () => {
   useEffect(() => {
     dispatch(setVariants(null));
     const fetchData = async () => {
-      console.log(import.meta.env.PRODUCTION_BACKEND_URL)
+      console.log(import.meta.env.VITE_PRODUCTION_BACKEND_URL)
       try {
-        const res = await fetch(import.meta.env.PRODUCTION_BACKEND_URL + "/api/user/listAllVehicles");
+        const res = await fetch(import.meta.env.VITE_PRODUCTION_BACKEND_URL + "/api/user/listAllVehicles");
         if (!res.ok) {
           console.log("not success");
         }
