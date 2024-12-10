@@ -31,33 +31,21 @@ App.listen(port, () => {
   console.log("server listening !");
 });
 
-const corsOrigins = process.env.CORS 
-  ? process.env.CORS.split(',').map(origin => origin.trim())
-  : ['https://rent-a-ride-two.vercel.app', 'http://localhost:5173'];
+const allowedOrigins = ['https://rent-a-ride-two.vercel.app', 'http://localhost:5173']; // Add allowed origins here
 
-
-  console.log(corsOrigins)
-
-// App.use(cors({
-//   origin: function (origin, callback) {
-//     console.log('Incoming Request Origin:', origin);
-
-//     // Allow requests with no origin (mobile apps, cURL)
-//     if (!origin) return callback(null, true);
-
-//     // Check if the origin is allowed
-//     if (corsOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       console.error('CORS Error: Origin not allowed:', origin);
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-// }));
-
-App.use(cors({
-  origin:"*"
-}))
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow all origins or restrict based on logic
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true, // Enables the Access-Control-Allow-Credentials header
+  })
+);
 
 
 App.use('*', cloudinaryConfig);
