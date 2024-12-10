@@ -51,8 +51,8 @@ export const refreshToken = async (req, res, next) => {
     await User.updateOne({ _id: user._id }, { refreshToken: newRefreshToken });
 
     res
-      .cookie("access_token", newAccessToken, { httpOnly: true, maxAge: 900000,sameSite: 'none', }) // 15 minutes
-      .cookie("refresh_token", newRefreshToken, { httpOnly: true, maxAge: 604800000 ,sameSite: 'none',}) // 7 days
+      .cookie("access_token", newAccessToken, { httpOnly: true, maxAge: 900000,sameSite: 'none',secure:true }) // 15 minutes
+      .cookie("refresh_token", newRefreshToken, { httpOnly: true, maxAge: 604800000 ,sameSite: 'none',secure:true}) // 7 days
       .status(200)
       .json({ accessToken: newAccessToken });
   } catch (error) {
@@ -89,17 +89,20 @@ export const signIn = async (req, res, next) => {
       isAdmin: validUser.isAdmin,
       isUser: validUser.isUser,
     };
-    next();
+    
 
     res
-      .cookie("access_token", accessToken, { httpOnly: true, maxAge: 900000 ,sameSite: 'none',}) // 15 minutes
+      .cookie("access_token", accessToken, { httpOnly: true, maxAge: 900000 ,sameSite: 'none', secure:true}) // 15 minutes
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
         maxAge: 604800000,
         sameSite: 'none',
+        secure:true
       }) // 7 days
       .status(200)
       .json(responsePayload);
+
+      next();
   } catch (error) {
     next(error);
   }
