@@ -28,35 +28,54 @@ export const signUp = async (req, res, next) => {
 //refreshTokens
 export const refreshToken = async (req, res, next) => {
   const refreshToken = req.cookies.refresh_token;
-  if (!refreshToken){
-    res.clearCookie('access_token','refresh_token')
+  if (!refreshToken) {
+    res.clearCookie("access_token", "refresh_token");
     return next(errorHandler(401, "You are not authenticated"));
-  } 
+  }
 
   try {
     const decoded = Jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
     const user = await User.findById(decoded.id);
 
     if (!user) return next(errorHandler(403, "Invalid refresh token"));
-    if (user.refreshToken !== refreshToken){
-      res.clearCookie('access_token',"refresh_token")
+    if (user.refreshToken !== refreshToken) {
+      res.clearCookie("access_token", "refresh_token");
       return next(errorHandler(403, "Invalid refresh token"));
+    }
 
-    } 
-
-    const newAccessToken = Jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN, { expiresIn: '15m' });
-    const newRefreshToken = Jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN, { expiresIn: '7d' });
+    const newAccessToken = Jwt.sign(
+      { id: user._id },
+      process.env.ACCESS_TOKEN,
+      { expiresIn: "15m" }
+    );
+    const newRefreshToken = Jwt.sign(
+      { id: user._id },
+      process.env.REFRESH_TOKEN,
+      { expiresIn: "7d" }
+    );
 
     // Update the refresh token in the database for the user
     await User.updateOne({ _id: user._id }, { refreshToken: newRefreshToken });
 
     res
-      .cookie("access_token", newAccessToken, { httpOnly: true, maxAge: 900000,sameSite: 'none',secure:true }) // 15 minutes
-      .cookie("refresh_token", newRefreshToken, { httpOnly: true, maxAge: 604800000 ,sameSite: 'none',secure:true}) // 7 days
+      .cookie("access_token", newAccessToken, {
+        httpOnly: true,
+        maxAge: 900000,
+        sameSite: "none",
+        secure: true,
+        domain: '.vercel.app'
+      }) // 15 minutes
+      .cookie("refresh_token", newRefreshToken, {
+        httpOnly: true,
+        maxAge: 604800000,
+        sameSite: "none",
+        secure: true,
+        domain: '.vercel.app'
+      }) // 7 days
       .status(200)
       .json({ accessToken: newAccessToken });
   } catch (error) {
-    next(errorHandler(500,'error in refreshToken controller in server'));
+    next(errorHandler(500, "error in refreshToken controller in server"));
   }
 };
 
@@ -89,20 +108,26 @@ export const signIn = async (req, res, next) => {
       isAdmin: validUser.isAdmin,
       isUser: validUser.isUser,
     };
-    
 
     res
-      .cookie("access_token", accessToken, { httpOnly: true, maxAge: 900000 ,sameSite: 'none', secure:true}) // 15 minutes
+      .cookie("access_token", accessToken, {
+        httpOnly: true,
+        maxAge: 900000,
+        sameSite: "none",
+        secure: true,
+        domain: '.vercel.app'
+      }) // 15 minutes
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
         maxAge: 604800000,
-        sameSite: 'none',
-        secure:true
+        sameSite: "none",
+        secure: true,
+        domain: ".vercel.app",
       }) // 7 days
       .status(200)
       .json(responsePayload);
 
-      next();
+    next();
   } catch (error) {
     next(error);
   }
@@ -122,7 +147,8 @@ export const google = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
           expires: expireDate,
-          sameSite: 'none',
+          sameSite: "none",
+          domain: ".vercel.app",
         })
         .status(200)
         .json(rest);
@@ -152,7 +178,9 @@ export const google = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
           expires: expireDate,
-          sameSite: 'none',
+          sameSite: "none",
+          secure: true,
+          domain: ".vercel.app",
         })
         .status(200)
         .json(rest);
