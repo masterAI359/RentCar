@@ -55,8 +55,9 @@ const Vehicles = () => {
   useEffect(() => {
     dispatch(setVariants(null));
     const fetchData = async () => {
+      console.log(import.meta.env.PRODUCTION_BACKEND_URL)
       try {
-        const res = await fetch("/api/user/listAllVehicles");
+        const res = await fetch(import.meta.env.PRODUCTION_BACKEND_URL + "/api/user/listAllVehicles");
         if (!res.ok) {
           console.log("not success");
         }
