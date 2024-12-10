@@ -61,16 +61,16 @@ export const refreshToken = async (req, res, next) => {
       .cookie("access_token", newAccessToken, {
         httpOnly: true,
         maxAge: 900000,
-        sameSite: "none",
-        secure: true,
-        domain: '.vercel.app'
+        SameSite: "None",
+        Secure: true,
+        Domain: '.vercel.app'
       }) // 15 minutes
       .cookie("refresh_token", newRefreshToken, {
         httpOnly: true,
         maxAge: 604800000,
-        sameSite: "none",
-        secure: true,
-        domain: '.vercel.app'
+        SameSite: "None",
+        Secure: true,
+        Domain: '.vercel.app'
       }) // 7 days
       .status(200)
       .json({ accessToken: newAccessToken });
@@ -113,16 +113,16 @@ export const signIn = async (req, res, next) => {
       .cookie("access_token", accessToken, {
         httpOnly: true,
         maxAge: 900000,
-        sameSite: "none",
-        secure: true,
-        domain: '.vercel.app'
+        SameSite: "None",
+        Secure: true,
+        Domain: '.vercel.app'
       }) // 15 minutes
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
         maxAge: 604800000,
-        sameSite: "none",
-        secure: true,
-        domain: ".vercel.app",
+        SameSite: "None",
+        Secure: true,
+        Domain: ".vercel.app",
       }) // 7 days
       .status(200)
       .json(responsePayload);
@@ -147,8 +147,8 @@ export const google = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
           expires: expireDate,
-          sameSite: "none",
-          domain: ".vercel.app",
+          SameSite: "None",
+          Domain: ".vercel.app",
         })
         .status(200)
         .json(rest);
@@ -178,7 +178,7 @@ export const google = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
           expires: expireDate,
-          sameSite: "none",
+          sameSite: "None",
           secure: true,
           domain: ".vercel.app",
         })
