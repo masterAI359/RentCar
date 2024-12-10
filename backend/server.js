@@ -35,14 +35,8 @@ const allowedOrigins = ['https://rent-a-ride-two.vercel.app', 'http://localhost:
 
 App.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow all origins or restrict based on logic
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: allowedOrigins,
+    methods:['GET', 'PUT', 'POST' ,'PATCH','DELETE'],
     credentials: true, // Enables the Access-Control-Allow-Credentials header
   })
 );
