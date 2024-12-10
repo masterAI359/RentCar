@@ -48,9 +48,7 @@ const Vehicles = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const BASE_URL = import.meta.env.MODE === 'production' 
-  ? import.meta.env.VITE_PRODUCTION_BACKEND_URL 
-  : '';
+  const BASE_URL = import.meta.env.VITE_PRODUCTION_BACKEND_URL
   //allVariants are set to null when we enter AllVehicles from navbar
 
   useEffect(() => {
