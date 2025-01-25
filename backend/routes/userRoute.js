@@ -10,20 +10,22 @@ import { BookCar, razorpayOrder, getVehiclesWithoutBooking, filterVehicles, show
 const router = express.Router()
 
 
-router.post('/update/:id',verifyToken,updateUser)
-router.delete('/delete/:id',verifyToken,deleteUser)
-router.get('/signout',verifyToken,signOut)
-router.get('/listAllVehicles',verifyToken,listAllVehicles)
-router.post('/showVehicleDetails',verifyToken,showVehicleDetails)
-router.post('/editUserProfile/:id',verifyToken,editUserProfile)
+//Removed verifyToken middleware because of (cors) unable to set and access cookie since i am using free domain from vercel
+
+router.post('/update/:id',updateUser)
+router.delete('/delete/:id',deleteUser)
+router.get('/signout',signOut)
+router.get('/listAllVehicles',listAllVehicles)
+router.post('/showVehicleDetails',showVehicleDetails)
+router.post('/editUserProfile/:id',editUserProfile)
 // router.post('/searchCar',searchCar)
 // router.post('/checkAvailability',checkAvailability)
-router.post('/razorpay',verifyToken,razorpayOrder)
-router.post('/bookCar',verifyToken,BookCar)
-router.post('/filterVehicles',verifyToken,filterVehicles)
-router.post('/getVehiclesWithoutBooking',verifyToken,getVehiclesWithoutBooking,showAllVariants)
+router.post('/razorpay',razorpayOrder)
+router.post('/bookCar',BookCar)
+router.post('/filterVehicles',filterVehicles)
+router.post('/getVehiclesWithoutBooking',getVehiclesWithoutBooking,showAllVariants)
 router.post('/showSingleofSameModel',getVehiclesWithoutBooking,showOneofkind)
-router.post('/findBookingsOfUser',verifyToken,findBookingsOfUser)
+router.post('/findBookingsOfUser',findBookingsOfUser)
 router.post('/latestbookings',latestbookings)
 router.post('/sendBookingDetailsEamil',sendBookingDetailsEamil)
 
