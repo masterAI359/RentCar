@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
           target: env.VITE_PRODUCTION_BACKEND_URL,
           changeOrigin: true,
           secure: false,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          // rewrite: (path) => path.replace(/^\/api/, '')
         }
       } : {}
     }
