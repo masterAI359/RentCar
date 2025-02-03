@@ -49,6 +49,9 @@ export const fetchLatestBooking = async (user_id,dispatch) => {
 export async function displayRazorpay(values, navigate , dispatch) {
   const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
+  let refreshToken = localStorage.getItem("refreshToken")
+  let accessToken = localStorage.getItem("accessToken")
+
   if (!res) {
     alert("Razorpay SDK failed to load. Are you online?");
     return;
@@ -58,8 +61,10 @@ export async function displayRazorpay(values, navigate , dispatch) {
   const result = await fetch("api/user/razorpay", {
     method: "POST",
     headers: {
+       "Authorization": `Bearer ${refreshToken},${accessToken}`,
       "Content-Type": "application/json",
     },
+
     body: JSON.stringify(values),
   });
 

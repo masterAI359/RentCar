@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 const BookingsTable = () => {
   const [bookings, setBookings] = useState([]);
 
+
   const fetchBookings = async () => {
     try {
       const res = await fetch("/api/admin/allBookings", {
@@ -126,7 +127,7 @@ const BookingsTable = () => {
 
   //rows
   const rows =
-    bookings.map((cur) => ({
+    bookings?.map((cur) => ({
       id: cur._id,
       bookingId: cur._id,
       image: cur.vehicleDetails.image[0],
