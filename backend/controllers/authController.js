@@ -27,9 +27,20 @@ export const signUp = async (req, res, next) => {
 
 //refreshTokens
 export const refreshToken = async (req, res, next) => {
-  const refreshToken = req.cookies.refresh_token;
+  // const refreshToken = req.cookies.refresh_token;
+
+  if (!req.headers.authorization) {
+    return next(errorHandler(403, "bad request no header provided"));
+  }
+
+  const refreshToken = req.headers.authorization.split(" ")[1].split(",")[0];
+  const accessToken = req.headers.authorization.split(" ")[1].split(",")[1];
+
+  console.log(refreshToken);
+  console.log(accessToken);
+
   if (!refreshToken) {
-    res.clearCookie("access_token", "refresh_token");
+    // res.clearCookie("access_token", "refresh_token");
     return next(errorHandler(401, "You are not authenticated"));
   }
 
@@ -39,7 +50,7 @@ export const refreshToken = async (req, res, next) => {
 
     if (!user) return next(errorHandler(403, "Invalid refresh token"));
     if (user.refreshToken !== refreshToken) {
-      res.clearCookie("access_token", "refresh_token");
+      // res.clearCookie("access_token", "refresh_token");
       return next(errorHandler(403, "Invalid refresh token"));
     }
 
@@ -63,17 +74,17 @@ export const refreshToken = async (req, res, next) => {
         maxAge: 900000,
         sameSite: "None",
         secure: true,
-        domain: "rent-a-ride-two.vercel.app"
+        domain: "rent-a-ride-two.vercel.app",
       }) // 15 minutes
       .cookie("refresh_token", newRefreshToken, {
         httpOnly: true,
         maxAge: 604800000,
         sameSite: "None",
         secure: true,
-        domain: "rent-a-ride-two.vercel.app"
+        domain: "rent-a-ride-two.vercel.app",
       }) // 7 days
       .status(200)
-      .json({ accessToken: newAccessToken });
+      .json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
   } catch (error) {
     next(errorHandler(500, "error in refreshToken controller in server"));
   }
@@ -86,22 +97,31 @@ export const signIn = async (req, res, next) => {
     if (!validUser) return next(errorHandler(404, "user not found"));
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(401, "wrong credentials"));
-    const accessToken = Jwt.sign(
-      { id: validUser._id },
-      process.env.ACCESS_TOKEN,
-      { expiresIn: "15m" }
-    ); //accessToken expires in 15 minutes
-    const refreshToken = Jwt.sign(
-      { id: validUser._id },
-      process.env.REFRESH_TOKEN,
-      { expiresIn: "7d" }
-    ); //refreshToken expires in 7 days
+    let accessToken = "";
+    let refreshToken = "";
+    accessToken = Jwt.sign({ id: validUser._id }, process.env.ACCESS_TOKEN, {
+      expiresIn: "15m",
+    }); //accessToken expires in 15 minutes
+    refreshToken = Jwt.sign({ id: validUser._id }, process.env.REFRESH_TOKEN, {
+      expiresIn: "7d",
+    }); //refreshToken expires in 7 days
 
-    await User.updateOne({ _id: validUser._id }, { refreshToken }); //store the refresh token in db
+    const updatedData = await User.findByIdAndUpdate(
+      { _id: validUser._id },
+      { refreshToken },
+      { new: true }
+    ); //store the refresh token in db
 
-    const { password: hashedPassword, isAdmin, ...rest } = validUser._doc;
+    //separating password from the updatedData
+    const { password: hashedPassword, isAdmin, ...rest } = updatedData._doc;
 
-    const responsePayload = { isAdmin, password: hashedPassword, ...rest };
+    //not sending users hashed password to frontend
+    const responsePayload = {
+      refreshToken: refreshToken,
+      accessToken,
+      isAdmin,
+      ...rest,
+    };
 
     req.user = {
       ...rest,
@@ -109,27 +129,29 @@ export const signIn = async (req, res, next) => {
       isUser: validUser.isUser,
     };
 
-    res
-      .cookie("access_token", accessToken, {
-        httpOnly: true,
-        maxAge: 900000,
-        sameSite: "None",
-        secure: true,
-        domain: "rent-a-ride-two.vercel.app"
-      }) // 15 minutes
-      .cookie("refresh_token", refreshToken, {
-        httpOnly: true,
-        maxAge: 604800000,
-        sameSite: "None",
-        secure: true,
-        domain: "rent-a-ride-two.vercel.app"
-      }) // 7 days
-      .status(200)
-      .json(responsePayload);
+    //the code for the cookie
+    // .cookie("access_token", accessToken, {
+    //   httpOnly: true,
+    //   maxAge: 900000,
+    //   sameSite: "None",
+    //   secure: true,
+    //   domain: "rent-a-ride-two.vercel.app"
+    // }) // 15 minutes
+    // .cookie("refresh_token", refreshToken, {
+    //   httpOnly: true,
+    //   maxAge: 604800000,
+    //   sameSite: "None",
+    //   secure: true,
+    //   domain: "rent-a-ride-two.vercel.app"
+    // })
+    // 7 days
+
+    res.status(200).json(responsePayload);
 
     next();
   } catch (error) {
     next(error);
+    console.log(error);
   }
 };
 
