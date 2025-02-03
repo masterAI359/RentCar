@@ -2,28 +2,29 @@ import jwt from "jsonwebtoken";
 import { errorHandler } from "./error.js";
 import User from "../models/userModel.js";
 import { refreshToken } from "../controllers/authController.js";
-import {access} from "fs";
 
 export const verifyToken = async (req, res, next) => {
+  // const accessToken = req.cookies.access_token;
+  // const refreshToken = req.cookies.refresh_token;
+  if (!req.headers.authorization) {
+    return next(errorHandler(403, "bad request no header provided"));
+  }
 
-  
-  const accessToken = req.cookies.access_token;
-  const refreshToken = req.cookies.refresh_token;
-
-  console.log(accessToken,refreshToken)
+  const refreshToken = req.headers.authorization.split(" ")[1].split(",")[0];
+  const accessToken = req.headers.authorization.split(" ")[1].split(",")[1];
 
   if (!accessToken) {
-    if (!refreshToken){
-      res.clearCookie('access_token',"refresh_token")
+    if (!refreshToken) {
+      // res.clearCookie('access_token',"refresh_token")
       return next(errorHandler(401, "You are not authenticated"));
     }
-     
 
     try {
       const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
       const user = await User.findById(decoded.id);
 
       if (!user) return next(errorHandler(403, "Invalid refresh token"));
+
       if (user.refreshToken !== refreshToken)
         return next(errorHandler(403, "Invalid refresh token"));
 
@@ -44,16 +45,6 @@ export const verifyToken = async (req, res, next) => {
         { refreshToken: newRefreshToken }
       );
 
-      res
-        .cookie("access_token", newAccessToken, {
-          httpOnly: true,
-          maxAge: 900000,
-        }) // 15 minutes
-        .cookie("refresh_token", newRefreshToken, {
-          httpOnly: true,
-          maxAge: 604800000,
-        }); // 7 days
-
       req.user = decoded.id; //setting req.user so that next middleware in this cycle can acess it
       next();
     } catch (error) {
@@ -67,8 +58,12 @@ export const verifyToken = async (req, res, next) => {
       next();
     } catch (error) {
       if (error.name === "TokenExpiredError") {
+        if (!refreshToken) {
+          return next(errorHandler(401, "You are not authenticated"));
+        }
+
         // Access token expired, try to refresh it
-        // ... (code to refresh the access token using the refresh token)
+        //try to refresh it
       } else {
         next(errorHandler(403, "Token is not valid"));
       }

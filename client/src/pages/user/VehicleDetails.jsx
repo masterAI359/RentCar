@@ -18,25 +18,27 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { useEffect } from "react";
 import { showVehicles } from "../../redux/user/listAllVehicleSlice";
-import { signOut } from "../../redux/user/userSlice";
-
-
+// import { signOut } from "../../redux/user/userSlice";
 
 const VehicleDetails = () => {
   const { singleVehicleDetail } = useSelector(
     (state) => state.userListVehicles
   );
 
-  const dispatch  = useDispatch()
-  const navigate = useNavigate()
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  let refreshToken = localStorage.getItem("refreshToken");
+  let accessToken = localStorage.getItem('accessToken');
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/user/listAllVehicles");
+        const res = await fetch("/api/user/listAllVehicles", {
+          headers: { "Authorization": `Bearer ${refreshToken},${accessToken}` },
+        });
         if (!res.ok) {
           console.log("not success");
-          return 
+          return;
         }
         const data = await res.json();
         dispatch(showVehicles(data));
@@ -47,38 +49,36 @@ const VehicleDetails = () => {
     fetchData();
   }, []);
 
-  const handleBook = async (vehicleId,navigate,dispatch) => {
-    try{
-      const booked = await fetch('/api/auth/refreshToken',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          vehicleId,
-          
-        })
-      })
+  const handleBook = async (vehicleId, navigate) => {
+    try {
+      // const booked = await fetch('/api/auth/refreshToken',{
+      //   method: 'POST',
+      //   headers: {
+      //     'Authorization':`Bearer ${refreshToken},${accessToken}`,
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     vehicleId,
 
+      //   })
+      // })
 
-      if(!booked.ok){
-        dispatch(signOut())
-        navigate('/signup')
-        return 
-      }
-      const data = await booked.json();
-      if(data){
-        navigate('/checkoutPage')
-      }
-      
+      // if(!booked.ok){
+      //   dispatch(signOut())
+      //   navigate('/signup')
+      //   return
+      // }
+      // const data = await booked.json();
+      // if(data){
+      //   navigate('/checkoutPage')
+      // }
 
+      navigate("/checkoutPage");
+    } catch (error) {
+      console.log(error);
     }
-    catch(error){
-      console.log(error)
-    }
-  }
+  };
 
-  
   return (
     <div>
       <section className="py-12 sm:py-8 lg:py-0 bg-white">
@@ -90,7 +90,7 @@ const VehicleDetails = () => {
                   <div className="max-w-xl overflow-hidden rounded-lg relative">
                     <img
                       className="h-full w-full max-w-full object-cover"
-                      src={singleVehicleDetail &&  singleVehicleDetail.image[0] }
+                      src={singleVehicleDetail && singleVehicleDetail.image[0]}
                       alt={singleVehicleDetail.model}
                     />
                   </div>
@@ -107,7 +107,8 @@ const VehicleDetails = () => {
                 </div>
                 <div className="mt-2 w-full lg:order-1 lg:w-32 lg:flex-shrink-0">
                   <div className="flex flex-row items-start lg:flex-col">
-                    {singleVehicleDetail && singleVehicleDetail.succes!=false && 
+                    {singleVehicleDetail &&
+                      singleVehicleDetail.succes != false &&
                       singleVehicleDetail.image.map((cur, idx) => (
                         <button
                           type="button"
@@ -120,7 +121,7 @@ const VehicleDetails = () => {
                             alt=""
                           />
                         </button>
-                    ))}
+                      ))}
                   </div>
                 </div>
               </div>
@@ -219,9 +220,7 @@ const VehicleDetails = () => {
                   type="button"
                   className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800 gap-2"
                   onClick={() => {
-                    handleBook(singleVehicleDetail._id,navigate,dispatch)
-                   
-                    
+                    handleBook(singleVehicleDetail._id, navigate, dispatch);
                   }}
                 >
                   <span>

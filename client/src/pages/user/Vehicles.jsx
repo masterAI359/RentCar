@@ -52,12 +52,15 @@ const Vehicles = () => {
   const BASE_URL = import.meta.env.VITE_PRODUCTION_BACKEND_URL
   //allVariants are set to null when we enter AllVehicles from navbar
 
+  let refreshToken = localStorage.getItem('refreshToken')
+  let accessToken = localStorage.getItem('accessToken')
+
   useEffect(() => {
     dispatch(setVariants(null));
     const fetchData = async () => {
-      console.log(BASE_URL)
       try {
         const res = await fetch(`${BASE_URL}/api/user/listAllVehicles`,{
+          headers:{'Authorization':`Bearer ${refreshToken},${accessToken}`},
           credentials:'include'
         });
         if (!res.ok) {
@@ -68,7 +71,7 @@ const Vehicles = () => {
           dispatch(showVehicles(data));
         }
       } catch (error) {
-        console.log(error);           
+        console.log(error);              
       }
     };
     fetchData();
