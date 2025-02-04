@@ -50,6 +50,7 @@
     "react-scripts": "5.0.0",
     "react-sweetalert2": "^0.6.0",
     "redux-persist": "^6.0.0",
+    "sonner": "^1.7.4",
     "tailwind-merge": "^2.3.0",
     "zod": "^3.22.4"
   },
