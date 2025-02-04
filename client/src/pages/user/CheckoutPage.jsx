@@ -14,29 +14,31 @@ import { useNavigate } from "react-router-dom";
 import { displayRazorpay } from "./Razorpay";
 import { setPageLoading } from "../../redux/user/userSlice";
 import { setisPaymentDone } from "../../redux/user/LatestBookingsSlice";
+import { toast, Toaster } from "sonner";
 
-
-
-export async function sendBookingDetailsEmail (toEmail,bookingDetails,dispatch) {
-  try{
-    const sendEamil = await fetch('/api/user/sendBookingDetailsEamil',{
-      method: 'POST',
-      headers:{
-        'Content-Type':'application/json'
+export async function sendBookingDetailsEmail(
+  toEmail,
+  bookingDetails,
+  dispatch
+) {
+  try {
+    const sendEamil = await fetch("/api/user/sendBookingDetailsEamil", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      body:JSON.stringify({toEmail,data:bookingDetails})
-    })
-    const response = await sendEamil.json()
+      body: JSON.stringify({ toEmail, data: bookingDetails }),
+    });
+    const response = await sendEamil.json();
 
-    if(!response.ok){
-      dispatch(setisPaymentDone(false))
-      console.log("something went wrong while sending email")
-      return 
+    if (!response.ok) {
+      dispatch(setisPaymentDone(false));
+      console.log("something went wrong while sending email");
+      return;
     }
-    
-    return "good"
-  }
-  catch(error){
+
+    return "good";
+  } catch (error) {
     console.log(error);
   }
 }
@@ -50,6 +52,7 @@ const schema = z.object({
     }),
   phoneNumber: z.string().min(8, { message: "phoneNumber required" }),
   adress: z.string().min(4, { message: "adress required" }),
+  // pickup_district: z.string().min(1),
 });
 
 const CheckoutPage = () => {
@@ -58,11 +61,12 @@ const CheckoutPage = () => {
     formState: { errors },
     register,
     watch,
-  } = useForm({ resolver: zodResolver(schema),
-    defaultValues:{
-      coupon:''
-    }
-   });
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      coupon: "",
+    },
+  });
   const navigate = useNavigate();
 
   const {
@@ -75,14 +79,16 @@ const CheckoutPage = () => {
   } = useSelector((state) => state.bookingDataSlice);
 
   //latest bookings data taken from redux
-  const {data,paymentDone} =useSelector(state => state.latestBookingsSlice)
+  const { data, paymentDone } = useSelector(
+    (state) => state.latestBookingsSlice
+  );
 
   const currentUser = useSelector((state) => state.user.currentUser);
   const singleVehicleDetail = useSelector(
     (state) => state.userListVehicles.singleVehicleDetail
   );
-  const {isPageLoading} = useSelector(state => state.user)
-  const dispatch  = useDispatch()
+  const { isPageLoading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const { email, phoneNumber, adress } = currentUser;
   const { price } = singleVehicleDetail;
@@ -90,8 +96,12 @@ const CheckoutPage = () => {
   const user_id = currentUser._id;
   const vehicle_id = singleVehicleDetail._id;
 
-  const start = new Date(pickupDate.humanReadable);
-  const end = new Date(dropoffDate.humanReadable);
+  const start = pickupDate?.humanReadable
+    ? new Date(pickupDate?.humanReadable)
+    : new Date();
+  const end = pickupDate?.humanReadable
+    ? new Date(dropoffDate?.humanReadable)
+    : new Date();
 
   const diffMilliseconds = end - start;
   const Days = Math.round(diffMilliseconds / (1000 * 3600 * 24));
@@ -99,7 +109,7 @@ const CheckoutPage = () => {
   //settting and checking coupon
   const [wrongCoupon, setWrongCoupon] = useState(false);
   const [discount, setDiscount] = useState(0);
-  
+
   const couponValue = watch("coupon");
   const handleCoupon = () => {
     setWrongCoupon(false);
@@ -112,8 +122,7 @@ const CheckoutPage = () => {
   };
 
   //calculateing total price after coupon
-  let totalPrice = price * Days + 50 - discount;
-
+  let totalPrice = price * Days ? Days + 50 - discount : "";
   //handle place order data
   const handlePlaceOrder = async () => {
     const orderData = {
@@ -127,8 +136,23 @@ const CheckoutPage = () => {
       dropoff_location,
     };
 
-    dispatch(setPageLoading(true))
-    await displayRazorpay(orderData,navigate,dispatch);
+    try {
+      dispatch(setPageLoading(true));
+      const displayRazorpayResponse = await displayRazorpay(
+        orderData,
+        navigate,
+        dispatch
+      );
+      if (!displayRazorpayResponse.ok) {
+        dispatch(setPageLoading(false));
+        toast.error(displayRazorpayResponse?.message);
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setPageLoading(false));
+    }finally{
+      dispatch(setPageLoading(false))
+    }
   };
 
   //after payment is done in displayRazorpay function we update the paymentDone from false to true our useEffect is triggered whenever state of paymentDone or data changes
@@ -136,7 +160,7 @@ const CheckoutPage = () => {
   useEffect(() => {
     if (paymentDone && data) {
       const sendEmail = async () => {
-        await sendBookingDetailsEmail(email, data,dispatch);
+        await sendBookingDetailsEmail(email, data, dispatch);
         dispatch(setisPaymentDone(false));
       };
 
@@ -144,20 +168,29 @@ const CheckoutPage = () => {
     }
   }, [paymentDone, data, email, dispatch]);
 
-
   return (
     <>
+      <Toaster
+        toastOptions={{
+          classNames: {
+            error: "bg-red-500 p-5",
+            success: "text-green-400 p-5",
+            warning: "text-yellow-400 p-5",
+            info: "bg-blue-400 p-5",
+          },
+        }}
+      />
       <div className="grid w-full absolute top-0  sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-[120px] xl:pl-[100px] gap-10 xl:mt-20 ">
-        <div className="px-4 pt-8 bg-gray w-full h-full drop-shadow-md">
-          <p className="text-xl font-medium">Order Summary</p>
-          <p className="text-gray-400">
-            Check your items. And select a suitable payment method
-          </p>
+        <div className="px-4  bg-gray w-full h-full drop-shadow-md">
           <div
-            className="mt-8 space-y-3 rounded-lg border border-none drop-shadow-md  px-2 py-4 sm:px-6 md:min-h-[600px]  Properties backdrop-blur-sm
+            className="pt-8 space-y-3 rounded-lg border border-none drop-shadow-md  px-2 py-4 sm:px-6 md:min-h-[600px]  Properties backdrop-blur-sm
              bg-white 
             flex flex-col justify-between"
           >
+            <p className="text-xl font-medium">Order Summary</p>
+            <p className="text-gray-400">
+              Check your items. And select a suitable payment method
+            </p>
             <div className="flex flex-col rounded-lg bg-white sm:flex-row">
               <img
                 className="m-1 mt-2 h-44 w-[200px] rounded-md  drop-shadow-md  border border-sm  object-contain object-center"
@@ -200,31 +233,56 @@ const CheckoutPage = () => {
                     Pick up
                   </div>
                   <div className="mt-2 capitalize">
-                    <p className="text-black text-lg mt-2 leading-6">
-                      {pickup_district}
+                    <p className="text-black text-[14px] mt-2 leading-6">
+                      {pickup_district
+                        ? pickup_district
+                        : "Pickup District Not selected"}
                     </p>
-                    <p className=" text-[14px] mt-2">{pickup_location}</p>
+                    <p className=" text-[14px] mt-2">
+                      {pickup_location
+                        ? pickup_location
+                        : "Pickup Location Not Selected"}
+                    </p>
                     <div className="text-[14px] flex flex-col justify-start items-start  pr-2 gap-2 mt-2">
                       <div className="flex justify-between gap-2 items-center">
                         <span>
                           <CiCalendarDate style={{ fontSize: 15 }} />
                         </span>
-                        {pickupDate && <>
-                        {console.log()}
-                           <span> {new Date(pickupDate.humanReadable).getDate()} : </span>
-                           <span> {new Date(pickupDate.humanReadable).getMonth()+1} : </span>
-                           <span> {new Date(pickupDate.humanReadable).getFullYear()}</span>
-                           </>
-                        }
-                     
+                        {pickupDate?.humanReadable && (
+                          <>
+                            {console.log()}
+                            <span>
+                              {" "}
+                              {new Date(
+                                pickupDate.humanReadable
+                              ).getDate()} :{" "}
+                            </span>
+                            <span>
+                              {" "}
+                              {new Date(pickupDate.humanReadable).getMonth() +
+                                1}{" "}
+                              :{" "}
+                            </span>
+                            <span>
+                              {" "}
+                              {new Date(pickupDate.humanReadable).getFullYear()}
+                            </span>
+                          </>
+                        )}
                       </div>
                       <div className="flex justify-center items-center gap-2">
                         <span>
                           <IoMdTime style={{ fontSize: 16 }} />
                         </span>
-                        <span>{pickupDate && new Date(pickupDate.humanReadable).getHours()}</span>:
-                        <span>{pickupDate && new Date(pickupDate.humanReadable).getMinutes()}</span>
-                       
+                        <span>
+                          {pickupDate?.humanReadable &&
+                            new Date(pickupDate.humanReadable).getHours()}
+                        </span>
+                        :
+                        <span>
+                          {pickupDate?.humanReadable &&
+                            new Date(pickupDate.humanReadable).getMinutes()}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -235,25 +293,42 @@ const CheckoutPage = () => {
                   </div>
 
                   <div className="mt-2">
-                    <p className="text-black text-lg leading-6 mt-2">
-                      {pickup_district}
+                    <p className="text-black text-[14px] leading-6 mt-2">
+                      {pickup_district
+                        ? pickup_district
+                        : "Pickup District Not Selected"}
                     </p>
-                    <p className=" text-[14px] mt-2">{dropoff_location}</p>
+                    <p className=" text-[14px] mt-2">
+                      {dropoff_location
+                        ? dropoff_location
+                        : "Dropoff Location not selected"}
+                    </p>
                     <div className="text-[14px] flex flex-col justify-start items-start pr-2 gap-2 mt-2">
                       <div className="flex  justify-between gap-2 items-center">
                         <span>
                           <CiCalendarDate style={{ fontSize: 15 }} />
                         </span>
-                        <span> {dropoffDate.day} : </span>
-                        <span> {dropoffDate && new Date(dropoffDate.humanReadable).getMonth()+1} : </span>
-                        <span> {dropoffDate.year} </span>
+                        <span> {dropoffDate?.day} : </span>
+                        <span>
+                          {" "}
+                          {dropoffDate?.humanReadable &&
+                            new Date(dropoffDate.humanReadable).getMonth() +
+                              1}{" "}
+                          :{" "}
+                        </span>
+                        <span> {dropoffDate?.year} </span>
+                        {errors?.pickup_district && (
+                          <p className="text-red-500 text-[10px]">
+                            {errors.pickup_district.message || "error"}
+                          </p>
+                        )}
                       </div>
                       <div className="flex justify-center items-center gap-2">
                         <span>
                           <IoMdTime style={{ fontSize: 16 }} />
                         </span>
-                        <span> {dropofftime.hour}</span>:
-                        <span> {dropofftime.minute}</span>
+                        <span> {dropofftime?.hour}</span>:
+                        <span> {dropofftime?.minute}</span>
                       </div>
                     </div>
                   </div>
@@ -340,13 +415,13 @@ const CheckoutPage = () => {
                 )}
               </div>
 
-              {/* pincode */}
+              {/* PinCode */}
               <div>
                 <div className="flex gap-6">
                   <TextField
                     rows={4}
                     id="coupon"
-                    // defaultValue={adress}
+                    // defaultValue={Address}
                     label={"Coupon"}
                     value={couponValue}
                     {...register("coupon")}
@@ -398,16 +473,20 @@ const CheckoutPage = () => {
               </p>
             </div>
 
-            {
-              isPageLoading ?   <button  className={`mt-4 mb-8 w-full rounded-md bg-gray-400 px-6 py-3 font-medium text-black`} disabled>
-             Processing ...
-            </button>
-            :
-            <button  className={`mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white`}>
-            { "Place Order"}
-          </button>
-            }
-          
+            {isPageLoading ? (
+              <button
+                className={`mt-4 mb-8 w-full rounded-md bg-gray-400 px-6 py-3 font-medium text-black`}
+                disabled
+              >
+                Processing ...
+              </button>
+            ) : (
+              <button
+                className={`mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white`}
+              >
+                {"Place Order"}
+              </button>
+            )}
           </form>
         </div>
       </div>
