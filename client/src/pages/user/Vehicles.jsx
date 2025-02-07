@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setVariants,
@@ -13,6 +13,7 @@ import Filter from "../../components/Filter";
 import Sort from "../../components/Sort";
 import { signOut } from "../../redux/user/userSlice";
 import Footers from "../../components/Footer";
+import SkeletonLoader from "../../components/ui/SkeletonLoader";
 
 
 export const onVehicleDetail = async (id, dispatch, navigate) => {
@@ -48,6 +49,7 @@ const Vehicles = () => {
   const { data, filterdData } = useSelector((state) => state.sortfilterSlice);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading , setIsLoading] = useState(true)
 
   const BASE_URL = import.meta.env.VITE_PRODUCTION_BACKEND_URL
   //allVariants are set to null when we enter AllVehicles from navbar
@@ -69,9 +71,11 @@ const Vehicles = () => {
         if (res.ok) {
           const data = await res.json();
           dispatch(showVehicles(data));
+          setIsLoading(false)
         }
       } catch (error) {
-        console.log(error);              
+        console.log(error); 
+        setIsLoading(false)             
       }
     };
     fetchData();
@@ -88,8 +92,14 @@ const Vehicles = () => {
         <div className="mt-10  bg-blend-overlay  backdrop-blur-xl opacity-1 box-shadow-xl  top-5 z-40 drop-shadow-lg ">
           <Sort />
         </div>
+       
+        
+
+          {isLoading ? <SkeletonLoader/> : 
+
         <div className=" flex  sm:flex-row  w-full  lg:grid lg:max-w-[1000px]  lg:grid-cols-3 justify-center items-center gap-5 flex-wrap mt-5">
-          {filterdData && filterdData.length > 0
+          {
+           (filterdData && filterdData.length > 0
             ? filterdData.map(
                 (cur, idx) =>
                   cur.isDeleted === "false" &&
@@ -270,8 +280,11 @@ const Vehicles = () => {
                       </div>
                     </div>
                   )
-              )}
-        </div>
+              ))
+            }
+              </div>
+              }
+              
       </div>
     </div>
     <Footers/>
