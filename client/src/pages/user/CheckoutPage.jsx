@@ -14,7 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { displayRazorpay } from "./Razorpay";
 import { setPageLoading } from "../../redux/user/userSlice";
 import { setisPaymentDone } from "../../redux/user/LatestBookingsSlice";
-import { toast, Toaster } from "sonner";
+import {toast, Toaster} from "sonner";
+// import { toast, Toaster } from "sonner";
 
 export async function sendBookingDetailsEmail(
   toEmail,
