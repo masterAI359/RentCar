@@ -15,7 +15,7 @@ import { signOut } from "../../redux/user/userSlice";
 import Footers from "../../components/Footer";
 import SkeletonLoader from "../../components/ui/SkeletonLoader";
 
-
+//use Custome hook in this case :)
 export const onVehicleDetail = async (id, dispatch, navigate) => {
   try {
     const res = await fetch("/api/user/showVehicleDetails", {
