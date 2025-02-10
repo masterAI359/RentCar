@@ -144,7 +144,8 @@ const CheckoutPage = () => {
         navigate,
         dispatch
       );
-      if (!displayRazorpayResponse.ok) {
+
+      if (!displayRazorpayResponse || !displayRazorpayResponse?.ok) {
         dispatch(setPageLoading(false));
         toast.error(displayRazorpayResponse?.message);
       }
