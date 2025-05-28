@@ -16,7 +16,7 @@ const Filter = () => {
   );
   const { variantMode } = useSelector((state) => state.sortfilterSlice);
 
-  const[filterOpen,setFilterOpen]  =  useState(true)
+  const[filterOpen,setFilterOpen]  =  useState(false)
 
   const dispatch = useDispatch();
   let transformedData = [];
@@ -101,7 +101,7 @@ const Filter = () => {
           {/* <!-- Filters  form --> */}
 
          
-          <div className={` border-t border-gray-200 dropdown-content transition-opacity ${filterOpen ? 'open opacity-100 fade-in' : 'opacity-0 fade-out'} `}>
+          <div className={` border-t border-gray-200 dropdown-content ${filterOpen ? 'open opacity-100 fade-in' : 'opacity-0 fade-out'} `}>
             <h3 className="sr-only">Categories</h3>
 
             <div className="border-t border-gray-200 px-4 py-6">

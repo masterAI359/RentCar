@@ -624,7 +624,7 @@ body {
  .dropdown-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.5s ease;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
     opacity: 0;
   }
 
@@ -637,21 +637,20 @@ body {
   /* filter plusicon transitions */
 
   .plusicon{
-    transition: transform 1s ease-in-out;
-    
+    transition: transform .3s ease-in-out;
     color: black;
     font-size: 30px;
   }
   .plusiconOpen{
-    transform: rotate(-225deg);
+    transform: rotate(-90deg);
     background-color: white;
-    transition: 1.4s ease;
+    transition: .3s ease;
     border-radius: 10px;
   }
 
   .iconClose{
    background-color: rgb(189, 185, 185);
-   transition:  1s ease;
+   transition:  .3s ease;
     border-radius: 5px;
   }
 
