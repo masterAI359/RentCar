@@ -9,7 +9,7 @@ This repository contains the code for a Full stack car rental website with 3 mod
 Clone Rent a Ride
 
 ```bash
-https://github.com/jeevan-aj/Rent-a-Ride.git
+https://github.com/masterAI359/RentCar.git
 ```
 
 Install node modules
